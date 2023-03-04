@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom';
 
 
  import LoginPage from "pages/Login.js";
+ import ForgotPassword from 'pages/ForgetPassword';
 // import SignupPage from "pages/Signup.js";
 // import PricingPage from "pages/Pricing.js";
 // import AboutUsPage from "pages/AboutUs.js";
@@ -144,8 +145,14 @@ import { useParams } from 'react-router-dom';
        component: LoginPage,
      scrollAnimationDisabled: true,
        url: "/components/innerPages/LoginPage",
-     },              
-    }  
+     }, 
+     ForgotPassword: {
+      component: ForgotPassword,
+    scrollAnimationDisabled: true,
+      url: "/components/innerPages/ForgotPassword",
+    },              
+    }
+
 //     SignupPage: {
 //       component: SignupPage,
 //       url: `/components/innerPages/SignupPage`,
