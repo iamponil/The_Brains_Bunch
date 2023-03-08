@@ -1,8 +1,12 @@
+const express = require("express");
+const router = express.Router();
 const User = require("../models/user");
 const SecretCode = require("../models/SecretCode");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
+const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 exports.getAll = async (req, res, next) => {
   const search = req.query.query;
   try {
@@ -254,3 +258,56 @@ exports.resetNewPassword= async (req, res) => {
     res.status(400).send({ msg: "Changement du mot de passe echoué", error });
   }
 }
+// //SignUp
+
+// router.post(
+//   "/signup",
+//   [
+//     check("name", "Veuillez insérer votre nom").not().isEmpty(),
+//     // check("firstname", "Veuillez insérer votre prenom").not().isEmpty(),
+//     check("email", "Veuillez insérer votre adresse email").not().isEmpty(),
+//     check(
+//       "password",
+//       "Veuillez insérer votre mot de passe avec un minimum de 6 caractères"
+//     ).isLength({ min: 6 }),
+//   //   check("cin", "Veuillez insérer votre numèro de carte d'identité").not().isEmpty(),
+//   //   check("tel", "Veuillez insérer votre numèro de telephone").not().isEmpty(),
+//   //   check("adresse", "Veuillez insérer votre adresse").not().isEmpty(),
+//    ],
+//   async (req, res) => {
+//     try {
+//       const errors = validationResult(req);
+//       if (!errors.isEmpty()) {
+//         return res.status(400).json({ errors: errors.array() });
+//       }
+//       const { name,  email,  password} = req.body;
+
+//       let user = await User.findOne({ email });
+//       if (user) {
+//         return res
+//           .status(400)
+//           .send({ errors: [{ msg: "Utilisateur existe déjà" }] });
+//       }
+      
+//       user = new User({
+//         name,  email,  password
+//       });
+//       const salt = await bcrypt.genSalt(10);
+
+//       user.password = await bcrypt.hash(password, salt);
+//       await user.save();
+//       const payload = {
+//         id: user.id,
+//       };
+
+//       // create a token using json webtoken
+//       const token = jwt.sign(payload, process.env.SECRET_KEY, {
+//         expiresIn: "2h",
+//       });
+//       res.status(200).send({ user, token });
+//     } catch (err) {
+//       console.error(err.message);
+//       res.status(400).send({ errors: [{ msg: "Création du compte échoué", error: err }] });
+//     }
+//   }
+// );

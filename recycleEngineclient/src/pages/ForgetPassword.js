@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 // import logo from "images/logoMun.jpg";
 import { Container as ContainerBase } from "components/misc/Layouts";
 import AnimationRevealPage from "helpers/AnimationRevealPage";
-const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
+const Container = tw(ContainerBase)`min-h-screen bg-gradient-to-b from-primary-100 to-teal-300 text-white font-medium flex justify-center -m-8`;
 // const Container = tw(
 //   ContainerBase
 // )`min-h-screen bg-gradient-to-b from-teal-100 to-teal-400 text-white font-medium flex justify-center -m-8`;
@@ -89,7 +89,7 @@ const ForgotPassword = () => {
               {/* <LogoImage src={logo} /> */}
             </LogoLink>
             <MainContent>
-              <Heading>Mot de passe oublié ?</Heading>
+              <Heading>Mot de passe oubliée ?</Heading>
               {step === 1 ? (
                 <FormContainer>
                   <p
