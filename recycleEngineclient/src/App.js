@@ -1,6 +1,10 @@
 import "tailwindcss/dist/base.css";
 import "styles/globalStyles.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login"
+import Home from "./MainLandingPage"
+import  Navbar from "./components/Navbar"
 import { css } from "styled-components/macro"; //eslint-disable-line
 
 /*
@@ -105,36 +109,75 @@ import LoginPage from "pages/Login.js";
  import MainLandingPage from "MainLandingPage.js";
 // import ThankYouPage from "ThankYouPage.js";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
   // return <AnimationRevealPage disabled>xxxxxxxxxx</AnimationRevealPage>;
+  const [user, setUser] = useState(null);
 
-
+  useEffect(() => {
+    const getUser = () => {
+      fetch("http://localhost:3000/auth/login/success", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) return response.json();
+          throw new Error("authentication has been failed!");
+        })
+        .then((resObject) => {
+          setUser(resObject.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
   return (
-    <Router>
-      <Switch>
-        {/* <Route path="/components/:type/:subtype/:name">
-          <ComponentRenderer />
-        </Route>
-        <Route path="/components/:type/:name">
-          <ComponentRenderer />
-        </Route>
-        <Route path="/thank-you">
-          <ThankYouPage />
-        </Route>*/
-        <Route path="/home">
-          <MainLandingPage />
-        </Route> }
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-      </Switch>
-    </Router>
+   
+    <BrowserRouter>
+      <div>
+      <Navbar user={user}/>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/" /> : <Login />}
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
-}
+};
+//   return (
+//      <BrowserRouter>
+//       <div>
+//         <Navbar user={user} />
+//         <Routes>
+//           <Route path="/" element={<Home />} />
+//           <Route
+//             path="/login"
+//             element={user ? <Navigate to="/" /> : <Login />}
+//           />
+//              <Routes>
+//         <Route path="/home">
+//           <MainLandingPage />
+//         </Route> 
+//           <Route
+//             path="/post/:id"
+//             element={user ? <Post /> : <Navigate to="/login" />}
+//           />
+//         </Routes>
+//       </div>
+//     </BrowserRouter>
+//     ):
+//   );
+// }
 
 // export default EventLandingPage;
 // export default HotelTravelLandingPage;

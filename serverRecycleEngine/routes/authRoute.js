@@ -1,10 +1,10 @@
 require("dotenv").config();
-var express = require("express");
-var router = express.Router();
-const jwt = require("jsonwebtoken");
+const router = require("express").Router();
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const authController = require("../controller/auth-controller");
 const authenticateToken = require("../middleware/Authorize");
+const passportSetup = require('../controller/passport')
 const CLIENT_URL = "http://localhost:3000/";
 
 //! get access token from refresh token
@@ -45,44 +45,31 @@ router.post("/sign-in", authController.login, (req, res) => {
   });
 }); 
 //Passport_Login
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }),(req,res)=>{  
-res.status(200).json({
-  user: res.user,
-  accessToken: res.accessToken,
-
-  }
-  );
-  console.log(req.body);
-});
+router.get("/google", passport.authenticate("google",{  scope: ['profile', 'email'] }));
 
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     successRedirect: CLIENT_URL,
     failureRedirect: "/login/failed",
-  }),(req,res)=>{
-    console.log(req.body+" this is the req body");
+  })
+);
+router.get("/login/success", (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "successfull",
+      user: req.user,
+      cookies: req.cookies,
+      token:req.token
+    });
   }
-);
-
-router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
-
-router.get(
-  "/github/callback",
-  passport.authenticate("github", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
-);
-
-router.get("/facebook", passport.authenticate("facebook", { scope: ["profile"] }));
-
-router.get(
-  "/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
-);
+});
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "failure",
+  });
+});
 
 module.exports = router;
