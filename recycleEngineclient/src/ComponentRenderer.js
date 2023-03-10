@@ -9,6 +9,7 @@ import BlogIndexPage from "pages/BlogIndex.js";
 // import PrivacyPolicyPage from "pages/PrivacyPolicy.js";
 import LoginPageImageSrc from "images/demo/LoginPage.jpeg";
 import SignupPageImageSrc from "images/demo/SignupPage.jpeg";
+import ForgotPassword from 'pages/ForgotPassword.js';
 // import BlogIndexPageImageSrc from "images/demo/BlogIndexPage.jpeg";
 // import TermsOfServicePageImageSrc from "images/demo/TermsOfServicePage.jpeg";
 // import PrivacyPolicyPageImageSrc from "images/demo/PrivacyPolicyPage.jpeg";
@@ -42,6 +43,12 @@ export const components = {
     SignupPage: {
       component: SignupPage,
       url: `/components/innerPages/SignupPage`,
+      imageSrc: SignupPageImageSrc,
+      scrollAnimationDisabled: true,
+    },
+    ForgotPassword: {
+      component:  ForgotPassword,
+      url: `/components/innerPages/ForgotPassword`,
       imageSrc: SignupPageImageSrc,
       scrollAnimationDisabled: true,
     },
