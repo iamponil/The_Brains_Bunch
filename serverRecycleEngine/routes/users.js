@@ -2,7 +2,8 @@ var express = require("express");
 var router = express.Router();
 var UserController = require("../controller/user-controller");
 const storage = require("../middleware/storage");
-
+//Get All Users
+router.get("/", UserController.getAllUsers);
 //Get All Users
 router.get("/getAll", UserController.getAll);
 

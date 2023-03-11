@@ -1,31 +1,34 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import App from "App";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-// Material Dashboard 2 React Context Provider
-import { MaterialUIControllerProvider } from "context";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "assets/styles/tailwind.css";
+
+// layouts
+
+import Admin from "layouts/Admin.js";
+import Auth from "layouts/Auth.js";
+
+// views without layouts
+
+
+import Profile from "views/Profile.js";
+import Index from "views/Index.js";
 
 ReactDOM.render(
   <BrowserRouter>
-    <MaterialUIControllerProvider>
-      <App />
-    </MaterialUIControllerProvider>
+    <Switch>
+      {/* add routes with layouts */}
+     
+      <Route path="/auth" component={Auth} />
+      {/* add routes without layouts */}
+   
+      <Route path="/profile" exact component={Profile} />
+      <Route path="/" component={Admin} />
+      {/* add redirect for first page */}
+      <Redirect from="*" to="/" />
+    </Switch>
   </BrowserRouter>,
   document.getElementById("root")
 );

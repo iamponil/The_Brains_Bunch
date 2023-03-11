@@ -7,6 +7,11 @@ const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+exports.getAllUsers = (req, res) => {
+	User.find(function (err, users) {
+		res.json(users);
+	});
+};
 exports.getAll = async (req, res, next) => {
   const search = req.query.query;
   try {
