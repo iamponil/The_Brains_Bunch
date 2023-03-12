@@ -1,6 +1,6 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const RefreshTokens = require("../models/refreshTokens");
-const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -26,7 +26,12 @@ exports.login = async (req, res, next) => {
   });
   let refreshTokenDb = await newRefreshToken.save();
   res.refreshToken = refreshTokenDb.token;
-  res.status(200).json({ message: "User Logged in",accessToken:accessToken,statusCode:res.statusCode,user:res.user});
+  res.status(200).json({
+    message: "User Logged in",
+    accessToken: accessToken,
+    statusCode: res.statusCode,
+    user: res.user,
+  });
   next();
 };
 
@@ -81,8 +86,6 @@ exports.getAccesTokenFromRefreshToken = async (req, res, next) => {
     res.json({ accessToken: accessToken });
   });
 };
-
-
 
 function generateAccessToken(payload) {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {

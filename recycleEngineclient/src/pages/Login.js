@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "components/misc/Layouts";
 import tw from "twin.macro";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import { Alert } from 'react-bootstrap'
 import styled from "styled-components";
 import { LoginSocialGoogle  } from "reactjs-social-login";
@@ -13,11 +13,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 import googleIconImageSrc from "images/google-icon.png";
 import GitHubIconImageSrc from "images/github.png";
 import FacebookIconImageSrc from "images/facebook.png";
+import Google from "../images/google.png"
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
 import {
   GoogleLoginButton,
 } from 'react-social-login-buttons';
-import { useHistory } from "react-router-dom";
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
@@ -66,23 +66,23 @@ export default ( {
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
   headingText = "Sign In To Recycle_Engine",
-  socialButtons = [
-    {
-      iconImageSrc: googleIconImageSrc,
-      text: "Sign In With Google",
-      url: "http://localhost:5000/auth/google/callback",
-    },
-    {
-      iconImageSrc: GitHubIconImageSrc,
-      text: "Sign In With GitHub",
-      url: "http://localhost:5000/auth/github"
-    },
-    {
-      iconImageSrc: FacebookIconImageSrc,
-      text: "Sign In With Facebook",
-      url: "http://localhost:5000/auth/facebook"
-    }
-  ],
+  // socialButtons = [
+  //   {
+  //     iconImageSrc: googleIconImageSrc,
+  //     text: "Sign In With Google",
+  //     url: "http://localhost:5000/auth/google/callback",
+  //   },
+  //   {
+  //     iconImageSrc: GitHubIconImageSrc,
+  //     text: "Sign In With GitHub",
+  //     url: "http://localhost:5000/auth/github"
+  //   },
+  //   {
+  //     iconImageSrc: FacebookIconImageSrc,
+  //     text: "Sign In With Facebook",
+  //     url: "http://localhost:5000/auth/facebook"
+  //   }
+  // ],
   submitButtonText = "Sign In",
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = "#",
@@ -93,15 +93,36 @@ export default ( {
   const onLoginStart = useCallback(() => {
     alert('login start');
   }, []);
-  const onResolve =  useCallback ((user) => {
+  const onResolve = async  (user) => {
     try {
+    
       // Send user details to server for authentication
       console.log(user);
-   axios.get('http://localhost:3000/auth/google',  user );
+ const data= await fetch('http://localhost:5000/auth/google',{method:'GET'},
+     { headers: {
+  
+   "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Origin": "*",
+      //   "Access-Control-Allow-Methods": "*" 
+   
+  }},
+  user );
+ console.log(data);
     } catch (error) {
       console.error(error);
     }
-  },[]);
+  };
+  const google = () => {
+  window.open("http://localhost:5000/auth/google", "_self");
+};
+
+const github = () => {
+  window.open("http://localhost:5000/auth/github", "_self");
+};
+
+const facebook = () => {
+  window.open("http://localhost:5000/auth/facebook", "_self");
+};
   const handleLoginFailure = (error) => {
     console.error(error);
   };
@@ -127,13 +148,12 @@ export default ( {
       }, 2000);
     }
   };
-  const history = useHistory();
 
   const handleLogin = async (e) => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     try {
-      const res = await axios.post('http://localhost:3000/auth/sign-in', { email, password });
+      const res = await axios.post('http://localhost:5000/auth/sign-in', { email, password });
      if (res.data.statusCode === 200) {
       localStorage.setItem('accessToken', res.data.accessToken);
       window.location='/home'
@@ -158,6 +178,10 @@ export default ( {
           <MainContent>
             <Heading>{headingText}</Heading>
             <FormContainer>
+            <div className="loginButton google" onClick={google}>
+            <img src={Google} alt="" className="icon" />
+            Google
+          </div>
             <LoginSocialGoogle
   provider="google"
   client_id="526931533634-ja1kt209p9ncg87051ipadj8p8c2c69f.apps.googleusercontent.com"

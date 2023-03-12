@@ -1,32 +1,30 @@
 require("dotenv").config();
-
 var createError = require("http-errors");
-var express = require("express");
 var path = require("path");
-var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var cors = require("cors");
 const cookieSession = require("cookie-session");
+const express = require("express");
+const cors = require("cors");
+const passportSetup = require("./controller/passport");
 const passport = require("passport");
-var app = express();
+const app = express();
 //PassportLogin
 app.use(
   cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
 );
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(
-  cors({
-    origin:"http://localhost:3001",
-    credentials: true,
-    methods: "GET,POST,PUT,DELETE",
-   
-  })
-  
-);
-// initialize routes
+ app.use(
+   cors({
+     origin: "http://localhost:3000",
+     methods: "GET,POST,PUT,DELETE",
+     credentials: true,
+   })
+ );
+
 const authenticateToken = require("./middleware/Authorize");
 
 var usersRouter = require("./routes/users");
@@ -36,7 +34,6 @@ const mongoose = require("mongoose");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
  mongoose.set("strictQuery", false);
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
@@ -47,20 +44,20 @@ db.once("open", () => console.log("Connected to DataBase"));
 app.use("/auth", authRoute);
 app.use("/users", usersRouter);
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// app.use(function (req, res, next) {
+//   next(createError(404));
+// });
 
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+// app.use(function (err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
+//   // render the error page
+//   res.status(err.status || 500);
   
-});
+// });
 
 //this function we will call when we need a version of the jwt token
 
