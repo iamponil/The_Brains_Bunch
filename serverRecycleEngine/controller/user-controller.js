@@ -42,18 +42,19 @@ exports.addUser = async (req, res, next) => {
   const user = req.body;
   user.image = req.file.filename;
   bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(user.password, salt, async function(err, hash) {
-   if (err) {
-    return next(err);
-    }
-    user.password = hash;
-    const userDb = new User(user);
-    try {
-      const user = await userDb.save();
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }  });
+    bcrypt.hash(user.password, salt, async function (err, hash) {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      const userDb = new User(user);
+      try {
+        const user = await userDb.save();
+        res.status(201).json(user);
+      } catch (error) {
+        res.status(400).json({ message: error.message });
+      }
+    });
   });
 };
 
@@ -144,9 +145,9 @@ async function SendMail(user, code) {
   // Create a SMTP transporter object
   let transporter = nodemailer.createTransport({
     service: "gmail",
-    host: 'smtp.gmail.com',
-   port: 465,
-   secure: true,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
       user: "thebrainsbrunch41@gmail.com",
       pass: "aufdccimtrwxoslh",
@@ -181,7 +182,7 @@ async function SendMail(user, code) {
   transporter.close();
 }
 //send secret code to mail
-exports.resetPassword=async (req, res) => {
+exports.resetPassword = async (req, res) => {
   try {
     // Get email from req.body
     const { email } = req.body;
@@ -202,16 +203,19 @@ exports.resetPassword=async (req, res) => {
     SendMail(finduser, code);
     res
       .status(200)
-      .send({ msg: "Veuillez consulter votre email pour la récupération du code" });
+      .send({
+        msg: "Veuillez consulter votre email pour la récupération du code",
+      });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ msg: "Récupération du mot de passe échouée", error });
+    res
+      .status(400)
+      .send({ msg: "Récupération du mot de passe échouée", error });
   }
-}
-
+};
 
 //submit secret code from mail
-exports.checkSecretCode=async (req, res) => {
+exports.checkSecretCode = async (req, res) => {
   try {
     // Get secret code from req.body
     const { code } = req.body;
@@ -229,11 +233,10 @@ exports.checkSecretCode=async (req, res) => {
     console.log(error);
     res.status(400).send({ msg: "Vérification du code échouée", error });
   }
-}
-
+};
 
 //reset new password
-exports.resetNewPassword= async (req, res) => {
+exports.resetNewPassword = async (req, res) => {
   try {
     // Get new and confirm password from req.body
     const { newpass, confirmpass } = req.body;
@@ -241,16 +244,18 @@ exports.resetNewPassword= async (req, res) => {
     const { id } = req.params;
     // Check if 2 password is equal
     if (newpass !== confirmpass) {
-      return res.status(400).send({ msg: "Les mots de passe ne sont pas identiques" });
+      return res
+        .status(400)
+        .send({ msg: "Les mots de passe ne sont pas identiques" });
     }
     // replace password
     const salt = await bcrypt.genSalt(10);
     const hashedpassword = await bcrypt.hash(newpass, salt);
     await User.updateOne({ _id: id }, { $set: { password: hashedpassword } });
 
-    res.status(200).send({ msg: "Mot de passe changé !"});
+    res.status(200).send({ msg: "Mot de passe changé !" });
   } catch (error) {
     console.log(error);
     res.status(400).send({ msg: "Changement du mot de passe echoué", error });
   }
-}
+};

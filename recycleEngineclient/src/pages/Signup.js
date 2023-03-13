@@ -1,16 +1,18 @@
-import React, { useState } from "react";
-import AnimationRevealPage from "helpers/AnimationRevealPage.js";
-import { Container as ContainerBase } from "components/misc/Layouts";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import illustration from "images/signup-illustration.svg";
-import logo from "images/logo.svg";
-import googleIconImageSrc from "images/google-icon.png";
-import twitterIconImageSrc from "images/twitter-icon.png";
-import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
-import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
-const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
+import React, { useState } from 'react';
+import AnimationRevealPage from 'helpers/AnimationRevealPage.js';
+import { Container as ContainerBase } from 'components/misc/Layouts';
+import tw from 'twin.macro';
+import styled from 'styled-components';
+import { css } from 'styled-components/macro'; //eslint-disable-line
+import illustration from 'images/signup-illustration.svg';
+import logo from 'images/logo.svg';
+import googleIconImageSrc from 'images/google-icon.png';
+import twitterIconImageSrc from 'images/twitter-icon.png';
+import { ReactComponent as SignUpIcon } from 'feather-icons/dist/icons/user-plus.svg';
+import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
+const Container = tw(
+  ContainerBase
+)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoLink = tw.a``;
@@ -49,30 +51,27 @@ const SubmitButton = styled.button`
 `;
 const IllustrationContainer = tw.div`sm:rounded-r-lg flex-1 bg-purple-100 text-center hidden lg:flex justify-center`;
 const IllustrationImage = styled.div`
-  ${props => `background-image: url("${props.imageSrc}");`}
+  ${(props) => `background-image: url("${props.imageSrc}");`}
   ${tw`m-12 xl:m-16 w-full max-w-lg bg-contain bg-center bg-no-repeat`}
 `;
 
-export default ( {
- 
-  logoLinkUrl = "#",
+export default ({
+  logoLinkUrl = '#',
   illustrationImageSrc = illustration,
-  headingText = "Register to Recycle Engine",
+  headingText = 'Register to Recycle Engine',
 
-  submitButtonText = "Register",
+  submitButtonText = 'Register',
   SubmitButtonIcon = LoginIcon,
-  forgotPasswordUrl = "#",
-  signupUrl = "#",
-
-}
-) => { 
+  forgotPasswordUrl = '#',
+  signupUrl = '#',
+}) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     phone_number: '',
-    image: null,  // add a state variable for the image
+    image: null, // add a state variable for the image
   });
 
   function handleInputChange(event) {
@@ -87,7 +86,7 @@ export default ( {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const { name, email, password , phone_number } = formData;
+    const { name, email, password, phone_number } = formData;
     const formDataToSend = new FormData(); // create a new FormData object
     formDataToSend.append('name', name);
     formDataToSend.append('email', email);
@@ -106,48 +105,70 @@ export default ( {
       console.error(error);
     }
   }
-  return  (
+  return (
+    <AnimationRevealPage>
+      <Container>
+        <Content>
+          <MainContainer>
+            <LogoLink href={logoLinkUrl}>
+              <LogoImage src={logo} />
+            </LogoLink>
+            <MainContent>
+              <Heading>{headingText}</Heading>
+              <FormContainer>
+                <Form enctype="multipart/form-data" onSubmit={handleSubmit}>
+                  <Input
+                    type="text"
+                    name="name"
+                    placeholder=" User Name "
+                    value={formData.name}
+                    onChange={handleInputChange}
+                  />
 
- 
-<AnimationRevealPage>
-    <Container>
-      <Content>
-        <MainContainer>
-          <LogoLink href={logoLinkUrl}>
-            <LogoImage src={logo} />
-          </LogoLink>
-          <MainContent>
-            <Heading>{headingText}</Heading>
-            <FormContainer>
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
 
-              <Form  enctype="multipart/form-data" onSubmit={handleSubmit}> 
-      
-        <Input type="text" name="name" placeholder=" User Name "  value={formData.name} onChange={handleInputChange} />
+                  <Input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
 
-    
-        <Input type="email" name="email"  placeholder="Email" value={formData.email} onChange={handleInputChange} />
+                  <Input
+                    type="Number"
+                    name="phone_number"
+                    placeholder="Phone Number"
+                    value={formData.phone_number}
+                    onChange={handleInputChange}
+                  />
 
-        <Input type="password" name="password"  placeholder="Password" value={formData.password} onChange={handleInputChange} />
+                  <Input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                  />
 
-        <Input type="Number" name="phone_number" placeholder="Phone Number" value={formData.phone_number} onChange={handleInputChange} />
-
-        <Input type="file" name="image" accept="image/*" onChange={e => setSelectedFile(e.target.files[0])}/>
-     
-                <SubmitButton type="submit">
-                  <SubmitButtonIcon className="icon" />
-                  <span className="text">{submitButtonText}</span>
-                </SubmitButton>
-              </Form>
-             
-              
-            </FormContainer>
-          </MainContent>
-        </MainContainer>
-        <IllustrationContainer>
-          <IllustrationImage imageSrc={illustrationImageSrc} />
-        </IllustrationContainer>
-      </Content>
-    </Container>
-  </AnimationRevealPage>
-  
-);}
+                  <SubmitButton type="submit">
+                    <SubmitButtonIcon className="icon" />
+                    <span className="text">{submitButtonText}</span>
+                  </SubmitButton>
+                </Form>
+              </FormContainer>
+            </MainContent>
+          </MainContainer>
+          <IllustrationContainer>
+            <IllustrationImage imageSrc={illustrationImageSrc} />
+          </IllustrationContainer>
+        </Content>
+      </Container>
+    </AnimationRevealPage>
+  );
+};
