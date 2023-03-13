@@ -105,7 +105,7 @@ export default function Sidebar() {
                   Dashboard
                 </Link>
               </li>
-
+{/* 
               <li className="items-center">
                 <Link
                   className={
@@ -126,7 +126,7 @@ export default function Sidebar() {
                   ></i>{" "}
                   Edit profile
                 </Link>
-              </li>
+              </li> */}
 
               <li className="items-center">
                 <Link

@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['SUPERADMIN', 'RECYCLENGINEAGENT','BACKER','CREATOR']
     },
+    status: {
+      type: String,
+      enum: ['ACTIVE', 'BLOCKED']
+    },
     project: [{ type: Schema.Types.ObjectId, ref: "project" }],
   },
   {

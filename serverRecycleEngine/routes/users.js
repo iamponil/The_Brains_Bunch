@@ -42,4 +42,10 @@ router.post("/resetPassword", UserController.resetPassword);
 router.post("/CheckSecretCode", UserController.checkSecretCode);
 //update password
 router.put("/resetNewPassword/:id",UserController.resetNewPassword);
+//Update Status User
+router.put("/Bloque/:id",UserController.Bloquage);
+//Get one Users By _id
+router.get("/getUserById/:id", UserController.getById);
+//Update user By id 
+router.post("/updateUser/:id",UserController.UpdateUserById);
 module.exports = router;
