@@ -4,7 +4,7 @@ import React from "react";
 
 import UserTable from "components/Cards/UserTable";
 
-export default function Tables() {
+export default function Users() {
   return (
     <>
       <div className="flex flex-wrap mt-4">

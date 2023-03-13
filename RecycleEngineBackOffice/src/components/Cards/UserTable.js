@@ -188,9 +188,9 @@ const Send = async (user) => {
 
   const res=await Axios.post(`http://localhost:5000/users/addUser`, {...user }).then(()=>{
     alert("Informations modifiées avec succés !")
-    history.push("/admin/tables");
+    history.push("/admin/users");
   window.location.reload(true);
-  setMsg(res.message)
+  // setMsg(res.message)
 }).catch((error)=>{
 console.log(error);
 alert("echec d'enregistrement")
@@ -338,7 +338,7 @@ const handlePrevClick = () => {
           <button type="button" className="btn btn-outline-success" onClick={() =>{handleClickDeleteOne(item._id)}}
           > <img src={pobelle} width="20" height="20" alt=""  />
    </button>  &nbsp;
-   <a href="/admin/settings" type="button" className="btn btn-outline-danger"
+   <a href="/admin/userdetails" type="button" className="btn btn-outline-danger"
                   > <img src={eye} width="20" height="20" alt=""  onClick={() =>{handleClickDetail(item._id)}}  />
           </a> &nbsp;
           <button type="button" className="btn "
@@ -377,7 +377,7 @@ const handlePrevClick = () => {
                 <button type="button" className="btn btn-outline-success" onClick={() =>{handleClickDeleteOne(user._id)}}
           > <img src={pobelle} width="20" height="20" alt=""  />
    </button>  &nbsp;
-          <a href="/admin/settings" type="button" className="btn btn-outline-danger"
+          <a href="/admin/userdetails" type="button" className="btn btn-outline-danger"
                   > <img src={eye} width="20" height="20" alt=""  onClick={() =>{handleClickDetail(user._id)}}  />
           </a> &nbsp;
           <button type="button" className="btn "

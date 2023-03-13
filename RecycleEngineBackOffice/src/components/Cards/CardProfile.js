@@ -107,7 +107,7 @@ export default function CardProfile({ roundedHeaderButton ,
 
     const res=await Axios.post(`http://localhost:5000/users/updateUser/${user._id}`, {...user }).then(()=>{
       alert("Informations modifiées avec succés !")
-      history.push("/admin/settings");
+      history.push("/admin/userdetails");
     window.location.reload(true);
     setMsg(res.message)
 }).catch((error)=>{
@@ -220,8 +220,8 @@ export default function CardProfile({ roundedHeaderButton ,
                       name="role"
                       value={user.role}
                       onChange={(e) =>  hundelchange(e)}
-                      required={true} >
-                      {/* <option value="" disabled selected>Selectionner un role</option> */}
+                      required={true} defaultValue="Selectionner un role">
+                      <option value="Selectionner un role" >Selectionner un role</option>
                       {/* <option className="CLIENT" value="CLIENT">
                     CLIENT
                       </option> */}
