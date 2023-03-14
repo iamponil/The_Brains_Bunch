@@ -11,7 +11,7 @@ export const MainLandingPage = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const dataParam = searchParams.get('data');
   const user = JSON.parse(dataParam);
-  console.log(user);
+  console.log(dataParam);
 
   return (
     <AnimationRevealPage>

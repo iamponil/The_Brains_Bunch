@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     phone_number: { type: String },
     image: { type: String, default: "default.png" },
     provider : {type: String,
-    enum:['google','facebook','github']},
+    enum:['google','facebook','github','linkedin']},
     // role 0 = super , 1 normal admin , 2 backer 3 creator  we will see if those can be one role or not . 
     role: {type:String,
     enum :['SUPERADMIN','ADMIN','CLIENT'] },

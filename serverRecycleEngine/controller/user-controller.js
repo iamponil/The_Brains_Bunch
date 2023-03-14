@@ -3,6 +3,15 @@ const SecretCode = require("../models/SecretCode");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
+
+
+
+
+exports.getAllUsers = (req, res) => {
+	User.find(function (err, users) {
+		res.json(users);
+	});
+};
 exports.getAll = async (req, res, next) => {
   const search = req.query.query;
   try {
@@ -257,5 +266,46 @@ exports.resetNewPassword = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ msg: "Changement du mot de passe echoué", error });
+  }
+};
+//update user by id 
+exports.UpdateUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).send("Utilisateur non trouvé");
+    }
+    const {errors,isValid}=ValidateRegister(req.body)
+    if(!isValid){
+      res.status(405).json(errors)
+    }
+    else{
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.phone_number = req.body.phone_number;
+    user.role = req.body.role;
+    user.image = req.body.image;
+    user.adresse = req.body.adresse;
+
+    if (req.body.password) {
+      const match = await bcrypt.compare(req.body.password, user.password);
+
+      if (!match) {
+       
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        user.password = hashedPassword;
+      } else {
+     
+        return res.status(400).send({msg:"Le nouveau mot de passe doit être différent du mot de passe actuel."});
+      }
+    }
+
+    await user.save();
+    return res.status(200).send("Utilisateur mis à jour avec succès.");
+  } }catch (error) {
+    console.log(error);
+    return res.status(500).send("Erreur interne du serveur");
   }
 };

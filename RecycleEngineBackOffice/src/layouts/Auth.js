@@ -10,8 +10,28 @@ import FooterSmall from "components/Footers/FooterSmall.js";
 
 import Login from "views/auth/Login.js";
 import Register from "views/auth/Register.js";
-
+import ResetPassword from "views/auth/ResetPassword";
+import axios from "axios";
 export default function Auth() {
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    axios.defaults.withCredentials = true;
+    console.log(localStorage.getItem('accessToken'));
+    try {
+      const res = await axios.delete('http://localhost:5000/auth/logout', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      if (res.data.statusCode === 201) {
+        localStorage.removeItem('accessToken');
+      }
+      window.location = '/login';
+    } catch (error) {
+      // Handle login error
+      console.error(error);
+    }
+  };
   return (
     <>
       <Navbar transparent />
@@ -27,6 +47,8 @@ export default function Auth() {
           <Switch>
             <Route path="/auth/login" exact component={Login} />
             <Route path="/auth/register" exact component={Register} />
+            <Route path="/auth/forgetPassword" exact component={ResetPassword} />
+            
             <Redirect from="/auth" to="/auth/login" />
           </Switch>
           <FooterSmall absolute />
