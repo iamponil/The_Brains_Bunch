@@ -110,6 +110,22 @@ router.get(
     failureRedirect: "/login/failed",
   })
 );
+
+router.get(
+  "/linkedin",
+  passport.authenticate("linkedin",
+  function(req, res){
+  console.log(req.user)
+  })
+);
+
+router.get(
+  "/linkedin/callback",
+  passport.authenticate("linkedin", {
+    successRedirect: CLIENT_URL+ "g",
+    failureRedirect: "/login/failed",
+  })
+);
 function generateAccessToken(payload) {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "24h",

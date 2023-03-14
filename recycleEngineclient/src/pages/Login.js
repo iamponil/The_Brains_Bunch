@@ -13,6 +13,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import Google from 'images/google-icon.png';
 import Github from 'images/github.png';
 import Facebook from 'images/facebook.png';
+import Linkedin from 'images/linkedin.png';
 import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
 import { GoogleLoginButton } from 'react-social-login-buttons';
 const Container = tw(
@@ -80,6 +81,9 @@ export default ({
 
   const facebook = () => {
     window.open('http://localhost:5000/auth/facebook', '_self');
+  };
+  const linkedin = () => {
+    window.open('http://localhost:5000/auth/linkedin', '_self');
   };
   const handleLoginFailure = (error) => {
     console.error(error);
@@ -155,6 +159,10 @@ export default ({
                     <img src={Github} alt="" className="icon" />
 
                     <div className="text">Github</div>
+                  </SocialButton>
+                  <SocialButton onClick={linkedin}>
+                    <img src={Linkedin} alt="" className="icon" />
+                    <div className="text">Linkedin</div>
                   </SocialButton>
                 </SocialButtonsContainer>
 
