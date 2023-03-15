@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import { css } from 'styled-components/macro'; //eslint-disable-line
-
 import Header, {
   NavLink,
   NavLinks,
@@ -10,9 +9,12 @@ import Header, {
   LogoLink,
   NavToggle,
   DesktopNavLinks,
-} from '../headers/light.js';
-import ResponsiveVideoEmbed from '../../helpers/ResponsiveVideoEmbed.js';
+} from '../headers/light.jsx';
+
+import ResponsiveVideoEmbed from '../../helpers/ResponsiveVideoEmbed.jsx';
 import axios from 'axios';
+
+import { DropdownMenu } from './../DropdownMenu/ReactDropDownMenu';
 
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none`}
@@ -62,48 +64,49 @@ const StyledResponsiveVideoEmbed = styled(ResponsiveVideoEmbed)`
     ${tw`rounded bg-black shadow-xl`}
   }
 `;
+const style = { borderRadius: '50%' };
 
 export const Hero = ({ user }) => {
-  console.log(user.image);
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    axios.defaults.withCredentials = true;
-    console.log(localStorage.getItem('accessToken'));
-    try {
-      const res = await axios.delete('http://localhost:5000/auth/logout', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      });
-      if (res.data.statusCode === 201) {
-        localStorage.removeItem('accessToken');
-      }
-      window.location = '/login';
-    } catch (error) {
-      // Handle login error
-      console.error(error);
-    }
-  };
+  function NavItem(props) {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <li className="nav-item">
+        <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
+          {props.icon}
+        </a>
+
+        {open && props.children}
+      </li>
+    );
+  }
+  console.log(user);
+
   const navLinks = [
     <NavLinks key={1}>
-      <NavLink href="#">About</NavLink>
-      <NavLink href="#">Blog</NavLink>
-      <NavLink href="#">Locations</NavLink>
-      <NavLink onClick={handleLogout}>Logout</NavLink>
+      <NavLink href="#">Create Project</NavLink>
+      <NavLink href="#">Blogs</NavLink>
+      <NavLink href="#"> Contributions</NavLink>
+      <NavLink>Contact</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
       {user ? (
-        <img
-          src={
-            user.image.startsWith('https')
-              ? user.image
-              : 'http://localhost:5000/uploads/' + user.image
+        <NavItem
+          icon={
+            <img
+              style={style}
+              src={
+                user.image.startsWith('https')
+                  ? user.image
+                  : 'http://localhost:5000/uploads/' + user.image
+              }
+            />
           }
-        />
+        >
+          <DropdownMenu user={user}></DropdownMenu>;
+        </NavItem>
       ) : (
-        //<button onClick={handleLogout}>Logoutt</button>
-        //  <img src={user.image}></img>
-        <PrimaryLink href="/#">Login</PrimaryLink>
+        <PrimaryLink href="/login">Login</PrimaryLink>
       )}
     </NavLinks>,
   ];
@@ -116,21 +119,15 @@ export const Hero = ({ user }) => {
         <TwoColumn>
           <LeftColumn>
             <Notification>
-              We have now launched operations in Europe.
+              We have now launched operations in Africa.
             </Notification>
             <Heading>
-              <span>Hire the best</span>
+              <span>Launch your project</span>
               <br />
-              <SlantedBackground>Marketing Team.</SlantedBackground>
+              <SlantedBackground>We Got Your Back.</SlantedBackground>
             </Heading>
-            <PrimaryAction>Read Customer Stories</PrimaryAction>
+            <PrimaryAction>Check our community projects</PrimaryAction>
           </LeftColumn>
-          <RightColumn>
-            <StyledResponsiveVideoEmbed
-              url="//player.vimeo.com/video/374265101?title=0&portrait=0&byline=0&autoplay=0&responsive=1"
-              background="transparent"
-            />
-          </RightColumn>
         </TwoColumn>
       </HeroContainer>
     </Container>

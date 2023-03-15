@@ -11,7 +11,7 @@ router.get("/getAll", UserController.getAll);
 router.get("/getAllClients", UserController.getAllClients);
 
 //Add new Users
-router.post("/addUser", storage.upload_file('image') ,UserController.addUser);
+router.post("/addUser", storage.upload_file("image"), UserController.addUser);
 
 //Get one Users By _id
 router.get("/oneById/:id", UserController.getById);
@@ -35,4 +35,10 @@ router.patch(
   UserController.getOneById,
   UserController.updateUser
 );
+//reset password
+router.post("/resetPassword", UserController.resetPassword);
+//check secret code
+router.post("/CheckSecretCode", UserController.checkSecretCode);
+//update password
+router.put("/resetNewPassword/:id", UserController.resetNewPassword);
 module.exports = router;

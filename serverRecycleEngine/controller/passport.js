@@ -1,14 +1,12 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GithubStrategy = require("passport-github2").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
+const LinkedinStrategy = require("passport-linkedin-oauth2").Strategy;
 const passport = require("passport");
 const User = require("../models/user");
-GITHUB_CLIENT_ID = "683b37f0e00eed5b799f";
-GITHUB_CLIENT_SECRET = "21c077880f847058a473bdfa6e3451141f97ee1e";
-
-FACEBOOK_APP_ID = "483967407116903";
-FACEBOOK_APP_SECRET = "7e958d709a2a38ae50bb58eeb17a3cd2";
-
+const storage = require("../middleware/storage");
+const fs = require("fs"),
+  request = require("request");
 passport.use(
   new GoogleStrategy(
     {
@@ -18,7 +16,10 @@ passport.use(
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
-        let user = await User.findOne({ email: profile.emails[0].value });
+        let user = await User.findOne({
+          email: profile.emails[0].value,
+          provider: "google",
+        });
         if (!user) {
           let newUser = new User({
             email: profile.emails[0].value,
@@ -40,23 +41,28 @@ passport.use(
 passport.use(
   new GithubStrategy(
     {
-      clientID: GITHUB_CLIENT_ID,
-      clientSecret: GITHUB_CLIENT_SECRET,
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      scope: ["user:email"],
       callbackURL: "/auth/github/callback",
+      //  prompt: "select_account",
     },
-
-    function (accessToken, refreshToken, profile, done) {
+    async function (accessToken, refreshToken, profile, done) {
       try {
-        let user = User.findOne({ login: profile.id });
+        let user = await User.findOne({
+          email: profile.emails[0].value,
+          provider: "github",
+        });
         if (!user) {
-          newUser = new User({
-            //email: profile.emails[0].value,
+          let newUser = new User({
+            email: profile.emails[0].value,
             name: profile.displayName,
             image: profile.photos[0].value,
             role: "CLIENT",
-            provider: "google",
+            provider: "github",
           });
-          newUser.save();
+          await newUser.save();
+          newUser = await User.findOne({ email: profile.emails[0].value });
           return done(null, newUser);
         } else return done(null, user);
       } catch (error) {
@@ -68,12 +74,55 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
       callbackURL: "/auth/facebook/callback",
     },
     function (accessToken, refreshToken, profile, done) {
       done(null, profile);
+    }
+  )
+);
+
+passport.use(
+  new LinkedinStrategy(
+    {
+      clientID: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      callbackURL: "/auth/linkedin/callback",
+      scope: ["r_emailaddress", "r_liteprofile"],
+      state: true,
+      prompt: "select_account",
+    },
+    async function (accessToken, refreshToken, profile, done) {
+      try {
+        let user = await User.findOne({
+          email: profile.emails[0].value,
+          provider: "linkedin",
+        });
+        const image = await download(
+          profile.photos[0].value ? profile.photos[0].value : "default.png",
+          +Date.now() + ".png",
+          function () {
+            console.log("done");
+          }
+        );
+        // const image = "./linkedin.png";
+        if (!user) {
+          let newUser = new User({
+            email: profile.emails[0].value,
+            name: profile.displayName,
+            image: image,
+            role: "CLIENT",
+            provider: "linkedin",
+          });
+          await newUser.save();
+          newUser = await User.findOne({ email: profile.emails[0].value });
+          return done(null, newUser);
+        } else return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
     }
   )
 );
@@ -83,3 +132,16 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+var download = function (uri, filename, callback) {
+  request.head(uri, function (err, res, body) {
+    console.log("content-type:", res.headers["content-type"]);
+    console.log("content-length:", res.headers["content-length"]);
+    console.log(filename);
+
+    request(uri)
+      .pipe(fs.createWriteStream("./uploads/" + filename))
+      .on("close", callback);
+    return filename;
+  });
+  return filename;
+};

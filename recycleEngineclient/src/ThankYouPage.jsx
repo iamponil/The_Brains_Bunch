@@ -18,10 +18,10 @@ export const ThankYouPage = () => {
           throw new Error('authentication has been failed!');
         })
         .then((resObject) => {
-          console.log(resObject);
+          console.log(resObject.user);
           localStorage.setItem('accessToken', resObject.token);
-          const user = resObject.user;
-          window.location.href = `/?data=${JSON.stringify(user)} `;
+          const data = resObject.user;
+          window.location.href = `/?data=${JSON.stringify(data)} `;
         })
         .catch((err) => {
           console.log(err);

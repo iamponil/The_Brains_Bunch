@@ -40,6 +40,7 @@ exports.getAllClients = async (req, res) => {
 
 exports.addUser = async (req, res, next) => {
   const user = req.body;
+  console.log(req.file);
   user.image = req.file.filename;
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(user.password, salt, async function (err, hash) {
@@ -201,11 +202,9 @@ exports.resetPassword = async (req, res) => {
     await newcode.save();
     // Send Email to user
     SendMail(finduser, code);
-    res
-      .status(200)
-      .send({
-        msg: "Veuillez consulter votre email pour la récupération du code",
-      });
+    res.status(200).send({
+      msg: "Veuillez consulter votre email pour la récupération du code",
+    });
   } catch (error) {
     console.log(error);
     res

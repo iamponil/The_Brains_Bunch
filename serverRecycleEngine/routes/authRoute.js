@@ -5,7 +5,8 @@ const RefreshTokens = require("../models/refreshTokens");
 const jwt = require("jsonwebtoken");
 const authController = require("../controller/auth-controller");
 const authenticateToken = require("../middleware/Authorize");
-const passportSetup = require("../controller/passport");
+const storage = require("../middleware/storage");
+//const passportSetup = require("../controller/passport");
 const CLIENT_URL = "http://localhost:3000/";
 const loginUrl = "http://localhost:3000/login";
 //! get access token from refresh token
@@ -39,7 +40,10 @@ router.post("/sign-in", authController.login);
 //Passport_Login
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  })
 );
 
 router.get(
@@ -88,14 +92,27 @@ router.get("/login/failed", (req, res) => {
     message: "failure",
   });
 });
-router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
+router.get(
+  "/github",
+  passport.authenticate("github", {
+    scope: ["user:email"],
+    prompt: "select_account",
+  })
+);
 
 router.get(
   "/github/callback",
-  passport.authenticate("github", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
+  passport.authenticate(
+    "github",
+    // {
+    //   scope: ["user:email"],
+    //   prompt: "select_account",
+    // },
+    {
+      successRedirect: CLIENT_URL + "g",
+      failureRedirect: "/login/failed",
+    }
+  )
 );
 
 router.get(
@@ -106,7 +123,22 @@ router.get(
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: CLIENT_URL,
+    successRedirect: CLIENT_URL + "g",
+    failureRedirect: "/login/failed",
+  })
+);
+
+router.get(
+  "/linkedin",
+
+  passport.authenticate("linkedin")
+);
+
+router.get(
+  "/linkedin/callback",
+
+  passport.authenticate("linkedin", {
+    successRedirect: CLIENT_URL + "g",
     failureRedirect: "/login/failed",
   })
 );

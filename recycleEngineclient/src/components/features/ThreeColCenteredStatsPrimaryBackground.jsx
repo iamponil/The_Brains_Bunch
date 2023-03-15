@@ -28,19 +28,19 @@ const StatValue = tw.div`text-4xl sm:text-3xl md:text-4xl lg:text-5xl font-black
 
 export default ({
   subheading = '',
-  heading = 'Over 9000 Projects Completed',
-  description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  heading = 'Over 9000 Projects Funded',
+  description = 'we support all kind of projects that help us maintain planet earth for future generations with backers and creative creators.',
   stats = [
     {
-      key: 'Clients',
+      key: 'Creators',
       value: '2500+',
     },
     {
-      key: 'Revenue',
+      key: 'Backers',
       value: '$100M+',
     },
     {
-      key: 'Employees',
+      key: 'Rewards',
       value: '150+',
     },
   ],

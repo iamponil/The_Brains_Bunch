@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import AnimationRevealPage from 'helpers/AnimationRevealPage.js';
+import AnimationRevealPage from 'helpers/AnimationRevealPage.jsx';
 import { Container as ContainerBase } from 'components/misc/Layouts';
 import tw from 'twin.macro';
 import axios, { Axios } from 'axios';
@@ -8,11 +8,12 @@ import styled from 'styled-components';
 import { LoginSocialGoogle } from 'reactjs-social-login';
 import { css } from 'styled-components/macro'; //eslint-disable-line
 import illustration from 'images/login-illustration.svg';
-import logo from 'images/logo.svg';
+import logo from 'images/logo.png';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Google from 'images/google-icon.png';
 import Github from 'images/github.png';
 import Facebook from 'images/facebook.png';
+import Linkedin from 'images/linkedin.png';
 import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
 import { GoogleLoginButton } from 'react-social-login-buttons';
 const Container = tw(
@@ -61,15 +62,16 @@ const IllustrationImage = styled.div`
 `;
 
 export default ({
-  logoLinkUrl = '#',
+  logoLinkUrl = '/login',
   illustrationImageSrc = illustration,
-  headingText = 'Sign In To Recycle_Engine',
+  headingText = 'Sign In To RecycleEngine',
 
   submitButtonText = 'Sign In',
   SubmitButtonIcon = LoginIcon,
-  forgotPasswordUrl = '#',
-  signupUrl = '#',
+  forgotPasswordUrl = '/forgot-password',
+  signupUrl = '/sign-up',
 }) => {
+  const style = { marginLeft: '120px' };
   const google = () => {
     window.open('http://localhost:5000/auth/google', '_self');
   };
@@ -80,6 +82,9 @@ export default ({
 
   const facebook = () => {
     window.open('http://localhost:5000/auth/facebook', '_self');
+  };
+  const linkedin = () => {
+    window.open('http://localhost:5000/auth/linkedin', '_self');
   };
   const handleLoginFailure = (error) => {
     console.error(error);
@@ -136,7 +141,7 @@ export default ({
         <Content>
           <MainContainer>
             <LogoLink href={logoLinkUrl}>
-              <LogoImage src={logo} />
+              <img style={style} src={logo} />
             </LogoLink>
             <MainContent>
               <Heading>{headingText}</Heading>
@@ -155,6 +160,10 @@ export default ({
                     <img src={Github} alt="" className="icon" />
 
                     <div className="text">Github</div>
+                  </SocialButton>
+                  <SocialButton onClick={linkedin}>
+                    <img src={Linkedin} alt="" className="icon" />
+                    <div className="text">Linkedin</div>
                   </SocialButton>
                 </SocialButtonsContainer>
 
