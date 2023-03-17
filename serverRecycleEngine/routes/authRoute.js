@@ -49,7 +49,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: CLIENT_URL + "g",
+    successRedirect: CLIENT_URL + "loading",
     failureRedirect: "/login/failed",
   })
 );
@@ -109,23 +109,10 @@ router.get(
     //   prompt: "select_account",
     // },
     {
-      successRedirect: CLIENT_URL + "g",
+      successRedirect: CLIENT_URL + "loading",
       failureRedirect: "/login/failed",
     }
   )
-);
-
-router.get(
-  "/facebook",
-  passport.authenticate("facebook", { scope: ["profile"] })
-);
-
-router.get(
-  "/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: CLIENT_URL + "g",
-    failureRedirect: "/login/failed",
-  })
 );
 
 router.get(
@@ -138,7 +125,7 @@ router.get(
   "/linkedin/callback",
 
   passport.authenticate("linkedin", {
-    successRedirect: CLIENT_URL + "g",
+    successRedirect: CLIENT_URL + "loading",
     failureRedirect: "/login/failed",
   })
 );

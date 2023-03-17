@@ -1,7 +1,11 @@
 const User = require("../models/user");
+const UserModel = require("../models/user");
 const SecretCode = require("../models/SecretCode");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+const sendMail = require("./sendMail");
+const ValidateRegister = require("../validations/Register");
+const jwt = require("jsonwebtoken");
 const salt = bcrypt.genSaltSync(10);
 exports.getAll = async (req, res, next) => {
   const search = req.query.query;
@@ -257,4 +261,68 @@ exports.resetNewPassword = async (req, res) => {
     console.log(error);
     res.status(400).send({ msg: "Changement du mot de passe echoué", error });
   }
+};
+exports.addUser1 = async (req, res, next) => {
+  const user = req.body;
+  user.image = req.file.filename;
+  const { errors, isValid } = ValidateRegister(req.body);
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(user.password, salt, async function (err, hash) {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      const userDb = new User(user);
+      try {
+        if (!isValid) {
+          res.status(405).json(errors);
+        } else {
+          User.findOne({ email: req.body.email }).then(async (exist) => {
+            if (exist) {
+              return res.status(400).send({ msg: "This email already exists" });
+            } else {
+              const activation_token = createActivationToken(user);
+              const url = `http://localhost:3000/activationemail/${activation_token}`;
+              const email = req.body.email;
+              await sendMail(email, "Activation account", url);
+              res.status(200).json({
+                messages:
+                  "Please activate your account to finish your register process",
+              });
+            }
+          });
+        }
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+  });
+};
+exports.activateEmail = async (req, res) => {
+  try {
+    const { activation_token } = req.body;
+    const user = jwt.verify(activation_token, process.env.ACCESS_TOKEN_SECRET);
+    const { name, email, password, phone_number, image } = user;
+    const check = await UserModel.findOne({ email: email });
+    console.log(user);
+    if (check) {
+      return res.status(400).json({ msg: "This email already exists" });
+    }
+    const newUser = new UserModel({
+      name,
+      email,
+      password,
+      phone_number,
+      image,
+    });
+    await newUser.save();
+    res.status(200).json({ msg: "Your account has been activated" });
+  } catch (err) {
+    res.status(550).json(err);
+  }
+};
+const createActivationToken = (payload) => {
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "24h",
+  });
 };

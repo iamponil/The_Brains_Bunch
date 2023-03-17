@@ -9,7 +9,7 @@ exports.login = async (req, res, next) => {
     const checkPass = bcrypt.compare(password, user.password);
     if (!user || !checkPass) {
       return res
-        .status(404)
+        .status(400)
         .json({ message: "No User with those information's " });
     }
   } catch (error) {
@@ -56,6 +56,7 @@ exports.logout = async (req, res, next) => {
       expiresIn: Date.now(),
       httpOnly: true,
     });
+    req.session = null;
     res.status(201).json({ message: "logout", statusCode: res.statusCode });
   } else {
     res.status(403).json({ message: "logout failed" });

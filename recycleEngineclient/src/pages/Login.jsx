@@ -12,7 +12,6 @@ import logo from 'images/logo.png';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Google from 'images/google-icon.png';
 import Github from 'images/github.png';
-import Facebook from 'images/facebook.png';
 import Linkedin from 'images/linkedin.png';
 import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
 import { GoogleLoginButton } from 'react-social-login-buttons';
@@ -80,9 +79,6 @@ export default ({
     window.open('http://localhost:5000/auth/github', '_self');
   };
 
-  const facebook = () => {
-    window.open('http://localhost:5000/auth/facebook', '_self');
-  };
   const linkedin = () => {
     window.open('http://localhost:5000/auth/linkedin', '_self');
   };
@@ -151,11 +147,7 @@ export default ({
                     <img src={Google} alt="" className="icon" />
                     <div className="text">Google</div>
                   </SocialButton>
-                  <SocialButton onClick={facebook}>
-                    <img src={Facebook} alt="" className="icon" />
 
-                    <div className="text">Facebook</div>
-                  </SocialButton>
                   <SocialButton onClick={github}>
                     <img src={Github} alt="" className="icon" />
 
@@ -174,6 +166,7 @@ export default ({
                   <Input
                     type="email"
                     name="email"
+                    pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
                     id="email"
                     placeholder="Email"
                     required
@@ -182,6 +175,7 @@ export default ({
                     type="password"
                     name="password"
                     id="password"
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                     placeholder="Password"
                     required
                   />

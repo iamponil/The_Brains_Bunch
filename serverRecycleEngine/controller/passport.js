@@ -1,6 +1,5 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GithubStrategy = require("passport-github2").Strategy;
-const FacebookStrategy = require("passport-facebook").Strategy;
 const LinkedinStrategy = require("passport-linkedin-oauth2").Strategy;
 const passport = require("passport");
 const User = require("../models/user");
@@ -71,18 +70,6 @@ passport.use(
     }
   )
 );
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: process.env.FACEBOOK_APP_ID,
-      clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "/auth/facebook/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
-    }
-  )
-);
 
 passport.use(
   new LinkedinStrategy(
@@ -127,10 +114,12 @@ passport.use(
   )
 );
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user.id);
 });
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
 });
 var download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {

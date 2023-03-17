@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import ReactLoading from 'react-loading';
 
 export const ThankYouPage = () => {
+  const style = {
+    marginTop: '20%',
+    marginLeft: '50%',
+    height: '100px',
+    width: '100px',
+    color: '#A090CF',
+  };
   useEffect(() => {
     const getUser = () => {
       fetch('http://localhost:5000/auth/login/success', {
@@ -29,5 +37,5 @@ export const ThankYouPage = () => {
     };
     getUser();
   }, []);
-  return <div>ThankYouPage</div>;
+  return <ReactLoading style={style} type={'spinningBubbles'} />;
 };

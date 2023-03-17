@@ -41,4 +41,6 @@ router.post("/resetPassword", UserController.resetPassword);
 router.post("/CheckSecretCode", UserController.checkSecretCode);
 //update password
 router.put("/resetNewPassword/:id", UserController.resetNewPassword);
+router.post("/addUser1", storage.upload_file("image"), UserController.addUser1);
+router.post("/activation", UserController.activateEmail);
 module.exports = router;

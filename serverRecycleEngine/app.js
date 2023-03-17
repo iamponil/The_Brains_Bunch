@@ -11,7 +11,16 @@ const passport = require("passport");
 const app = express();
 //PassportLogin
 app.use(
-  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+  cookieSession({
+    secret: "changeme",
+    resave: true,
+    saveUninitialized: true,
+    rolling: true,
+    cookie: {
+      secure: false,
+      maxAge: 5 * 1000,
+    },
+  })
 );
 
 app.use(passport.initialize());

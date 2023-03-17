@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
     address: { type: Schema.Types.ObjectId, ref: "address" },
     project: [{ type: Schema.Types.ObjectId, ref: "project" }],
     sub_roles: [{ type: Schema.Types.ObjectId, ref: "sub_roles" }],
+    status: { type: String, enum: ["ACTIVE", "BLOCKED"] },
   },
   {
     timestamps: true,

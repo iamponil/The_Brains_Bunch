@@ -8,17 +8,22 @@ import { MainLandingPage } from './MainLandingPage.jsx';
 import { ThankYouPage } from 'ThankYouPage';
 import ForgetPassword from './pages/ForgetPassword';
 import Register from './pages/register';
+import ActivationEmail from 'pages/ActivationEmail.jsx';
 
 export default function App() {
   return (
     <BrowserRouter>
       <div>
         <Routes>
-          <Route path="/g" element={<ThankYouPage />} />
+          <Route path="/loading" element={<ThankYouPage />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/sign-up" element={<Register />} />
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route
+            path="/activationemail/:activation_token"
+            element={<ActivationEmail />}
+          ></Route>
         </Routes>
       </div>
     </BrowserRouter>
