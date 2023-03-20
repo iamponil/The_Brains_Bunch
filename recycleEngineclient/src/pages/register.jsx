@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import AnimationRevealPage from 'helpers/AnimationRevealPage';
 import { Container as ContainerBase } from 'components/misc/Layouts';
 import tw from 'twin.macro';
+import 'react-phone-number-input/style.css';
+import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
+import flags from 'react-phone-number-input/flags';
 import styled from 'styled-components';
 import illustration from 'images/signup-illustration.svg';
 import logo from 'images/logo.png';
-import axios from 'axios';
+// import axios from 'axios';
 import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
 const Container = tw(
   ContainerBase
@@ -44,6 +47,7 @@ export default ({
   forgotPasswordUrl = '#',
   signupUrl = '#',
 }) => {
+  const phoneInputRef = useRef(null); 
   const style = { marginLeft: '120px' };
   const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({
@@ -51,16 +55,26 @@ export default ({
     email: '',
     password: '',
     phone_number: '',
+    phone_number_country: '',
     image: null, // add a state variable for the image
   });
   const [msg, setMsg] = useState('');
   const [error, setErrors] = useState(null);
   const [step, setStep] = useState(1);
+
+ 
+
   // const [error, setErrors] = useState(null);
   function handleInputChange(event) {
     const target = event.target;
-    const name = target.name;
+    const name = target.name; 
     const value = target.type === 'file' ? target.files[0] : target.value;
+    if (name === 'phone_number' && !isValidPhoneNumber(value)) {
+      setErrors(<div style={{ color: 'red' }}>Please enter a valid phone number</div>);
+    } else {
+      setErrors(null);
+    }
+  
     setFormData({
       ...formData,
       [name]: value,
@@ -69,9 +83,12 @@ export default ({
 
   async function handleSubmit(event) {
     event.preventDefault();
-
+    
     const { name, email, password, phone_number } = formData;
-
+    if (!phone_number || typeof phone_number !== 'string' || phone_number.trim() === '' || !isValidPhoneNumber(phone_number)) {
+      setErrors('');
+      return null;
+    }
     const formDataToSend = new FormData(); // create a new FormData object
     formDataToSend.append('name', name);
     formDataToSend.append('email', email);
@@ -92,21 +109,21 @@ export default ({
       setErrors(error.response.data.msg);
     }
   }
-  const sendCode = async (code) => {
-    try {
-      const result = await axios.post(
-        'http://localhost:5000/users/CheckSecretCode',
-        { code }
-      );
-      console.log(result);
-      setFormData(result.data.findcode.user);
-      setErrors(null);
-      setStep(3);
-    } catch (error) {
-      // console.log(error.response)
-      setErrors(error.response.data.msg);
-    }
-  };
+  // const sendCode = async (code) => {
+  //   try {
+  //     const result = await axios.post(
+  //       'http://localhost:5000/users/CheckSecretCode',
+  //       { code }
+  //     );
+  //     console.log(result);
+  //     setFormData(result.data.findcode.user);
+  //     setErrors(null);
+  //     setStep(3);
+  //   } catch (error) {
+  //     // console.log(error.response)
+  //     setErrors(error.response.data.msg);
+  //   }
+  // };
   return (
     <AnimationRevealPage>
       <Container>
@@ -158,17 +175,18 @@ export default ({
                     minLength={8}
                   />
 
-                  <Input
-                    type="text"
+                  <PhoneInput
                     name="phone_number"
                     placeholder="Phone Number"
                     value={formData.phone_number}
-                    onChange={handleInputChange}
-                    required={true}
-                    minLength={8}
-                    maxLength={8}
+                    onChange={(value) => {
+                      setFormData({ ...formData, phone_number: value });
+                    }}
+                    flags={flags}
+                     defaultCountry="TN"
+                     style={{ border: !isValidPhoneNumber(formData.phone_number)? '2px solid red' : 'none' }}
                   />
-
+                  {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number)? "":<div style={{ color: 'red' }}>Please enter a valid phone number</div>}
                   <Input
                     type="file"
                     name="image"
