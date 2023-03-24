@@ -80,10 +80,9 @@ export default ({
       [name]: value,
     });
   }
-
   async function handleSubmit(event) {
     event.preventDefault();
-    
+  
     const { name, email, password, phone_number } = formData;
     if (!phone_number || typeof phone_number !== 'string' || phone_number.trim() === '' || !isValidPhoneNumber(phone_number)) {
       setErrors('');
@@ -96,34 +95,27 @@ export default ({
     formDataToSend.append('phone_number', phone_number);
     formDataToSend.append('image', selectedFile); // add the image to the FormData object
     console.log(selectedFile);
-
+  
     try {
       const response = await fetch('http://localhost:5000/users/addUser1', {
         method: 'POST',
         body: formDataToSend, // send the FormData object as the request body
       });
+      console.log(response);
       const { data: res } = await response.json();
-      alert('verify your email account');
+      if (response.status !== 200) {
+        alert('Invalid Email Account');
+      } else {
+        alert('verify your email account');
+      }
       setMsg(res.message);
+      console.log(res.message)
+      
     } catch (error) {
-      setErrors(error.response.data.msg);
+      setErrors(error?.response?.data?.msg);
     }
   }
-  // const sendCode = async (code) => {
-  //   try {
-  //     const result = await axios.post(
-  //       'http://localhost:5000/users/CheckSecretCode',
-  //       { code }
-  //     );
-  //     console.log(result);
-  //     setFormData(result.data.findcode.user);
-  //     setErrors(null);
-  //     setStep(3);
-  //   } catch (error) {
-  //     // console.log(error.response)
-  //     setErrors(error.response.data.msg);
-  //   }
-  // };
+  
   return (
     <AnimationRevealPage>
       <Container>
@@ -149,6 +141,7 @@ export default ({
                     type="email"
                     name="email"
                     placeholder="Email"
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     //  pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
                     value={formData.email}
                     onChange={handleInputChange}

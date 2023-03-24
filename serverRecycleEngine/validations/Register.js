@@ -35,6 +35,10 @@ module.exports = function ValidateRegister(data) {
   //   errors.image = "Required image";
   // }
 
+  if( validator.isEmail(data.email)===false){
+    errors.email="Invalid Email Address"
+  }
+  
   return {
     errors,
     isValid: isEmpty(errors),
