@@ -145,17 +145,17 @@ export default ({
                 <SocialButtonsContainer>
                   <SocialButton onClick={google}>
                     <img src={Google} alt="" className="icon" />
-                    <div className="text">Google</div>
+                    <div className="text">Sign In With Google</div>
                   </SocialButton>
 
                   <SocialButton onClick={github}>
                     <img src={Github} alt="" className="icon" />
 
-                    <div className="text">Github</div>
+                    <div className="text">Sign In With Github</div>
                   </SocialButton>
                   <SocialButton onClick={linkedin}>
                     <img src={Linkedin} alt="" className="icon" />
-                    <div className="text">Linkedin</div>
+                    <div className="text">Sign In With Linkedin</div>
                   </SocialButton>
                 </SocialButtonsContainer>
 
@@ -166,7 +166,8 @@ export default ({
                   <Input
                     type="email"
                     name="email"
-                    pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                    // pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
                     id="email"
                     placeholder="Email"
                     required

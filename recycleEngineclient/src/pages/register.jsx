@@ -40,14 +40,16 @@ const IllustrationImage = styled.div`
 export default ({
   logoLinkUrl = '#',
   illustrationImageSrc = illustration,
-  headingText = 'Register to Recycle Engine',
+  headingText = 'Sign Up to Recycle Engine',
 
   submitButtonText = 'Register',
+  ResendButton='Resend Email',
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = '#',
   signupUrl = '#',
+  signInUrl = '/login',
 }) => {
-  const phoneInputRef = useRef(null); 
+  const phoneInputRef = useRef(null);
   const style = { marginLeft: '120px' };
   const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({
@@ -62,27 +64,29 @@ export default ({
   const [error, setErrors] = useState(null);
   const [step, setStep] = useState(1);
 
- 
+
 
   // const [error, setErrors] = useState(null);
   function handleInputChange(event) {
     const target = event.target;
-    const name = target.name; 
+    const name = target.name;
     const value = target.type === 'file' ? target.files[0] : target.value;
+
     if (name === 'phone_number' && !isValidPhoneNumber(value)) {
       setErrors(<div style={{ color: 'red' }}>Please enter a valid phone number</div>);
     } else {
       setErrors(null);
     }
-  
+
     setFormData({
       ...formData,
       [name]: value,
     });
   }
+
   async function handleSubmit(event) {
     event.preventDefault();
-  
+
     const { name, email, password, phone_number } = formData;
     if (!phone_number || typeof phone_number !== 'string' || phone_number.trim() === '' || !isValidPhoneNumber(phone_number)) {
       setErrors('');
@@ -95,7 +99,7 @@ export default ({
     formDataToSend.append('phone_number', phone_number);
     formDataToSend.append('image', selectedFile); // add the image to the FormData object
     console.log(selectedFile);
-  
+
     try {
       const response = await fetch('http://localhost:5000/users/addUser1', {
         method: 'POST',
@@ -110,12 +114,12 @@ export default ({
       }
       setMsg(res.message);
       console.log(res.message)
-      
+
     } catch (error) {
       setErrors(error?.response?.data?.msg);
     }
   }
-  
+
   return (
     <AnimationRevealPage>
       <Container>
@@ -128,25 +132,28 @@ export default ({
               <Heading>{headingText}</Heading>
               <FormContainer>
                 <Form enctype="multipart/form-data" onSubmit={handleSubmit}>
-                  <Input
-                    type="text"
-                    name="name"
-                    placeholder=" User Name "
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required={true}
-                  />
-
-                  <Input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-                    //  pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required={true}
-                  />
+                  <label>UserName :
+                    <Input
+                      type="text"
+                      name="name"
+                      placeholder=" User Name *"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+                  </label>
+                  <label>Email:
+                    <Input
+                      type="email"
+                      name="email"
+                      placeholder="Email *"
+                      pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                      //  pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+                  </label>
                   {error !== null ? (
                     <p tw="mt-6 text-xs text-red-600 text-center">
                       <span
@@ -157,43 +164,61 @@ export default ({
                       </span>
                     </p>
                   ) : null}
-                  <Input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required={true}
-                    minLength={8}
-                  />
-
-                  <PhoneInput
-                    name="phone_number"
-                    placeholder="Phone Number"
-                    value={formData.phone_number}
-                    onChange={(value) => {
-                      setFormData({ ...formData, phone_number: value });
-                    }}
-                    flags={flags}
-                     defaultCountry="TN"
-                     style={{ border: !isValidPhoneNumber(formData.phone_number)? '2px solid red' : 'none' }}
-                  />
-                  {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number)? "":<div style={{ color: 'red' }}>Please enter a valid phone number</div>}
-                  <Input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={(e) => setSelectedFile(e.target.files[0])}
-                  />
+                  <label>Password :
+                    <Input
+                      type="password"
+                      name="password"
+                      placeholder="Password *"
+                      pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required={true}
+                      minLength={8}
+                    />
+                  </label>
+                  <label>Phone Number:
+                    <PhoneInput
+                      name="phone_number"
+                      placeholder="Phone Number *"
+                      value={formData.phone_number}
+                      onChange={(value) => {
+                        setFormData({ ...formData, phone_number: value });
+                      }}
+                      flags={flags}
+                      defaultCountry="TN"
+                      style={{ border: !isValidPhoneNumber(formData.phone_number) ? '2px solid red' : 'none' }}
+                    />
+                  </label>
+                  {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number) ? "" : <div style={{ color: 'red' }}>Please enter a valid phone number</div>}
+                  <label>Profile Picture:
+                    <Input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onChange={(e) => setSelectedFile(e.target.files[0])}
+                    /></label>
                   {error && <div>{error}</div>}
                   {msg && <div>{msg}</div>}
                   <SubmitButton type="submit">
                     <SubmitButtonIcon className="icon" />
                     <span className="text">{submitButtonText}</span>
                   </SubmitButton>
+                  
+                  <SubmitButton type="submit">
+                    <SubmitButtonIcon className="icon" />
+                    <span className="text">{ResendButton}</span>
+                  </SubmitButton>
                 </Form>
               </FormContainer>
+              <p tw="mt-8 text-sm text-gray-600 text-center">
+                already have an account?{' '}
+                <a
+                  href={signInUrl}
+                  tw="border-b border-gray-500 border-dotted"
+                >
+                  login
+                </a>
+              </p>
             </MainContent>
           </MainContainer>
           <IllustrationContainer>

@@ -28,9 +28,9 @@ module.exports = function ValidateRegister(data) {
   // if (validator.isEmpty(data.confirm)) {
   //   errors.confirm = "Required confirm";
   // }
-  if (validator.isEmpty(data.phone_number)) {
-    errors.phone_number = "Required phone number";
-  }
+  // if (validator.isEmpty(data.phone_number)) {
+  //   errors.phone_number = "Required phone number";
+  // }
   // if (validator.isEmpty(data.image)) {
   //   errors.image = "Required image";
   // }

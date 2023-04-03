@@ -195,7 +195,7 @@ exports.resetPassword = async (req, res) => {
     // Check user
     const finduser = await User.findOne({ email });
     if (!finduser) {
-      return res.status(400).send({ msg: "Compte non trouvé" });
+      return res.status(400).send({ msg: "Compte non trouvé Veuiller entrer un compte existant" });
     }
 
     // Generate Secret Code
@@ -327,6 +327,6 @@ exports.activateEmail = async (req, res) => {
 };
 const createActivationToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "24h",
+    expiresIn: "15m",
   });
 };
