@@ -43,7 +43,7 @@ export default ({
   headingText = 'Sign Up to Recycle Engine',
 
   submitButtonText = 'Register',
-  ResendButton='Resend Email',
+  ResendButton = 'Resend Email',
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = '#',
   signupUrl = '#',
@@ -56,6 +56,7 @@ export default ({
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     phone_number: '',
     phone_number_country: '',
     image: null, // add a state variable for the image
@@ -87,8 +88,12 @@ export default ({
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const { name, email, password, phone_number } = formData;
+    const { name, email, password, phone_number,confirmPassword } = formData;
     if (!phone_number || typeof phone_number !== 'string' || phone_number.trim() === '' || !isValidPhoneNumber(phone_number)) {
+      setErrors('');
+      return null;
+    }
+    if (password !== confirmPassword) {
       setErrors('');
       return null;
     }
@@ -176,6 +181,21 @@ export default ({
                       minLength={8}
                     />
                   </label>
+                  <div className="form-group">
+                  <label>Confirm Password
+                  <Input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirm Password *"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  
+                  {formData.confirmPassword!=formData.password?<div style={{ color: 'red' }}>Passwords do not match</div>:""}
+                  </label>
+                  </div>
+                  <div className="form-group">
                   <label>Phone Number:
                     <PhoneInput
                       name="phone_number"
@@ -189,7 +209,9 @@ export default ({
                       style={{ border: !isValidPhoneNumber(formData.phone_number) ? '2px solid red' : 'none' }}
                     />
                   </label>
+                  </div>
                   {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number) ? "" : <div style={{ color: 'red' }}>Please enter a valid phone number</div>}
+                  <div className="form-group">
                   <label>Profile Picture:
                     <Input
                       type="file"
@@ -197,13 +219,14 @@ export default ({
                       accept="image/*"
                       onChange={(e) => setSelectedFile(e.target.files[0])}
                     /></label>
+                    </div>
                   {error && <div>{error}</div>}
                   {msg && <div>{msg}</div>}
                   <SubmitButton type="submit">
                     <SubmitButtonIcon className="icon" />
                     <span className="text">{submitButtonText}</span>
                   </SubmitButton>
-                  
+
                   <SubmitButton type="submit">
                     <SubmitButtonIcon className="icon" />
                     <span className="text">{ResendButton}</span>

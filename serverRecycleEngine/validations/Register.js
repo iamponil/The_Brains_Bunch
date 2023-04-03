@@ -22,12 +22,12 @@ module.exports = function ValidateRegister(data) {
   if (validator.isEmpty(data.password)) {
     errors.password = "Required password";
   }
-  // if(!validator.equals(data.password, data.confirm)){
-  //   errors.confirm = "Passwords does not match";
-  // }
-  // if (validator.isEmpty(data.confirm)) {
-  //   errors.confirm = "Required confirm";
-  // }
+  if(!validator.equals(data.password, data.confirm)){
+    errors.confirm = "Passwords do not match";
+  }
+  if (validator.isEmpty(data.confirm)) {
+    errors.confirm = "Required confirm";
+  }
   // if (validator.isEmpty(data.phone_number)) {
   //   errors.phone_number = "Required phone number";
   // }
