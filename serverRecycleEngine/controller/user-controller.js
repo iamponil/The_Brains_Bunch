@@ -7,6 +7,11 @@ const sendMail = require("./sendMail");
 const ValidateRegister = require("../validations/Register");
 const jwt = require("jsonwebtoken");
 const salt = bcrypt.genSaltSync(10);
+exports.getAllUsers = (req, res) => {
+	User.find(function (err, users) {
+		res.json(users);
+	});
+};
 exports.getAll = async (req, res, next) => {
   const search = req.query.query;
   try {
@@ -41,11 +46,17 @@ exports.getAllClients = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+//Add User
 exports.addUser = async (req, res, next) => {
+  User.findOne({email:req.body.email}).then(async exist=>{
+        if(exist){
+          return res.status(400).send({msg:'This email already exists'})
+         
+        }else{
+          
   const user = req.body;
   console.log(req.file);
-  user.image = req.file.filename;
+  // user.image = req.file.filename;
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(user.password, salt, async function (err, hash) {
       if (err) {
@@ -61,13 +72,10 @@ exports.addUser = async (req, res, next) => {
       }
     });
   });
-};
-
+}})}
 exports.getById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate(
-      "complaint project"
-    );
+    const user = await User.findById(req.params.id);
     if (user == null) {
       return res.status(304).json({ message: "cannot find user" });
     }
@@ -78,7 +86,7 @@ exports.getById = async (req, res) => {
 };
 exports.getOneById = async (req, res, next) => {
   try {
-    user = await User.findById(req.params.id).populate("complaint project");
+    user = await User.findById(req.params.id);
     if (user == null) {
       return res.status(404).json({ message: "cannot find user " });
     }
@@ -238,9 +246,9 @@ exports.checkSecretCode = async (req, res) => {
   }
 };
 
-//reset new password
 exports.resetNewPassword = async (req, res) => {
   try {
+    const user = await User.findById(req.params.id);
     // Get new and confirm password from req.body
     const { newpass, confirmpass } = req.body;
     // Get user id from req.params
@@ -251,20 +259,31 @@ exports.resetNewPassword = async (req, res) => {
         .status(400)
         .send({ msg: "Les mots de passe ne sont pas identiques" });
     }
-    // replace password
-    const salt = await bcrypt.genSalt(10);
-    const hashedpassword = await bcrypt.hash(newpass, salt);
-    await User.updateOne({ _id: id }, { $set: { password: hashedpassword } });
+    else   if (user) {
+      const match = await bcrypt.compare(newpass, user.password);
 
-    res.status(200).send({ msg: "Mot de passe changé !" });
+      if (!match) {
+       
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newpass, salt);
+       //replace password
+        await User.updateOne({ _id: id }, { $set: { password: hashedPassword  } });
+        res.status(200).send({ msg: "Mot de passe changé !" });
+      } else {
+     
+        return res.status(400).send({msg:"Le nouveau mot de passe doit être différent du mot de passe actuel."});
+      }
+    }
+    
   } catch (error) {
     console.log(error);
     res.status(400).send({ msg: "Changement du mot de passe echoué", error });
   }
 };
+
 exports.addUser1 = async (req, res, next) => {
   const user = req.body;
-  user.image = req.file.filename;
+  // user.image = req.file.filename;
   const { errors, isValid } = ValidateRegister(req.body);
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(user.password, salt, async function (err, hash) {
@@ -329,4 +348,60 @@ const createActivationToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
+};
+//Update Status User
+exports.Bloquage = (req, res) => {
+  
+  const id = req.params.id;
+
+  User.findByIdAndUpdate(id,{status: "BLOCKED"}, { useFindAndModify: false })
+    .then(data => {
+      if (!data) {
+        res.status(404).send({
+          message: `Cannot update User with id=${id}. User was not found!`
+        });
+      } else res.send({ message: "User was updated successfully." });
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating User with id=" + id
+      });
+    });
+};
+
+
+//update user by id 
+exports.UpdateUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).send("Utilisateur non trouvé");
+    }
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.phone_number = req.body.phone_number;
+     user.image = req.body.image;
+    user.adresse = req.body.adresse;
+user.role=req.body.role;
+    if (req.body.password) {
+      const match = await bcrypt.compare(req.body.password, user.password);
+
+      if (!match) {
+       
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        user.password = hashedPassword;
+      } else {
+     
+        return res.status(400).send({msg:"Le nouveau mot de passe doit être différent du mot de passe actuel."});
+      }
+    }
+
+    await user.save();
+    return res.status(200).send("Utilisateur mis à jour avec succès.");
+  }catch (error) {
+    console.log(error);
+    return res.status(500).send("Erreur interne du serveur");
+  }
 };

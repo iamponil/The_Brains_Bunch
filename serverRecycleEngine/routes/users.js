@@ -4,6 +4,7 @@ var UserController = require("../controller/user-controller");
 const storage = require("../middleware/storage");
 
 //Get All Users
+router.get("/", UserController.getAllUsers);
 router.get("/getAll", UserController.getAll);
 
 // get All Clients
@@ -14,7 +15,7 @@ router.get("/getAllClients", UserController.getAllClients);
 router.post("/addUser", storage.upload_file("image"), UserController.addUser);
 
 //Get one Users By _id
-router.get("/oneById/:id", UserController.getById);
+// router.get("/oneById/:id", UserController.getById);
 
 //Get one Users By FirstName
 router.get("/oneByName/:name", UserController.getByName);
@@ -43,4 +44,10 @@ router.post("/CheckSecretCode", UserController.checkSecretCode);
 router.put("/resetNewPassword/:id", UserController.resetNewPassword);
 router.post("/addUser1", storage.upload_file("image"), UserController.addUser1);
 router.post("/activation", UserController.activateEmail);
+//Get one Users By _id
+router.get("/getUserById/:id", UserController.getById);
+//Update Status User
+router.put("/Bloque/:id",UserController.Bloquage);
+//Update user By id 
+router.post("/updateUser/:id", storage.upload_file("image"),UserController.UpdateUserById);
 module.exports = router;
