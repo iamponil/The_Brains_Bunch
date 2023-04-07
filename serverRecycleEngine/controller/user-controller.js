@@ -284,7 +284,10 @@ exports.addUser1 = async (req, res, next) => {
               const activation_token = createActivationToken(user);
               const url = `http://localhost:3000/activationemail/${activation_token}`;
               const email = req.body.email;
-              await sendMail(email, "Activation account", url);
+              await sendMail(email, "Activation account",url);
+
+
+
               res.status(200).json({
                 messages:
                   "Please activate your account to finish your register process",
@@ -317,6 +320,7 @@ exports.activateEmail = async (req, res) => {
     });
     await newUser.save();
     res.status(200).json({ msg: "Your account has been activated" });
+    
   } catch (err) {
     res.status(550).json(err);
   }

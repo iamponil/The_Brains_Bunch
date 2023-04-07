@@ -5,8 +5,7 @@ import tw from 'twin.macro';
 import axios, { Axios } from 'axios';
 import { Alert } from 'react-bootstrap';
 import styled from 'styled-components';
-import { LoginSocialGoogle } from 'reactjs-social-login';
-import { css } from 'styled-components/macro'; //eslint-disable-line
+
 import illustration from 'images/login-illustration.svg';
 import logo from 'images/logo.png';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -14,14 +13,12 @@ import Google from 'images/google-icon.png';
 import Github from 'images/github.png';
 import Linkedin from 'images/linkedin.png';
 import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
-import { GoogleLoginButton } from 'react-social-login-buttons';
 const Container = tw(
   ContainerBase
 )`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoLink = tw.a``;
-const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
 const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
@@ -82,23 +79,9 @@ export default ({
   const linkedin = () => {
     window.open('http://localhost:5000/auth/linkedin', '_self');
   };
-  const handleLoginFailure = (error) => {
-    console.error(error);
-  };
+
   const [isVerified, SetIsVerified] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isVerified) {
-      // submit the form
-      console.log('Form submitted!');
-      window.location.href = '/';
-    } else {
-      // show error message
-      console.log('Please verify that you are a human.');
-    }
-  };
   const handleButtonClick = () => {
     if (!isVerified) {
       setShowAlert(true);

@@ -1,11 +1,10 @@
-import React from "react";
-import AnimationRevealPage from "helpers/AnimationRevealPage.js";
-import tw from "twin.macro";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import Header from "components/headers/light.js";
-import Footer from "components/footers/FiveColumnWithInputForm.js";
-import ContactUsForm from "components/forms/TwoColContactUsWithIllustrationFullForm.js";
-import ContactDetails from "components/cards/ThreeColContactDetails.js";
+import React from 'react';
+import AnimationRevealPage from 'helpers/AnimationRevealPage.js';
+import tw from 'twin.macro';
+import Header from 'components/headers/light.js';
+import Footer from 'components/footers/FiveColumnWithInputForm.js';
+import ContactUsForm from 'components/forms/TwoColContactUsWithIllustrationFullForm.js';
+import ContactDetails from 'components/cards/ThreeColContactDetails.js';
 
 const Address = tw.span`leading-relaxed`;
 const AddressLine = tw.span`block`;
@@ -20,7 +19,7 @@ export default () => {
       <ContactDetails
         cards={[
           {
-            title: "New York",
+            title: 'New York',
             description: (
               <>
                 <Address>
@@ -30,10 +29,10 @@ export default () => {
                 <Email>contact@treact.com</Email>
                 <Phone>+1 (203) 991-6988</Phone>
               </>
-            )
+            ),
           },
           {
-            title: "Illinois",
+            title: 'Illinois',
             description: (
               <>
                 <Address>
@@ -43,10 +42,10 @@ export default () => {
                 <Email>contact@treact.com</Email>
                 <Phone>+1 (203) 991-6988</Phone>
               </>
-            )
+            ),
           },
           {
-            title: "California",
+            title: 'California',
             description: (
               <>
                 <Address>
@@ -56,10 +55,10 @@ export default () => {
                 <Email>contact@treact.com</Email>
                 <Phone>+1 (203) 991-6988</Phone>
               </>
-            )
+            ),
           },
           {
-            title: "Tennessee",
+            title: 'Tennessee',
             description: (
               <>
                 <Address>
@@ -69,10 +68,10 @@ export default () => {
                 <Email>contact@treact.com</Email>
                 <Phone>+1 (203) 991-6988</Phone>
               </>
-            )
+            ),
           },
           {
-            title: "New Jersey",
+            title: 'New Jersey',
             description: (
               <>
                 <Address>
@@ -82,10 +81,10 @@ export default () => {
                 <Email>contact@treact.com</Email>
                 <Phone>+1 (203) 991-6988</Phone>
               </>
-            )
+            ),
           },
           {
-            title: "Ohio",
+            title: 'Ohio',
             description: (
               <>
                 <Address>
@@ -95,8 +94,8 @@ export default () => {
                 <Email>contact@treact.com</Email>
                 <Phone>+1 (203) 991-6988</Phone>
               </>
-            )
-          }
+            ),
+          },
         ]}
       />
       <Footer />
