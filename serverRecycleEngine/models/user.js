@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, default: null },
     email: { type: String, required: true },
     password: { type: String /*, required: true*/ },
-    confirmPassword:{type:String, required: true},
+    // confirmPassword:{type:String, required: true},
     phone_number: { type: String },
     image: { type: String, default: "default.png" },
     provider: { type: String, enum: ["google", "linkedin", "github"] },

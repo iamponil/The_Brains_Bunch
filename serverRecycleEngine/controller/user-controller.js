@@ -320,11 +320,12 @@ exports.addUser1 = async (req, res, next) => {
     });
   });
 };
+
 exports.activateEmail = async (req, res) => {
   try {
     const { activation_token } = req.body;
     const user = jwt.verify(activation_token, process.env.ACCESS_TOKEN_SECRET);
-    const { name, email, password,confirmPassword, phone_number, image } = user;
+    const { name, email, password, phone_number, image } = user;
     const check = await UserModel.findOne({ email: email });
     console.log(user);
     if (check) {
@@ -334,7 +335,7 @@ exports.activateEmail = async (req, res) => {
       name,
       email,
       password,
-      confirmPassword,
+      // confirmPassword,
       phone_number,
       image,
     });
@@ -342,12 +343,15 @@ exports.activateEmail = async (req, res) => {
     res.status(200).json({ msg: "Your account has been activated" });
     
   } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(400).json({ msg: "TokenExpiredError" });
+    }
     res.status(550).json(err);
   }
 };
 const createActivationToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "2m",
   });
 };
 //Update Status User

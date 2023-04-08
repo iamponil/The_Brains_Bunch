@@ -2,11 +2,17 @@ import React, { useRef, useState } from 'react';
 import AnimationRevealPage from 'helpers/AnimationRevealPage';
 import { Container as ContainerBase } from 'components/misc/Layouts';
 import tw from 'twin.macro';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import '../pages/button.css';
+
 import 'react-phone-number-input/style.css';
 import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
 import flags from 'react-phone-number-input/flags';
 import styled from 'styled-components';
-import illustration from 'images/signup-illustration.svg';
+// import illustration from 'images/signup-illustration.svg';
+import illustration from 'images/signup.png';
 import logo from 'images/logo.png';
 // import axios from 'axios';
 import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
@@ -16,42 +22,69 @@ const Container = tw(
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoLink = tw.a``;
-const LogoImage = tw.img`h-12 mx-auto`;
+const styles = {
+  imageUpload: {
+    position: 'relative',
+    width: '100px',
+    height: '100px',
+    margin: '0 auto',
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: '50%',
+    border: '2px solid #fff',
+  },
+  fileInput: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    opacity: 0,
+    cursor: 'pointer',
+  },
+};
+
+// const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
 const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
 const Form = tw.form`mx-auto max-w-xs`;
 const Input = tw.input`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
-const SubmitButton = styled.button`
-  ${tw`mt-5 tracking-wide font-semibold bg-primary-500 text-gray-100 w-full py-4 rounded-lg hover:bg-primary-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none`}
-  .icon {
-    ${tw`w-6 h-6 -ml-2`}
-  }
-  .text {
-    ${tw`ml-3`}
-  }
-`;
+// const SubmitButton = styled.button`
+//   ${tw`mt-5 tracking-wide font-semibold bg-primary-500 text-gray-100 w-full py-4 rounded-lg hover:bg-primary-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none`}
+//   .icon {
+//     ${tw`w-6 h-6 -ml-2`}
+//   }
+//   .text {
+//     ${tw`ml-3`}
+//   }
+// `;
 const IllustrationContainer = tw.div`sm:rounded-r-lg flex-1 bg-purple-100 text-center hidden lg:flex justify-center`;
 const IllustrationImage = styled.div`
   ${(props) => `background-image: url("${props.imageSrc}");`}
-  ${tw`m-12 xl:m-16 w-full max-w-lg bg-contain bg-center bg-no-repeat`}
+  ${tw` w-full  bg-contain bg-center bg-no-repeat`}
 `;
 
-export default ({
+export default function Register({
   logoLinkUrl = '#',
   illustrationImageSrc = illustration,
   headingText = 'Sign Up to Recycle Engine',
 
   submitButtonText = 'Register',
-  ResendButton='Resend Email',
+  ResendButton = 'Resend Email',
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = '#',
   signupUrl = '#',
   signInUrl = '/login',
-}) => {
-  const phoneInputRef = useRef(null);
+}) {
+  // const phoneInputRef = useRef(null);
   const style = { marginLeft: '120px' };
+  const [showSendButton, setShowSendButton] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -63,7 +96,6 @@ export default ({
   });
   const [msg, setMsg] = useState('');
   const [error, setErrors] = useState(null);
-  const [step, setStep] = useState(1);
 
 
 
@@ -88,7 +120,7 @@ export default ({
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const { name, email, password, phone_number,confirmPassword } = formData;
+    const { name, email, password, phone_number, confirmPassword } = formData;
     if (!phone_number || typeof phone_number !== 'string' || phone_number.trim() === '' || !isValidPhoneNumber(phone_number)) {
       setErrors('');
       return null;
@@ -101,7 +133,7 @@ export default ({
     formDataToSend.append('name', name);
     formDataToSend.append('email', email);
     formDataToSend.append('password', password);
-    formDataToSend.append('confirmPassword', confirmPassword);
+    // formDataToSend.append('confirmPassword', confirmPassword);
     formDataToSend.append('phone_number', phone_number);
     formDataToSend.append('image', selectedFile); // add the image to the FormData object
     console.log(selectedFile);
@@ -113,10 +145,15 @@ export default ({
       });
       console.log(response);
       const { data: res } = await response.json();
+      // if (response.status !== 200) {
+      //   alert('Invalid Email Account');
+      // } else {
+      //   alert('verify your email account');
+      // }
       if (response.status !== 200) {
-        alert('Invalid Email Account');
+        toast.error('Invalid Email Account');
       } else {
-        alert('verify your email account');
+        toast.success('Verify Your Email Account');
       }
       setMsg(res.message);
       console.log(res.message)
@@ -125,19 +162,44 @@ export default ({
       setErrors(error?.response?.data?.msg);
     }
   }
+  const handleSendClick = () => {
+    setShowSendButton(false);
+  }
 
+  const handleResendClick = () => {
+    setShowSendButton(true);
+  }
+  const defaultImage = require('../images/demo/150-1503945_transparent-user-png-default-user-image-png-png.png');
   return (
     <AnimationRevealPage>
       <Container>
         <Content>
           <MainContainer>
             <LogoLink href={logoLinkUrl}>
-              <img style={style} src={logo} />
+              <img style={style} src={logo} alt="logo" />
             </LogoLink>
             <MainContent>
               <Heading>{headingText}</Heading>
               <FormContainer>
                 <Form enctype="multipart/form-data" onSubmit={handleSubmit}>
+                  <div style={{ textAlign: 'center' }}>
+                <label ><br />Profile Picture:
+                
+      <div className="image-upload">
+        <label htmlFor="file-input">
+          <img src={selectedFile ? URL.createObjectURL(selectedFile) : defaultImage  } alt="Profile" className="profile-image"style={styles.profileImage} />
+        </label>
+        
+        <input
+          id="file-input"
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={(e) => setSelectedFile(e.target.files[0])}
+        />
+      </div>
+    </label></div>
+    <br/>
                   <label>UserName :
                     <Input
                       type="text"
@@ -181,22 +243,29 @@ export default ({
                       required={true}
                       minLength={8}
                     />
+                    {formData.password.length > 0 && formData.password.length < 8 && (
+                      <div style={{ color: 'red' }}>Password must be at least 8 characters long</div>
+                    )}
+                    {formData.password.length >= 8 && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formData.password) && (
+                      <div style={{ color: 'red' }}>Password must contain at least one letter and one number</div>
+                    )}
                   </label>
                   <div className="form-group">
-                  <label>Confirm Password
-                  <Input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirm Password *"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  
-                  {formData.confirmPassword!=formData.password?<div style={{ color: 'red' }}>Passwords do not match</div>:""}
-                  </label>
+                    <label>Confirm Password
+                      <Input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm Password *"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                      />
+
+                      {formData.confirmPassword !== formData.password ? <div style={{ color: 'red' }}>Passwords do not match</div> : ""}
+                    </label>
                   </div>
                   <label>Phone Number:
+
                     <PhoneInput
                       name="phone_number"
                       placeholder="Phone Number *"
@@ -206,30 +275,59 @@ export default ({
                       }}
                       flags={flags}
                       defaultCountry="TN"
-                      // style={{ border: !isValidPhoneNumber(formData.phone_number) ? '2px solid red' : 'none' }}
+
+                      style={{
+                        height:'100px',
+                        border: formData.phone_number ? (
+                          !isPossiblePhoneNumber(formData.phone_number) && !isValidPhoneNumber(formData.phone_number) ? '2px solid red' : 'none') : 'null'
+                      }}
                     />
                   </label>
-                  {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number) ? "" : <div style={{ color: 'red' }}>Please enter a valid phone number</div>}
-                  <label>Profile Picture:
+                  {formData.phone_number ? (
+                    !isPossiblePhoneNumber(formData.phone_number) && !isValidPhoneNumber(formData.phone_number) ? (
+
+                      <div style={{ color: 'red' }}>Please enter a valid phone number</div>
+                    ) : null
+                  ) : null}
+                  {/* {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number) ? "" : <div style={{ color: 'red' }}>Please enter a valid phone number</div>} */}
+                  
+                  
+                  
+                  {/* <label><br />Profile Picture:
                     <Input
                       type="file"
                       name="image"
                       accept="image/*"
                       onChange={(e) => setSelectedFile(e.target.files[0])}
-                    /></label>
+                    /></label> */}
+    
                   {error && <div>{error}</div>}
                   {msg && <div>{msg}</div>}
-                  <SubmitButton type="submit">
-                    <SubmitButtonIcon className="icon" />
-                    <span className="text">{submitButtonText}</span>
-                  </SubmitButton>
-                  
-                  <SubmitButton type="submit">
-                    <SubmitButtonIcon className="icon" />
-                    <span className="text">{ResendButton}</span>
-                  </SubmitButton>
+                  <br />
+                  <br />
+                  <div>
+                    {showSendButton ?
+                      <button type="submit" onClick={handleSendClick}>
+                        <div className='wrapper'>
+                          <i class="bi bi-send"></i>
+                        </div>
+                        <span className="text">{submitButtonText}</span>
+
+                      </button>
+
+
+                      :
+
+                      <button type="submit" onClick={handleResendClick}>
+                        <div className='wrapper'>
+                          <i class="bi bi-send"></i>
+                        </div>
+                        <span className="text">Resend</span>
+                      </button>}  <p tw="mt-8 text-sm text-gray-600">Didn't receive an email?</p>
+                    <br /></div>
                 </Form>
               </FormContainer>
+              <ToastContainer />
               <p tw="mt-8 text-sm text-gray-600 text-center">
                 already have an account?{' '}
                 <a
