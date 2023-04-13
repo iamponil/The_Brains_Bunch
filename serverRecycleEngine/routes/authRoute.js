@@ -4,7 +4,7 @@ const passport = require("passport");
 const RefreshTokens = require("../models/refreshTokens");
 const jwt = require("jsonwebtoken");
 const authController = require("../controller/auth-controller");
-const authenticateToken = require("../middleware/Authorize");
+const authenticateToken = require("../middleware/authorize");
 const storage = require("../middleware/storage");
 //const passportSetup = require("../controller/passport");
 const CLIENT_URL = "http://localhost:3000/";
@@ -134,4 +134,5 @@ function generateAccessToken(payload) {
     expiresIn: "24h",
   });
 }
+router.get('/user/login-stats',authController.getLoginStats)
 module.exports = router;

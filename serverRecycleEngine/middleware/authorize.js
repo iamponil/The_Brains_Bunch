@@ -11,7 +11,10 @@ function authenticateToken(req, res, next) {
     req.body["payload"] = user;
     req.payload = user;
     req.user = user;
-
+ // Store user login statistics
+//  const loginStats = { date: new Date() };
+//  req.user.loginStatistics.push(loginStats);
+//  req.user.save();
     next();
   });
 }

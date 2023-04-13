@@ -16,9 +16,11 @@ const userSchema = new mongoose.Schema(
     project: [{ type: Schema.Types.ObjectId, ref: "project" }],
     sub_roles: [{ type: Schema.Types.ObjectId, ref: "sub_roles" }],
     status: { type: String, enum: ["ACTIVE", "BLOCKED"] },
+    login:{ type: Schema.Types.ObjectId, ref: "login" },
   },
   {
     timestamps: true,
   }
 );
+
 module.exports = mongoose.model("user", userSchema);
