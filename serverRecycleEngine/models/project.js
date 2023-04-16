@@ -1,15 +1,22 @@
 const mongoose = require("mongoose");
+const { number } = require("prop-types");
 const Schema = mongoose.Schema;
 
 const projectSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true  },
-    remainingPeriod: { type: Date, required: true },
-    fundGoal: { type: Number, required: true },
+    name: { type: String},
+    location:{type:String},
+    remainingPeriod: { type: Date},
+    fundGoal: { type: Number},
     content: { type: String },
     description: { type: String },
-    category: { type: Schema.Types.ObjectId, ref: "category" },
+    category: { type:String},
+    subCategory:{type:String},
     image : { type: String, default: "default.png" },
+    video:{type:String},
+    budget:{type:Number},
+    launchingDate:{type:Number},
+    duration:{type:Number},
     rewardOption : { type: String },
     status : { type: Boolean, default:false },
     user: [{ type: Schema.Types.ObjectId, ref: "user" }],

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import AnimationRevealPage from 'helpers/AnimationRevealPage';
 import { Container as ContainerBase } from 'components/misc/Layouts';
 import tw from 'twin.macro';
@@ -6,7 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../pages/button.css';
-
 import 'react-phone-number-input/style.css';
 import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
 import flags from 'react-phone-number-input/flags';
@@ -72,19 +71,12 @@ export default function Register({
   logoLinkUrl = '#',
   illustrationImageSrc = illustration,
   headingText = 'Sign Up to Recycle Engine',
-
   submitButtonText = 'Register',
-  ResendButton = 'Resend Email',
-  SubmitButtonIcon = LoginIcon,
-  forgotPasswordUrl = '#',
-  signupUrl = '#',
   signInUrl = '/login',
 }) {
-  // const phoneInputRef = useRef(null);
   const style = { marginLeft: '120px' };
   const [showSendButton, setShowSendButton] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -96,10 +88,6 @@ export default function Register({
   });
   const [msg, setMsg] = useState('');
   const [error, setErrors] = useState(null);
-
-
-
-  // const [error, setErrors] = useState(null);
   function handleInputChange(event) {
     const target = event.target;
     const name = target.name;
@@ -133,7 +121,6 @@ export default function Register({
     formDataToSend.append('name', name);
     formDataToSend.append('email', email);
     formDataToSend.append('password', password);
-    // formDataToSend.append('confirmPassword', confirmPassword);
     formDataToSend.append('phone_number', phone_number);
     formDataToSend.append('image', selectedFile); // add the image to the FormData object
     console.log(selectedFile);
@@ -145,11 +132,6 @@ export default function Register({
       });
       console.log(response);
       const { data: res } = await response.json();
-      // if (response.status !== 200) {
-      //   alert('Invalid Email Account');
-      // } else {
-      //   alert('verify your email account');
-      // }
       if (response.status !== 200) {
         toast.error('Invalid Email Account');
       } else {
@@ -183,23 +165,23 @@ export default function Register({
               <FormContainer>
                 <Form enctype="multipart/form-data" onSubmit={handleSubmit}>
                   <div style={{ textAlign: 'center' }}>
-                <label ><br />Profile Picture:
-                
-      <div className="image-upload">
-        <label htmlFor="file-input">
-          <img src={selectedFile ? URL.createObjectURL(selectedFile) : defaultImage  } alt="Profile" className="profile-image"style={styles.profileImage} />
-        </label>
-        
-        <input
-          id="file-input"
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={(e) => setSelectedFile(e.target.files[0])}
-        />
-      </div>
-    </label></div>
-    <br/>
+                    <label ><br />Profile Picture:
+
+                      <div className="image-upload">
+                        <label htmlFor="file-input">
+                          <img src={selectedFile ? URL.createObjectURL(selectedFile) : defaultImage} alt="Profile" className="profile-image" style={styles.profileImage} />
+                        </label>
+
+                        <input
+                          id="file-input"
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          onChange={(e) => setSelectedFile(e.target.files[0])}
+                        />
+                      </div>
+                    </label></div>
+                  <br />
                   <label>UserName :
                     <Input
                       type="text"
@@ -216,7 +198,6 @@ export default function Register({
                       name="email"
                       placeholder="Email *"
                       pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-                      //  pattern="^[A-Za-z0-9]+(\.?[A-Za-z0-9]+)@(esprit|gmail|outlook|hotmail|yahoo|microsoft|icloud|yandex|gmx|mail|aol|zoho|protonmail|googlemail)\.(tn|com|org|de|net|cn|uk|info|nl|eu|ru)$"
                       value={formData.email}
                       onChange={handleInputChange}
                       required={true}
@@ -277,7 +258,7 @@ export default function Register({
                       defaultCountry="TN"
 
                       style={{
-                        height:'100px',
+                        height: '100px',
                         border: formData.phone_number ? (
                           !isPossiblePhoneNumber(formData.phone_number) && !isValidPhoneNumber(formData.phone_number) ? '2px solid red' : 'none') : 'null'
                       }}
@@ -289,18 +270,6 @@ export default function Register({
                       <div style={{ color: 'red' }}>Please enter a valid phone number</div>
                     ) : null
                   ) : null}
-                  {/* {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number) ? "" : <div style={{ color: 'red' }}>Please enter a valid phone number</div>} */}
-                  
-                  
-                  
-                  {/* <label><br />Profile Picture:
-                    <Input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={(e) => setSelectedFile(e.target.files[0])}
-                    /></label> */}
-    
                   {error && <div>{error}</div>}
                   {msg && <div>{msg}</div>}
                   <br />

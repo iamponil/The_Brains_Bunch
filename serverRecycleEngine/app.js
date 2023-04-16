@@ -1,14 +1,19 @@
 require("dotenv").config();
-
+const http = require('http');
+const bodyParser = require('body-parser');
 var createError = require("http-errors");
 var path = require("path");
+const multer = require('multer');
 var logger = require("morgan");
 const cookieSession = require("cookie-session");
 const express = require("express");
 const cors = require("cors");
 const passportSetup = require("./controller/passport");
 const passport = require("passport");
+const upload = multer({ dest: 'uploads/' });
 const app = express();
+const server = http.createServer(app);
+server.timeout = 120000; // 2 minutes
 //PassportLogin
 app.use(
   cookieSession({
@@ -25,7 +30,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(bodyParser.json());
 // app.use(
 //   cors({
 //     origin: "*",
@@ -52,7 +57,7 @@ const authenticateToken = require("./middleware/Authorize");
 
 var usersRouter = require("./routes/users");
 var authRoute = require("./routes/authRoute");
-
+var projectRouter=require("./routes/projectRouter");
 const mongoose = require("mongoose");
 app.use(logger("dev"));
 app.use(express.json());
@@ -66,5 +71,5 @@ db.once("open", () => console.log("Connected to DataBase"));
 // call routes
 app.use("/auth", authRoute);
 app.use("/users", usersRouter);
-
+app.use("/projects",projectRouter);
 module.exports = app;
