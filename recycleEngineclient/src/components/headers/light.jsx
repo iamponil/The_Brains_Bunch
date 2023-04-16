@@ -9,6 +9,7 @@ import useAnimatedNavToggler from '../../helpers/useAnimatedNavToggler.jsx';
 import logo from '../DropdownMenu/icons/logo.png';
 import { ReactComponent as MenuIcon } from 'feather-icons/dist/icons/menu.svg';
 import { ReactComponent as CloseIcon } from 'feather-icons/dist/icons/x.svg';
+import { Link } from 'react-router-dom';
 
 const Header = tw.header`
   flex justify-between items-center
@@ -82,10 +83,11 @@ export default ({
       <NavLink href="/#">Blog</NavLink>
       <NavLink href="/#">Pricing</NavLink>
       <NavLink href="/#">Contact Us</NavLink>
-      <NavLink href="/#" tw="lg:ml-12!">
+      <NavLink href="/login" tw="lg:ml-12!">
         Login
       </NavLink>
-      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} href="/#">
+
+      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} >
         Sign Up
       </PrimaryLink>
     </NavLinks>,

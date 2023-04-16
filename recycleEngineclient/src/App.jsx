@@ -9,6 +9,9 @@ import { ThankYouPage } from 'ThankYouPage';
 import ForgetPassword from './pages/ForgetPassword';
 import Register from './pages/register';
 import ActivationEmail from 'pages/ActivationEmail.jsx';
+import SimpleContactUs from 'pages/SimpleContactUs.js';
+import TwoColumnWithInput from 'components/hero/CreatProject.js';
+
 
 export default function App() {
   return (
@@ -18,6 +21,8 @@ export default function App() {
           <Route path="/loading" element={<ThankYouPage />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/sign-up" element={<Register />} />
+          <Route path="/ProjectCreat" element={<TwoColumnWithInput />} />
+          <Route path="/oo" element={<SimpleContactUs />} />
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route

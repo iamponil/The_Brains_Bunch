@@ -15,6 +15,7 @@ import ResponsiveVideoEmbed from '../../helpers/ResponsiveVideoEmbed.jsx';
 import axios from 'axios';
 
 import { DropdownMenu } from './../DropdownMenu/ReactDropDownMenu';
+import CreatProject from './CreatProject.js';
 
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none`}
@@ -69,7 +70,7 @@ const style = { borderRadius: '50%' };
 export const Hero = ({ user }) => {
   function NavItem(props) {
     const [open, setOpen] = useState(false);
-
+   
     return (
       <li className="nav-item">
         <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
@@ -84,7 +85,13 @@ export const Hero = ({ user }) => {
 
   const navLinks = [
     <NavLinks key={1}>
-      <NavLink href="#">Create Project</NavLink>
+       {user ? (<NavLink href={`/ProjectCreat?data=${JSON.stringify(user)}`}>Create Project</NavLink> ) : (
+        <NavLink href="/login">Create Project</NavLink> 
+           
+      )}
+        {/* <div style={{ display: 'none' }}>
+      <CreatProject user={user}></CreatProject> 
+      </div> */}
       <NavLink href="#">Blogs</NavLink>
       <NavLink href="#"> Contributions</NavLink>
       <NavLink>Contact</NavLink>
