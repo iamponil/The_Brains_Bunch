@@ -11,7 +11,8 @@ import Register from './pages/register';
 import ActivationEmail from 'pages/ActivationEmail.jsx';
 import SimpleContactUs from 'pages/SimpleContactUs.js';
 import TwoColumnWithInput from 'components/hero/CreatProject.js';
-
+import Basics from 'components/hero/Basics.js';
+import Previewproject from 'components/cards/previewProject.js';
 
 export default function App() {
   return (
@@ -23,8 +24,10 @@ export default function App() {
           <Route path="/sign-up" element={<Register />} />
           <Route path="/ProjectCreat" element={<TwoColumnWithInput />} />
           <Route path="/oo" element={<SimpleContactUs />} />
+          <Route path="/basics" element={<Basics />} />
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/previewProject" element={<Previewproject />} />
           <Route
             path="/activationemail/:activation_token"
             element={<ActivationEmail />}

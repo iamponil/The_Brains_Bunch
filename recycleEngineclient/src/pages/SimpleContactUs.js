@@ -15,7 +15,7 @@ const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-gray-300 text-gray-100 rounded-lg relative`}
+  ${tw`text-gray-100 rounded-lg relative`}
   form {
     ${tw`mt-4`}
   }
@@ -35,15 +35,18 @@ const Paragraph = tw.p`font-bold text-2xl md:text-3xl lg:text-4xl xl:text-3xl te
 
 
 
-const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
+const TwoColumn = tw.div`flex flex-col sm:flex-row`;
 const Column = tw.div`sm:w-5/12 flex flex-col`;
-const InputContainer = tw.div`relative py-5 mt-6`;
+const InputContainer = tw.div` `;
 const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm`;
 const Input = tw.input``;
 const TextArea = tw.textarea`h-24 sm:h-full resize-none`;
 const SubmitButton = tw.button`w-full sm:w-64 mt-6 py-3 bg-gray-500 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl`;
 
 const SvgDotPattern1 = tw(SvgDotPatternIcon)`absolute bottom-0 right-0 transform translate-y-1/2 translate-x-1/2 -z-10 opacity-50 text-primary-500 fill-current w-24`
+const SvgDotPattern2 = tw(SvgDotPatternIcon)`absolute top-0 left-0 transform -translate-x-20 rotate-90 translate-y-8 -z-10 opacity-25 text-primary-500 fill-current w-40`
+const SvgDotPattern3 = tw(SvgDotPatternIcon)`absolute top-0 right-0 transform translate-x-20 rotate-45 translate-y-24 -z-10 opacity-25 text-primary-500 fill-current w-24`
+const SvgDotPattern4 = tw(SvgDotPatternIcon)`absolute bottom-0 left-0 transform -translate-x-20 rotate-45 -translate-y-8 -z-10 opacity-25 text-primary-500 fill-current w-24`
 
 export default function SimpleContactUs({ roundedHeaderButton  }) {
   const searchParams = new URLSearchParams(window.location.search);
@@ -53,17 +56,24 @@ export default function SimpleContactUs({ roundedHeaderButton  }) {
 console.log(usernameParam);
   const selectedValue = JSON.parse(dataParam);
   console.log(selectedValue)
+
+  const handlepreview = (e) => {
+    e.preventDefault();
+    window.location.href = `/previewProject?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(usernameParam)}`;
+   }
   return (
+    
     <>
     <Header roundedHeaderButton={roundedHeaderButton} />
     <Container>
       <Content>
-        <FormContainer>
+     
+        <FormContainer style={{marginLeft:64 }}>
         
           
               <TwoColumn>
                 <Column>
-                <InputContainer>
+                <InputContainer style={{marginLeft:64 }}>
                 <Heading>
            Recycling {selectedValue} <span tw="text-gray-500">Project </span>
             </Heading>
@@ -72,7 +82,7 @@ console.log(usernameParam);
             By {usernameParam} 
             </Paragraph>
             <br></br>
-          <div style={{ display: 'flex' , color: black }} ><p style={{marginRight:4 }}>Preview </p><button>  <BsEyeFill/> </button></div> 
+          <div style={{ display: 'flex' , color: black }} ><p style={{marginRight:4 }}>Preview </p><button onClick={handlepreview} >  <BsEyeFill/> </button></div> 
 
             <br></br>
             <br></br>
@@ -80,12 +90,12 @@ console.log(usernameParam);
              </InputContainer>
                 </Column>
                 <Column>
-                  <InputContainer tw="flex-1">
+                  <InputContainer style={{marginLeft:64 }} >
 
                     
-          <Navbar bg="dark" variant="dark" tw="rounded-full">
+          <Navbar bg="dark" variant="dark" tw="rounded-full ">
         <Container>
-          <Navbar.Brand href="#"  tw="text-gray-100 font-bold  sm:my-2 rounded-full py-4 flex justify-center">
+          <Navbar.Brand href="/basics"  tw="text-gray-100 font-bold  sm:my-2 rounded-full py-4 flex justify-center">
             
            Basics
           </Navbar.Brand>
@@ -123,6 +133,9 @@ console.log(usernameParam);
            
         
           <SvgDotPattern1 />
+         
+      <SvgDotPattern3 />
+      <SvgDotPattern4 />
         </FormContainer>
       </Content>
     </Container>
