@@ -1,0 +1,73 @@
+.contact-us-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    width:1000px;
+    padding: 1rem;
+    
+  }
+  
+  .contact-us-image-container {
+    flex: 0;
+  }
+  
+  .contact-us-image {
+    max-width: 100%;
+    height: auto;
+  }
+  .contact-us-form-container h1 {
+    margin-top: 0;
+    font-size: 30px;
+    color: white;
+    font-weight: bolder;
+    
+  }
+  
+.contact-us-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgba(0, 140, 255, 0.32);
+    margin-top:200px;
+    margin-left: 500px;
+  }
+  .contact-us-form-container {
+    flex: 1;
+    padding: 50px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  input,
+  textarea {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  button[type="submit"] {
+    background-color: white;
+    color: blue;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #fff;
+    color: #000;
+  }
+.Nav{
+    
+}

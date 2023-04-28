@@ -90,18 +90,19 @@ export const Hero = ({ user }) => {
       )}
       <NavLink href="#">Blogs</NavLink>
       <NavLink href="#"> Contributions</NavLink>
-      <NavLink>Contact</NavLink>
+      <NavLink href="/contactUs">Contact</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
       {user ? (
         <NavItem
           icon={
             <img
-              style={style}
+              style={style
+              }
               src={
                 user.image.startsWith('https')
                   ? user.image
-                  : 'http://localhost:5000/uploads/' + user.image
+                  : 'http://localhost:5000/uploads/' + user.image 
               }
             />
           }

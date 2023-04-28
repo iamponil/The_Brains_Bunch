@@ -50,4 +50,6 @@ router.get("/getUserById/:id", UserController.getById);
 router.put("/Bloque/:id",UserController.Bloquage);
 //Update user By id 
 router.post("/updateUser/:id", storage.upload_file("image"),UserController.UpdateUserById);
+//send Contact Us Mail
+router.post("/send-email",UserController.SendContactMail)
 module.exports = router;

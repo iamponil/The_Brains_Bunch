@@ -194,6 +194,49 @@ async function SendMail(user, code) {
   });
   transporter.close();
 }
+//send contact us mail
+exports.SendContactMail = async (req,res) => {
+  // console.log(name,email,msg)
+
+  console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+  console.log(req.body.name)
+  // Create a SMTP transporter object
+
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "thebrainsbrunch41@gmail.com",
+      pass: "aufdccimtrwxoslh",
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  // Message object
+  let message = {
+    from: req.body.email,
+    to: "thebrainsbrunch41@gmail.com",
+    subject: "Message from Contact Form",
+    html: `<div>
+            <p><strong>Email from: ${req.body.name}</strong></p>
+             <br>
+             <p>  <strong>Email: ${req.body.email} </strong></span> </p>
+             <p>  <strong>Message: ${req.body.msg} </strong></span> </p>
+             </div>`,
+  };
+
+  try {
+    await transporter.sendMail(message);
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.log(error);
+  }
+  transporter.close();
+};
 //send secret code to mail
 exports.resetPassword = async (req, res) => {
   try {
@@ -283,7 +326,10 @@ exports.resetNewPassword = async (req, res) => {
 
 exports.addUser1 = async (req, res, next) => {
   const user = req.body;
-  // user.image = req.file.filename;
+  console.log("hi");
+  console.log(req.body);
+
+  user.image = req.file.filename;
   const { errors, isValid } = ValidateRegister(req.body);
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(user.password, salt, async function (err, hash) {

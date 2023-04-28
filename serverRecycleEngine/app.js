@@ -52,7 +52,7 @@ const authenticateToken = require("./middleware/Authorize");
 
 var usersRouter = require("./routes/users");
 var authRoute = require("./routes/authRoute");
-
+var projectRouter=require("./routes/projectRouter");
 const mongoose = require("mongoose");
 app.use(logger("dev"));
 app.use(express.json());
@@ -66,5 +66,5 @@ db.once("open", () => console.log("Connected to DataBase"));
 // call routes
 app.use("/auth", authRoute);
 app.use("/users", usersRouter);
-
+app.use("/projects",projectRouter);
 module.exports = app;

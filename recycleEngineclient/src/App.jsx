@@ -13,6 +13,7 @@ import SimpleContactUs from 'pages/SimpleContactUs.js';
 import TwoColumnWithInput from 'components/hero/CreatProject.js';
 import Basics from 'components/hero/Basics.js';
 import Previewproject from 'components/cards/previewProject.js';
+import ContactUsPage from 'pages/ContactUsPage.jsx';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/previewProject" element={<Previewproject />} />
+          <Route path="/contactUs" element={<ContactUsPage/>}/>
           <Route
             path="/activationemail/:activation_token"
             element={<ActivationEmail />}

@@ -136,7 +136,7 @@ export default function Register({
     // formDataToSend.append('confirmPassword', confirmPassword);
     formDataToSend.append('phone_number', phone_number);
     formDataToSend.append('image', selectedFile); // add the image to the FormData object
-    console.log(selectedFile);
+    console.log('hh'+selectedFile);
 
     try {
       const response = await fetch('http://localhost:5000/users/addUser1', {

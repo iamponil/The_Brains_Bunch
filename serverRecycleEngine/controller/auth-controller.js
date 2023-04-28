@@ -112,6 +112,7 @@ exports.getLoginStats = async (req, res) => {
   
     const data = {};
     logins.forEach(login => {
+      console.log(login.user);
       const name = login.user.name;
       if (data[name]) {
         data[name] += 1;
