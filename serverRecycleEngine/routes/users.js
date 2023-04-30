@@ -52,4 +52,6 @@ router.put("/Bloque/:id",UserController.Bloquage);
 router.post("/updateUser/:id", storage.upload_file("image"),UserController.UpdateUserById);
 //send Contact Us Mail
 router.post("/send-email",UserController.SendContactMail)
+//GetProjectsByUser
+router.get("/GetProjectsByUser/:id",UserController.GetProjectsByUser)
 module.exports = router;

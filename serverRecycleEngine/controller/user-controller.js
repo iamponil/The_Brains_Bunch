@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const sendMail = require("./sendMail");
 const ValidateRegister = require("../validations/Register");
 const jwt = require("jsonwebtoken");
-const salt = bcrypt.genSaltSync(10);
+const Project=require('../models/project')
 exports.getAllUsers = (req, res) => {
 	User.find(function (err, users) {
 		res.json(users);
@@ -456,3 +456,12 @@ user.role=req.body.role;
     return res.status(500).send("Erreur interne du serveur");
   }
 };
+exports.GetProjectsByUser=async(req,res)=>{
+  try {
+    const userId = req.params.id;
+    const projects = await Project.find({ user: userId });
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
