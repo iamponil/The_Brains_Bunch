@@ -28,6 +28,46 @@ module.exports = {
       res.status(400).json({ error: err.message });
     }
   },
+  // async updateProject(req, res) {
+  //   console.log('Request body:', req.body);
+  //   console.log('Request files:', req.files);
+  //   const projectName = req.params.name;
+  //   const project = await Project.findOne({ name: projectName });
+
+  //   if (!project) {
+  //     return res.status(404).json({ message: "Project not found" });
+  //   }
+
+  //   // check if there is an image file in the request
+  //   if (req.files && req.files.image) {
+  //     project.image = req.files.image[0].path;
+  //   }
+
+  //   // check if there is a video file in the request
+  //   if (req.files && req.files.video) {
+  //     project.video = req.files.video[0].path;
+  //   }
+
+  //   project.name = req.body.name;
+  //   project.subtitle = req.body.subtitle;
+  //   project.category = req.body.category;
+  //   project.location = req.body.location;
+  //   project.duration = req.body.duration;
+  //   project.launchingDate = req.body.launchingDate;
+  //   project.budget = req.body.budget;
+
+  //   try {
+  //     const updatedProject = await project.save();
+
+  //     res.status(200).json({
+  //       message: "Project updated successfully",
+  //       project: updatedProject,
+  //     });
+  //   } catch (error) {
+  //     console.log('Error while saving project:', error);
+  //     res.status(400).json({ message: error.message });
+  //   }
+  // },
   async updateProject(req, res) {
     console.log('Request body:', req.body);
     console.log('Request files:', req.files);
@@ -40,12 +80,12 @@ module.exports = {
 
     // check if there is an image file in the request
     if (req.files && req.files.image) {
-      project.image = req.files.image[0].path;
+      project.image = req.files.image[0].filename;
     }
 
     // check if there is a video file in the request
     if (req.files && req.files.video) {
-      project.video = req.files.video[0].path;
+      project.video = req.files.video[0].filename;
     }
 
     project.name = req.body.name;
@@ -67,7 +107,8 @@ module.exports = {
       console.log('Error while saving project:', error);
       res.status(400).json({ message: error.message });
     }
-  },
+  }
+,
   async getOneById(req, res, next) {
     try {
       const project = await Project.findById(req.params.id);
