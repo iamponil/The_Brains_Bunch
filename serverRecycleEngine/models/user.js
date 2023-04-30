@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     // role 0 = super , 1 normal admin , 2 backer 3 creator  we will see if those can be one role or not .
     role: { type: String, enum: ["SUPERADMIN", "ADMIN", "CLIENT"] },
     address: { type: Schema.Types.ObjectId, ref: "address" },
-    project: [{ type: Schema.Types.ObjectId, ref: "project" }],
+    projects: [{ type: Schema.Types.ObjectId, ref: "project" }],
     sub_roles: [{ type: Schema.Types.ObjectId, ref: "sub_roles" }],
     status: { type: String, enum: ["ACTIVE", "BLOCKED"] },
     login:{ type: Schema.Types.ObjectId, ref: "login" },
