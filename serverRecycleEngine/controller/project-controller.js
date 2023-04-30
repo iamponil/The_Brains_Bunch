@@ -110,10 +110,18 @@ module.exports = {
     }
   },
   async getAll(req, res) {
-    User.find(function (err, projects) {
+    Project.find(function (err, projects) {
       res.json(projects);
     });
   }
+  // async getAll(req, res) {
+  //   try {
+  //     const projects = await Project.find();
+  //     res.json(projects);
+  //   } catch (error) {
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // }
 };
 
 

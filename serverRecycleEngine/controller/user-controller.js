@@ -215,11 +215,10 @@ exports.SendContactMail = async (req,res) => {
       rejectUnauthorized: false,
     },
   });
-
   // Message object
   let message = {
     from: req.body.email,
-    to: "thebrainsbrunch41@gmail.com",
+    to: "nouioui.fatma.4@gmail.com",
     subject: "Message from Contact Form",
     html: `<div>
             <p><strong>Email from: ${req.body.name}</strong></p>
@@ -229,14 +228,32 @@ exports.SendContactMail = async (req,res) => {
              </div>`,
   };
 
-  try {
-    await transporter.sendMail(message);
-    console.log("Email sent successfully!");
-  } catch (error) {
-    console.log(error);
-  }
-  transporter.close();
-};
+  // try {
+  //   await transporter.sendMail(message);
+  //   console.log("Email sent successfully!");
+    
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  // transporter.close();
+
+
+
+try {
+  await transporter.sendMail(message, function (error, info) {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ message: "Failed to send email. Please try again later." });
+    } else {
+      console.log("Email sent successfully!");
+      res.status(200).json({ message: "Email sent successfully!" });
+    }
+  });
+} catch (error) {
+  console.log(error);
+  res.status(500).json({ message: "Failed to send email. Please try again later." });
+}};
+
 //send secret code to mail
 exports.resetPassword = async (req, res) => {
   try {

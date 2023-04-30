@@ -289,17 +289,6 @@ export default function Register({
                       <div style={{ color: 'red' }}>Please enter a valid phone number</div>
                     ) : null
                   ) : null}
-                  {/* {formData.phone_number && isPossiblePhoneNumber(formData.phone_number) && isValidPhoneNumber(formData.phone_number) ? "" : <div style={{ color: 'red' }}>Please enter a valid phone number</div>} */}
-                  
-                  
-                  
-                  {/* <label><br />Profile Picture:
-                    <Input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={(e) => setSelectedFile(e.target.files[0])}
-                    /></label> */}
     
                   {error && <div>{error}</div>}
                   {msg && <div>{msg}</div>}
