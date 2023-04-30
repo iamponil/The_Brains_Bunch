@@ -1,10 +1,25 @@
-import React from "react";
+import React ,{useEffect, useState} from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import {ReactComponent as SvgDotPatternIcon} from "../../images/dot-pattern.svg"
-import Header, { NavLinks } from "components/headers/light";
-import { NavLink } from "react-router-dom";
+import Header, { NavLinks ,NavLink} from "components/headers/light";
+import { Link } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 const Container = tw.div``;
 const Content = tw.div``;
 
@@ -39,17 +54,65 @@ const FormContainer = styled.div`
     }
   }
 `;
-
+const Form = tw.form`mx-auto max-w-xs`;
 const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
 const Column = tw.div`sm:w-5/12 flex flex-col`;
 const InputContainer = tw.div`relative py-5 mt-6`;
 const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm`;
 const Input = tw.input`  `;
 const TextArea = tw.textarea`h-64 sm:h-full `;
-const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl`;
-
+const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary-500  rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl`;
+const Button = styled.button`
+  ${tw`mt-5 tracking-wide font-semibold bg-gray-100 text-primary-500 w-full py-4 rounded-lg   rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700  transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-inner focus:outline-none`}
+  .icon {
+    ${tw`w-6 h-6 -ml-2`}
+  }
+  .text {
+    ${tw`ml-3`}
+  }
+`;
 
 export default ({ roundedHeaderButton  }) => {
+  const RecycleEngineFee = 0.05;
+const ProcessingFee = 0.05;
+  const [open, setOpen] = React.useState(false);
+  const [goalAmount, setGoalAmount] = useState(" ");
+  const [taxes, setTaxes] = useState(" ");
+  const [subtotaltaxes,setSubtotaltaxes]=useState(" ");
+  const [suggestedGoal, setSuggestedGoal] = useState(" ");
+  const [total,setTotal]=useState(" ");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleGoalAmountChange = (event) => {
+    setGoalAmount(event.target.value);
+  };
+
+  const handleTaxesChange = (event) => {
+    setTaxes(event.target.value);
+  };
+  const handleTotalChange = (event) => {
+    setTotal(event.target.value);
+  };
+
+  const calculateSuggestedGoal = () => {
+   
+    const subtotal = parseFloat(goalAmount) + (parseFloat(goalAmount) * parseFloat(taxes||0) / 100);
+    setSubtotaltaxes(subtotal);
+    const total = subtotal + (subtotal * RecycleEngineFee) + (subtotal * ProcessingFee);
+    setSuggestedGoal(total.toFixed(2));
+
+  };
+  const selectAmount=()=>{
+    if(suggestedGoal)
+    setTotal(suggestedGoal);
+    handleClose();
+   setGoalAmount("");
+   setTaxes("");
+    
+  }
+  useEffect(() => {
+    calculateSuggestedGoal();
+  }, [goalAmount, taxes]);
   return (
     <><Header roundedHeaderButton={roundedHeaderButton} />
  
@@ -104,9 +167,11 @@ export default ({ roundedHeaderButton  }) => {
                 <Column>
                   <InputContainer>
                     <Label htmlFor="name-input" tw="text-primary-500">Funding goal</Label>
-                    <Input id="name-input" type="Number" name="name" placeholder="Goal amount $ " />
+                    <Input id="name-input" type="Number" name="name" placeholder="Goal amount $ " value={total} onChange={handleTotalChange}/>
+                   
                   </InputContainer>
-                 
+                  <NavLink onClick={handleOpen}   >Use our calculator to estimate total costs </NavLink>
+               
                 </Column>
                 <Column>
                 <InputContainer>
@@ -186,6 +251,100 @@ export default ({ roundedHeaderButton  }) => {
       </Content>
       
     </Container>
+    <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={open}>
+        <Box sx={{...style, width: 600}}>
+          {/* <Typography id="modal-modal-title" variant="h6" component="h2">
+            Modifier vos informations
+          </Typography> */}
+           <Container>
+      <Content>
+      <FormContainer name="form">
+          {/* <h2>Funding goal</h2> */}
+          <p  tw="text-gray-700 font-bold sm:text-3xl">Funding calculator</p>
+          <h3>Enter the total amount you think you'll need to make this project and fulfill your rewards.Build out a budget that includes shipping , materials, research,vendors, and labor costs </h3>
+      <TwoColumn>
+                <Column>
+                  <InputContainer>
+                    <Label htmlFor="name-input" tw="text-primary-500">Funding goal</Label>
+                    <Input id="name-input" type="Number" name="name" placeholder="Goal amount $ " value={goalAmount}  onChange={handleGoalAmountChange}/>
+                   
+                  </InputContainer>
+              
+               
+                </Column>
+           
+              
+               
+              
+                  <Column>
+                  <InputContainer>
+                    <Label htmlFor="name-input" tw="text-primary-500">Pourcentage du Taxes %</Label>
+                    <Input id="name-input" type="Number" name="name" placeholder="Taxes %" value={taxes}
+              onChange={handleTaxesChange} />
+                   
+                  </InputContainer>
+
+             
+            
+                </Column>
+                
+              
+              </TwoColumn>
+              <br></br>
+              <TwoColumn>
+               <Column> <p tw="text-primary-500 font-bold ">Taxes</p></Column>
+                <Column>
+                <Input id="taxe" type="number" name="taxe" placeholder="$" value={goalAmount*taxes/100} readOnly />
+              
+            </Column>
+              </TwoColumn>
+              <br></br>
+      
+              {/* <TwoColumn>
+                <Column> <p tw="text-primary-500 font-bold ">Recycle Engine fees: 5%</p></Column>
+                <Column> <p tw="text-gray-500 font-bold ">${subtotaltaxes*RecycleEngineFee}</p></Column>
+              </TwoColumn> */}
+                <TwoColumn>
+               <Column> <p tw="text-primary-500 font-bold ">Recycle Engine fees: 5%</p></Column>
+                <Column>
+                <Input id="RecycleEnginefees" type="number" name="Suggestedgoal" placeholder="$" value={RecycleEngineFee*goalAmount} readOnly />
+              
+            </Column>
+              </TwoColumn>
+              <br></br>
+       
+              <TwoColumn>
+                  <Column> <p tw="text-primary-500 font-bold ">Processing fees 5%</p></Column>
+                <Column>
+                <Input id="email-input" type="number" name="email" placeholder="%" value={ProcessingFee*goalAmount} readOnly />
+              
+            </Column>
+              </TwoColumn>
+              <br></br> <hr tw=" text-gray-900"></hr> 
+             <br></br>
+             
+              <TwoColumn>
+               <Column> <p tw="text-primary-500 font-bold ">Suggested goal:</p></Column>
+                <Column>
+                <Input id="Suggestedgoal-input" type="number" name="Suggestedgoal" placeholder="$" value={suggestedGoal} readOnly />
+              
+            </Column>
+              </TwoColumn>
+                <Button type="submit" onClick={selectAmount}>
+     
+                  <span className="text">Select</span>
+                </Button>   
+              </FormContainer></Content></Container>
+        </Box>
+        </Fade>
+      </Modal>
+      
     </>
   );
 };
