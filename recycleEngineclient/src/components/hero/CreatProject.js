@@ -94,7 +94,7 @@ export default ({ roundedHeaderButton  }) => {
     const res = await Axios.post(`http://localhost:5000/projects/addProject`,{...project },{ headers });
     console.log(selectedValue,selectedCountry,Title)
     alert("Informations enregistrées avec succès !");
-    window.location.href = `/oo?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user.name)}&titre=${JSON.stringify(Title)} `;
+    window.location.href = `/oo?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(Title)} `;
   } catch (error) {
     console.log(error);
     setErrors(error.response.data.msg);

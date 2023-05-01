@@ -28,15 +28,15 @@ export default () => {
   const usernameParam = searchParams.get('username');
 console.log(usernameParam);
   const selectedValue = JSON.parse(dataParam);
-  const username = JSON.parse(usernameParam);
+  const user = JSON.parse(usernameParam);
   console.log(selectedValue)
-  console.log(username)
+  console.log(user)
   const titreParam = searchParams.get('titre');
   const titre = JSON.parse(titreParam);
   console.log(titre)
   const handlepreview = (e) => {
     e.preventDefault();
-    window.location.href = `/oo?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(username)}&titre=${JSON.stringify(titre)}`;
+    window.location.href = `/oo?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(titre)}`;
   
    }
    //get project details by id
@@ -66,7 +66,7 @@ useEffect(()=>
         heading={
           <>
            Recycling {project.category}
-            <wbr /> <HighlightedText>By {username}</HighlightedText>
+            <wbr /> <HighlightedText>By {user.name}</HighlightedText>
           </>
         }
         description={
@@ -92,7 +92,7 @@ useEffect(()=>
         textOnLeft={false}
         primaryButtonText="I support this project"
         imageSrc=
-          {`http://localhost:5000/${project.image}`}
+          {`http://localhost:5000/uploads/${project.image}`}
          
         imageCss={imageCss}
         imageDecoratorBlob={true}

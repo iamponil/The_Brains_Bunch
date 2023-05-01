@@ -14,7 +14,9 @@ import TwoColumnWithInput from 'components/hero/CreatProject.js';
 import TwoColumnWithInput2 from 'pages/SimpleContactUs.js';
 import Basics from 'components/hero/Basics.js';
 import Previewproject from 'components/cards/previewProject.js';
-
+import ProjectDetailsS from 'components/cards/ProjectDetails.js';
+import Projectbyuser from 'components/cards/PortfolioTwoCardsWithImage.jsx';
+import AllProjects from 'components/cards/TabCardGrid.js';
 export default function App() {
   return (
     <BrowserRouter>
@@ -24,7 +26,9 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/sign-up" element={<Register />} />
           <Route path="/ProjectCreat" element={<TwoColumnWithInput />} />
-        
+          <Route path="/AllProjects" element={<AllProjects />} />
+          <Route path="/Projectbyuser" element={<Projectbyuser />} /> 
+          <Route path="/project/:id" element={<ProjectDetailsS/>} />
           <Route path="/oo" element={<SimpleContactUs />} />
           <Route path="/basics" element={<Basics />} />
           <Route path="/" element={<MainLandingPage />} />

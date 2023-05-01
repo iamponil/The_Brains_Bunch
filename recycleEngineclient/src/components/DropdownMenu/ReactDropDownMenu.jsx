@@ -1,6 +1,6 @@
 import { ReactComponent as ArrowIcon } from './icons/arrow.svg';
 import { CSSTransition } from 'react-transition-group';
-import { TbLogout } from 'react-icons/tb';
+import { TbLogout  } from 'react-icons/tb';
 import './dropdown.css';
 
 import {
@@ -48,6 +48,11 @@ export const DropdownMenu = ({ user }) => {
       // Handle login error
       console.error(error);
     }
+  };
+  const handleproject= async (e) => {
+     e.preventDefault();
+     window.location.href = `/Projectbyuser?username=${JSON.stringify(user)}`;
+   
   };
   useEffect(() => {
     setMenuHeight(dropdownRef.current?.firstChild.offsetHeight);
@@ -112,6 +117,13 @@ export const DropdownMenu = ({ user }) => {
             Display and accesibility
           </DropdownItem>
           <DropdownItem
+            goToMenu={handleproject}
+            leftIcon={<BsFillCursorFill />}
+            
+          >
+            My Projects
+          </DropdownItem>
+          <DropdownItem
             goToMenu={handleLogout}
             leftIcon={<TbLogout />}
             rightIcon={<TbLogout />}
@@ -139,7 +151,7 @@ export const DropdownMenu = ({ user }) => {
           <DropdownItem leftIcon={<MdOutlinePrivateConnectivity />}>
             Privacy center
           </DropdownItem>
-          <DropdownItem leftIcon={<MdOutlineLanguage />}>Language</DropdownItem>
+          <DropdownItem  leftIcon={<MdOutlineLanguage />}>Language</DropdownItem>
         </div>
       </CSSTransition>
 

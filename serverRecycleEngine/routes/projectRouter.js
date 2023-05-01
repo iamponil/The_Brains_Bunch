@@ -10,8 +10,16 @@ const storage = require("../middleware/storage");
 router.post("/addProject",authenticateToken,ProjectController.addProject);
 //Update Project
 router.post('/updateProject/:title',authenticateToken, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), ProjectController.updateProject);
-//Delete Project
-router.delete("/deleteProject",authenticateToken,ProjectController.deleteProject);
 //getProjectByTitle
 router.get("/getByTitle/:title",ProjectController.getByTitle);
+//GetProjectsByUser
+router.get("/GetProjectsByUser/:id",ProjectController.GetProjectsByUser)
+// Get all projects
+router.get("/getAll", ProjectController.getAll);
+
+router.get("/getProjectById/:id", ProjectController.getProjectById);
+
+router.delete("/deleteProject/:id", authenticateToken, ProjectController.getOneById, ProjectController.deleteProject);
+// Delete all projects
+router.delete("/deleteAll", authenticateToken, ProjectController.deleteAll);
 module.exports = router;

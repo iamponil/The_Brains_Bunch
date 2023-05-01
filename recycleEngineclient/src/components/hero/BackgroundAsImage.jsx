@@ -88,6 +88,11 @@ export const Hero = ({ user }) => {
         <NavLink href="/login">Create Project</NavLink> 
            
       )}
+      
+      {user ? (<NavLink href={`/Projectbyuser?data=${JSON.stringify(user)}`}>My Projects</NavLink> ) : (
+        <NavLink ></NavLink> 
+           
+      )}
       <NavLink href="#">Blogs</NavLink>
       <NavLink href="#"> Contributions</NavLink>
       <NavLink>Contact</NavLink>
