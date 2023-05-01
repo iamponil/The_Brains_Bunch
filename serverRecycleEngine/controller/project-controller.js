@@ -1,5 +1,6 @@
 const Project=require('../models/project');
-const User=require('../models/user')
+const User=require('../models/user');
+const Comment=require("../models/comment")
 // const upload = require('../middleware/multerProject'); // Import the multer middleware
 // const multer = require('multer');
 const passport=require('passport');
@@ -101,8 +102,123 @@ module.exports = {
       } catch (error) {
         res.status(500).json({ message: error.message });
       }
+    },
+ 
+    
+    
+    
+ 
+  async addLike(req, res) {
+    try {
+      const { projectId } = req.params;
+      const userId = req.user.id;
+  
+      const project = await Project.findById(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+  
+   
+      
+  
+      if (project.likedBy.includes(userId)) {
+        return res.status(400).json({ message: "User already liked this project" });
+      }
+        // check if user has disliked the project before
+        const hasDisliked = project.dislikedBy.includes(userId);
+        if (hasDisliked) {
+          project.dislikes--;
+          const userIndex = project.dislikedBy.indexOf(userId);
+          project.dislikedBy.splice(userIndex, 1);
+        }
+    
+      project.likes++;
+      project.likedBy.push(userId);
+      await project.save();
+  
+      res.status(200).json(project);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
     }
-  };
+  },
+  
+  async addDislike(req, res) {
+    try {
+      const { projectId } = req.params;
+      const userId = req.user.id;
+  
+      const project = await Project.findById(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+  
+      if (project.dislikedBy.includes(userId)) {
+        return res.status(400).json({ message: "User already disliked this project" });
+      }
+  
+      // check if user has liked the project before
+      const hasLiked = project.likedBy.includes(userId);
+      if (hasLiked) {
+        project.likes--;
+        const userIndex = project.likedBy.indexOf(userId);
+        project.likedBy.splice(userIndex, 1);
+      }
+  
+      project.dislikes++;
+      project.dislikedBy.push(userId);
+      await project.save();
+  
+      res.status(200).json(project);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  },
+  
+  //add Comment 
+   async addComment  (req, res) {
+    try {
+      const { projectId } = req.params;
+      const { content } = req.body;
+      const project = await Project.findById(projectId);
+     
+      const comment = new Comment({
+        content,
+        user: req.user.id,
+        project: project._id,
+      });
+      await comment.save();
+      project.comment.push(comment);
+      await project.save();
     
-    
-    
+      res.status(201).json(comment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server Error" });
+    }
+  },
+  async addRating(req, res)  {
+    try {
+      const { projectId } = req.params;
+      const project = await Project.findById(projectId);
+      if (!project) throw new Error("Project not found");
+  
+      const rating = req.body.rating;
+      if (!rating || rating < 1 || rating > 5)
+        throw new Error("Invalid rating value");
+  
+      project.ratings.push(rating);
+      const totalRatings = project.ratings.length;
+      const ratingSum = project.ratings.reduce((sum, r) => sum + r, 0);
+      const averageRating = ratingSum / totalRatings;
+  
+      project.averageRating = averageRating;
+      await project.save();
+  
+      res.json(project);
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ message: err.message });
+    }
+  } };

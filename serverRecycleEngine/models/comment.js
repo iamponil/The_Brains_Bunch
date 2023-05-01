@@ -5,6 +5,7 @@ const projectUpdateCommentSchema = new mongoose.Schema(
   {
     content: { type: String },
     user: [{ type: Schema.Types.ObjectId, ref: "user" }],
+    project:[{type: Schema.Types.ObjectId, ref: "project"}],
     update:  { type: Schema.Types.ObjectId, ref: "update" },
     
   },
