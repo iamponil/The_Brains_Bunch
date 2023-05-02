@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  backend_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5000"
+    depends_on:
+      - database_service
+
+  database_service:
+    image: mongo:5
+    ports:
+      - "27050:27017"
