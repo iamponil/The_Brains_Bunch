@@ -162,7 +162,7 @@ export default ({
                   </CardImageContainer>
             <CardText>
               <CardHeader>
-              <Link to={`/basics/${project.title}`}> <CardCompany>{project.title}</CardCompany> </Link> 
+              <Link to={`/basics/${project.title}`}> <CardCompany> Update {project.title}</CardCompany> </Link> 
               </CardHeader>
               <CardTitle>{project.category}</CardTitle>
               <CardMeta style={{marginLeft:'10px' , marginRight:'50px' }}>

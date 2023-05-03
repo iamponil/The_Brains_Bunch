@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
+import { ReactComponent as ArrowRightIcon } from "images/arrow-right-icon.svg";
 import Header from "components/headers/light";
 import MainFeature from "components/features/TwoColWithButton.js";
 import DesignIllustration from "../../images/imgoo.jpg";
@@ -26,17 +27,16 @@ export default () => {
      console.log(id);
      
      setproject(data);
+    
      
    }).catch(console.error())
  },[]);
   return (
     <><Header  />
-   
-    {/* <button  style={{marginLeft:'111 px' , backgroundColor: 'transparent' , color:'gray' }}onClick={handlepreview} >   Exit preview  <img src={Exit} style={{width:'20px', height:'20px' ,marginRight:'20px'}}></img></button> 
+  
 
-        */}
       <MainFeature
-        subheading={<Subheading></Subheading>}
+        subheading={<Subheading> {project.title} </Subheading>}
         heading={
           <>
            Recycling {project.category}
@@ -64,7 +64,8 @@ export default () => {
         
         buttonRounded={false}
         textOnLeft={false}
-        primaryButtonText="I support this project"
+        primaryButtonText="View all Projects "
+        primaryButtonUrl = "/AllProjects"
         imageSrc=
           {`http://localhost:5000/uploads/${project.image}`}
          
@@ -72,7 +73,7 @@ export default () => {
         imageDecoratorBlob={true}
         imageDecoratorBlobCss={tw`left-1/2 -translate-x-1/2 md:w-32 md:h-32 opacity-25`}
       />
-     
+    
     </>  
   );
 }

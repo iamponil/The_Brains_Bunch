@@ -4,6 +4,11 @@ const authenticateToken = require("../middleware/Authorize");
 const upload = require('../middleware/multerProject');
 var ProjectController = require("../controller/project-controller");
 const storage = require("../middleware/storage");
+const {
+    addLike,
+    addDislike,
+    addComment,
+  } = require("../controller/project-controller");
 // router.put('/updateProject/:id', storage.upload_file("image","video"), ProjectController.updateProject);
 
 //Add new Projects
@@ -22,4 +27,12 @@ router.get("/getProjectById/:id", ProjectController.getProjectById);
 router.delete("/deleteProject/:id", authenticateToken, ProjectController.getOneById, ProjectController.deleteProject);
 // Delete all projects
 router.delete("/deleteAll", authenticateToken, ProjectController.deleteAll);
+//like project
+router.post("/:projectId/like",authenticateToken,ProjectController.addLike);
+//dislike project
+  router.post("/:projectId/dislike",authenticateToken,ProjectController.addDislike);
+  //add comment to project
+  router.post("/:projectId/comment",authenticateToken,ProjectController.addComment);
+  //add rating
+  router.post("/:projectId/rating",authenticateToken,ProjectController.addRating);
 module.exports = router;

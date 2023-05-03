@@ -4,20 +4,27 @@ const Schema = mongoose.Schema;
 const projectSchema = new mongoose.Schema(
   {
     title: { type: String, required: true},
-    location:{type:String, required: true},
-    fundGoal: { type: Number},
-    category: { type:String, required: true},
+    location:{type:String},
+    fundGoal: { type: Number },
+    category: { type:String},
     subtitle: { type:String},
-    image : { type: String, default: "default.png" },
+    image : { type: String },
     video:{type:String},
     launchingDate:{type:Date},
     duration:{type:Number},
     UserName:{type:String},
     status : { type: Boolean, default:false },
     user: { type: Schema.Types.ObjectId, ref: "user" },
-  
-
+    comment: [ { type: Schema.Types.ObjectId, ref: "comment" }],
+    likes: { type: Number, default: 0 },
+    likedBy: [{ type: Schema.Types.ObjectId, ref: "user" }],
+    dislikes: { type: Number, default: 0 },
+    dislikedBy: [{ type: Schema.Types.ObjectId, ref: "user" }],
+    ratings: [{ type: Number, min: 1, max: 5 }],
+    averageRating: {type: Number,default: 0}
   },
+
+
   {
     timestamps: true,
   }

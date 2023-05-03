@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import tw from "twin.macro";
@@ -54,8 +54,6 @@ export default (
 
  
   const searchParams = new URLSearchParams(window.location.search);
-  
-  
   const usernameParam = searchParams.get('username');
   const user = JSON.parse(usernameParam);
 console.log(usernameParam);
@@ -66,20 +64,40 @@ const dataParam = searchParams.get('data');
   const titreParam = searchParams.get('titre');
   const titre = JSON.parse(titreParam);
   console.log(titre)
+  const [error, setErrors] = useState(null);
+  const [projects, setproject] = useState([]);
   const handlepreview = (e) => {
     e.preventDefault();
     window.location.href = `/previewProject?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(titre)}`;
    }
    const handlebacis = (e) => {
     e.preventDefault();
-    window.location.href = `/basics?titre=${JSON.stringify(titre)}&username=${JSON.stringify(user)}`;
+    window.location.href = `/basics/${projects.title}`;
   }
-  return (<>   <Header roundedHeaderButton={roundedHeaderButton }  />
+
+  useEffect(() => {
+    if (user && user._id) {
+      fetch(`http://localhost:5000/projects/getByTitle/${titre}`) 
+        .then(res => {
+          return res.json()
+        })
+        .then(data => {
+          console.log(data);
+          setproject(data);
+        })
+        .catch(err => {
+          console.error(err);
+          setErrors(err);
+        });
+    }
+  }, []);
+  return (<>  
+   <Header roundedHeaderButton={roundedHeaderButton }  />
     <Container>
       <ContentWithPaddingXl>
         <Column>
         <Heading >
-           Recycling {selectedValue} Project 
+           Recycling {selectedValue} Project   {projects.title}
             </Heading>
             <br></br>
             <Paragraph tw="font-bold text-primary-500">

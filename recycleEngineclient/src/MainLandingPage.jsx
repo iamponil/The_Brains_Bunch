@@ -6,7 +6,7 @@ import PortCard from 'components/cards/PortfolioTwoCardsWithImage';
 import Card from 'components/cards/ThreeColSlider';
 import Feature from 'components/features/ThreeColCenteredStatsPrimaryBackground';
 import AnimationRevealPage from 'helpers/AnimationRevealPage';
-
+import AllProjects from 'components/cards/TabCardGrid.js';
 export const MainLandingPage = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const dataParam = searchParams.get('data');
@@ -17,10 +17,10 @@ export const MainLandingPage = () => {
   return (
     <AnimationRevealPage>
       <Hero user={user} />
+     <AllProjects/> 
       <Feature />
       <Blog />
       <Card />
-      <PortCard />
       <Footer />
     </AnimationRevealPage>
   );

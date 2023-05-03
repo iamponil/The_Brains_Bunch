@@ -4,7 +4,7 @@ import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import {ReactComponent as SvgDotPatternIcon} from "../../images/dot-pattern.svg"
 import Header, { NavLinks } from "components/headers/light";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import Axios from"axios";
 const Container = tw.div``;
 const Content = tw.div``;
@@ -51,13 +51,12 @@ const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary
 
 
 export default function Basics ({ roundedHeaderButton  }) {
-  const searchParams = new URLSearchParams(window.location.search);
-  const titreParam = searchParams.get('titre');
-  const titre = JSON.parse(titreParam);
-  console.log(titre)
-  const usernameParam = searchParams.get('username');
-  const userName = JSON.parse(usernameParam);
-console.log(usernameParam);
+  const { titre } = useParams();
+//   const searchParams = new URLSearchParams(window.location.search);
+
+//   const usernameParam = searchParams.get('username');
+//   const userName = JSON.parse(usernameParam);
+// console.log(usernameParam);
   const [error, setErrors] = useState(null);
   const[msg,setMsg]=useState("");
   const [file, setFile] = useState({name:""});
@@ -70,7 +69,7 @@ console.log(usernameParam);
     subtitle:"",
     image:null,
     video:null,
-    launchingDate:"",
+    launchingDate:new Date().toISOString().slice(0, 10),
     duration: 0
   });
   const [dragging, setDragging] = useState(false);
@@ -90,22 +89,22 @@ console.log(usernameParam);
     const droppedFile2 = e.dataTransfer.files[0];
     setVideo(droppedFile2);
   };
-//get project details by id
-useEffect(()=>
-{
-  fetch(`http://localhost:5000/projects/getByTitle/${titre}`)
-  .then(res=>{
-    return res.json()
-  })
-  .then(data=>{
-    console.log(data);
-    setproject(data);
-  })
-  .catch(err => {
-    console.error(err);
-    setErrors(err);
-  });
-},[]);
+//get project details by title
+useEffect(() => {
+  if (titre) {
+    fetch(`http://localhost:5000/projects/getByTitle/${titre}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setproject(data);
+        console.log(project.launchingDate)
+      })
+      .catch(err => {
+        console.error(err);
+        setErrors(err);
+      });
+  }
+}, [titre]);
  
 const hundelchange = (e) => {
   const target = e.target;
@@ -116,6 +115,7 @@ const hundelchange = (e) => {
     setFile(value);
   } else if (name === 'video') {
     setVideo(value);
+   
   } else {
     setproject({
       ...project,
@@ -135,9 +135,9 @@ const hundelchange = (e) => {
       e.preventDefault();
      // update the title parameter in the search params
 
-  searchParams.set("titre", '"' + project.title + '"');
-  const newUrl = window.location.pathname + "?" + searchParams.toString();
-  window.history.pushState({}, "", newUrl);
+  // searchParams.set("titre", '"' + project.title + '"');
+  // const newUrl = window.location.pathname + "?" + searchParams.toString();
+  // window.history.pushState({}, "", newUrl);
       const {
       title,
       location,
@@ -168,8 +168,8 @@ const hundelchange = (e) => {
       const res = await Axios.post(`http://localhost:5000/projects/updateProject/${titre}`,formData , { headers }).then(()=>{
         console.log(file, video);
         alert("Informations modifiées avec succés !")
-        window.location.href = `/previewProject?titre=${JSON.stringify(project.title)}&username=${JSON.stringify(userName)}`;
-   
+        window.location.href = `/project/${project._id}`;
+        
   }).catch((error)=>{
     setErrors(error);
    
@@ -268,7 +268,7 @@ const handleInputChangevd = (e) => {
                 <Column>
                 <InputContainer>
                     <Label htmlFor="name-input" tw="text-primary-500">Target launch date (optional)</Label>
-                    <Input id="name-input" type="date"  name="launchingDate" value={project.launchingDate|| ''} onChange={(e) => hundelchange(e)} placeholder="E.g. John Doe" />
+                    <Input id="name-input" type="date"  name="launchingDate" value={project.launchingDate && !isNaN(new Date(project.launchingDate)) ? new Date(project.launchingDate).toISOString().slice(0,10) : ''} onChange={(e) => hundelchange(e)} placeholder="E.g. John Doe" />
                   </InputContainer>
                   <br></br>
                 
@@ -316,7 +316,7 @@ const handleInputChangevd = (e) => {
         Drop an image here (MAX. 800x400px)
         </label>
         <div tw="flex justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-          <input   id="file_input" tw="sr-only" type="file" onChange={handleInputChange} />
+          <input   id="file_input" tw="sr-only" type="file"  name="image" onChange={handleInputChange} />
           <div tw="space-y-1 text-center">
       <svg tw="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
         <path d="M19.67,8H28.33a1.33,1.33,0,0,1,1.26,1.06l.88,4.39H17.53l.88-4.39A1.33,1.33,0,0,1,19.67,8Z"></path>
@@ -330,7 +330,7 @@ const handleInputChangevd = (e) => {
         {file && (
         <div>
           <p>Selected file:</p>
-          <p>{file.name}</p>
+          <p>{project.image}</p>
         </div>
       )}
         </span>
@@ -352,7 +352,7 @@ const handleInputChangevd = (e) => {
         Drop a video here ( no larger than 5120 MB)
         </label>
         <div tw="flex justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-          <input   id="file_input1" tw="sr-only" type="file" onChange={handleInputChangevd} />
+          <input   id="file_input1" tw="sr-only"name="video"  type="file" onChange={handleInputChangevd} />
           <div tw="space-y-1 text-center">
       <svg tw="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
         <path d="M19.67,8H28.33a1.33,1.33,0,0,1,1.26,1.06l.88,4.39H17.53l.88-4.39A1.33,1.33,0,0,1,19.67,8Z"></path>
@@ -366,7 +366,7 @@ const handleInputChangevd = (e) => {
         {video && (
         <div>
           <p>Selected video:</p>
-          <p>{video.name}</p>
+          <p>{project.video}</p>
         </div>
       )}  
         </span>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
+import StarRating from "components/cards/StarRating";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts.js";
@@ -9,12 +10,25 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as StarIcon } from "images/star-icon.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
-import { Axios } from "axios";
+import axios, { Axios } from "axios";
 import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin.svg";
 import { Link } from "react-router-dom";
+import { AiFillLike ,AiFillDislike } from 'react-icons/ai';
+import Headers from "components/headers/light";
+import { ReactComponent as PriceIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)`text-primary-500 `;
+const SecondaryInfoContainer = tw.div`flex justify-between flex-col sm:flex-row mt-2 sm:mt-4`;
+const SecondaryInfoContainer2 = tw.div`flex flex-col sm:flex-row mt-2 sm:mt-4`;
+const IconWithText = tw.div`flex items-center mr-6 my-2 sm:my-0`;
+const Text = tw.div`ml-2 text-sm font-semibold text-gray-800`;
 
+const IconContainer = styled.div`
+  ${tw`inline-block rounded-full p-2 bg-gray-700 text-gray-100`}
+  svg {
+    ${tw`w-3 h-3`}
+  }
+`;
 
 
 const TabContent = tw(motion.div)`mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12`;
@@ -37,7 +51,7 @@ const CardHoverOverlay = styled(motion.div)`
   ${tw`absolute inset-0 flex justify-center items-center`}
 `;
 const CardButton = tw(PrimaryButtonBase)`text-sm`;
-
+const CardAction = tw(PrimaryButtonBase)`w-full mt-6 opacity-50 justify-center` ;
 const CardReview = tw.div`font-medium text-xs text-gray-600`;
 
 const CardText = tw.div`p-4 text-gray-900`;
@@ -54,14 +68,64 @@ const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
 
 export default ({
   heading = "All Projects",
-
+  cardLinkText = " I Support this project",
 }) => {
  
 
   const [error, setErrors] = useState(null);
   const [projects, setproject] = useState([]);
- 
-  
+  const [rating, setRating] = useState(0);
+  const [newComment, setNewComment] = useState("");
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+  };
+  const handleLike = async (projectId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/projects/${projectId}/like`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ userId: "user_id_here" }),
+      });
+      const data = await response.json();
+      setproject((prevProjects) => {
+        const index = prevProjects.findIndex((project) => project._id === projectId);
+        if (index === -1) {
+          return prevProjects;
+        }
+        const updatedProject = { ...prevProjects[index], ...data };
+        const updatedProjects = [...prevProjects];
+        updatedProjects[index] = updatedProject;
+        return updatedProjects;
+      });
+    } catch (error) {
+      console.error(error);
+      setErrors(error.message);
+    }
+  };
+
+  const handleDislike = async (projectId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/projects/${projectId}/dislike`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ userId: "user_id_here" }),
+      });
+      const data = await response.json();
+      setproject((prevProjects) => {
+        const index = prevProjects.findIndex((project) => project._id === projectId);
+        if (index === -1) {
+          return prevProjects;
+        }
+        const updatedProject = { ...prevProjects[index], ...data };
+        const updatedProjects = [...prevProjects];
+        updatedProjects[index] = updatedProject;
+        return updatedProjects;
+      });
+    } catch (error) {
+      console.error(error);
+      setErrors(error.message);
+    }
+  };
   useEffect(() => {
   
     fetch(`http://localhost:5000/projects/getAll`) 
@@ -79,7 +143,69 @@ export default ({
   }
 , []);
 
+  // const handleRatingChange = (e) => {
+  //   const value = parseInt(e.target.value);
+  //   if (value < 1 || value > 5) {
+  //     setErrors('Invalid rating value');
+  //   } else {
+  //     setErrors(null);
+  //    setRating(parseInt(e.target.value));
+  //   }
+  // };
+
+  // const handleRatingSubmit = (e, projectId) => {
+  //   e.preventDefault();
+  //   if (rating > 0) {
+  //     fetch(`http://localhost:5000/projects/${projectId}/rating`, {
+  //       method: 'POST',
+  //       headers: headers,
+  //       body: JSON.stringify({ rating }),
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log(data);
+  //         console.log(rating)
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //         setErrors(err.message);
+  //       });
+  //   }
+  // };
+  const handleCommentSubmit = async (e, projectId, content) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post(`http://localhost:5000/projects/${projectId}/comment`, {
+        content,
+      }, {
+        headers: headers,
+      });
+  
+      const newComment = response.data;
+  
+      setproject((prevProjects) => {
+        const index = prevProjects.findIndex((project) => project._id === projectId);
+        if (index === -1) {
+          return prevProjects;
+        }
+        const updatedProject = { ...prevProjects[index], comment: [...prevProjects[index].comment, newComment] };
+        const updatedProjects = [...prevProjects];
+        updatedProjects[index] = updatedProject;
+        return updatedProjects;
+      });
+    } catch (error) {
+      console.error(error);
+      setErrors(error.message);
+    }
+  };
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+  
   return (
+    <>
+    {/* <Headers/> */}
     <Container>
       <ContentWithPaddingXl>
          <HeaderRow>
@@ -112,6 +238,7 @@ export default ({
                     <CardRatingContainer>
                     <LocationIcon /> <CardReview>({project.location})</CardReview>
                     </CardRatingContainer>
+                  
                     <CardHoverOverlay
                       variants={{
                         hover: {
@@ -129,12 +256,88 @@ export default ({
                     </CardHoverOverlay>
                   </CardImageContainer>
                   <CardText>
-                    <CardTitle>{project.title}</CardTitle>
+                  <SecondaryInfoContainer>
+                  <button 
+     onClick={() => handleLike(project._id)} style={{ backgroundColor:'transparent' , color:'#a273ff' }}
+  >
+   < AiFillLike style={{ width:'40px', height:'40px' , color:'#a273ff' , marginRight:'15px'}} /> Like
+  </button>
+  <button 
+     onClick={() => handleDislike(project._id)} style={{ backgroundColor:'transparent' , color:'#a273ff'  }}
+     
+  >
+    <AiFillDislike style={{ width:'40px', height:'40px' , color:'#a273ff' , marginRight:'15px'}}/>  Dislike
+  </button>      </SecondaryInfoContainer>
+
+  
+  {/* <StarRating rating={project.ratings} onRatingChange={(newRating) => handleRatingClick(newRating, project._id)}/> */}
+  {/* <form onSubmit={(e) => handleRatingSubmit(e, project._id)}>
+        <label>
+          Rating (1-5):
+          <input type="number" min="1" max="5" value={rating} onChange={handleRatingChange} />
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+      {error && <p>{error}</p>} */}
+
+
+
+                <br></br>
+                <SecondaryInfoContainer2>
+                  <IconWithText>
+                    <IconContainer>
+                      <LocationIcon />
+                    </IconContainer>
+                    <Text>{project.location}</Text>
+                  </IconWithText>
+                  <IconWithText>
+                    <IconContainer>
+                      <PriceIcon />
+                    </IconContainer>
+                    <Text>{project.fundGoal}</Text>
+                  </IconWithText>
+                </SecondaryInfoContainer2>
+                <br></br>
+                    <CardTitle>  {project.title}</CardTitle>
                     <CardContent>Category:{project.category}</CardContent>
-                    <CardPrice>Duration : {project.duration}</CardPrice>
+                    <CardTitle>Duration : {project.duration}</CardTitle>
                   </CardText>
+                  <CardAction >{cardLinkText}</CardAction>
+                  <form onSubmit={(e) => handleCommentSubmit(e, project._id, newComment)}>
+                  <div style={{ display: "flex", marginTop: "10px" }}>
+  <input 
+    type="text"
+    style={{ 
+      flexGrow: 1,
+      padding: "5px",
+      borderRadius: "5px",
+      marginRight: "5px"
+    }}
+    placeholder="Add a comment..."
+    value={newComment[project._id]}
+    onChange={(e) => handleCommentChange(e, project._id)} 
+  />
+  <button 
+    type="submit" 
+    style={{ 
+      padding: "5px 10px",
+      borderRadius: "5px",
+      backgroundColor: "#a273ff",
+      color: "white",
+      border: "none",
+      cursor: "pointer"
+    }}
+    
+  >
+    Add Comment
+  </button>
+</div>
+</form>
+                 
+
                 </Card>
               </CardContainer>
+              
             ))}
           </TabContent>
        
@@ -142,6 +345,7 @@ export default ({
       <DecoratorBlob1 />
       <DecoratorBlob2 />
     </Container>
+    </>
   );
 };
 

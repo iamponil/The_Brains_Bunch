@@ -30,7 +30,7 @@ export default function App() {
           <Route path="/Projectbyuser" element={<Projectbyuser />} /> 
           <Route path="/project/:id" element={<ProjectDetailsS/>} />
           <Route path="/oo" element={<SimpleContactUs />} />
-          <Route path="/basics" element={<Basics />} />
+          <Route path="/basics/:titre" element={<Basics />} />
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/previewProject" element={<Previewproject />} />
