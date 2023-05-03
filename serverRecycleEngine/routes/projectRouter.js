@@ -23,6 +23,7 @@ router.get("/GetProjectsByUser/:id",ProjectController.GetProjectsByUser)
 router.get("/getAll", ProjectController.getAll);
 
 router.get("/getProjectById/:id", ProjectController.getProjectById);
+router.get("/:id/comments", ProjectController.getAllCommentsByProjectId);
 
 router.delete("/deleteProject/:id", authenticateToken, ProjectController.getOneById, ProjectController.deleteProject);
 // Delete all projects

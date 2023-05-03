@@ -259,7 +259,24 @@ async deleteProject(req, res) {
         console.error(err);
         res.status(400).json({ message: err.message });
       }
-    } 
+    } ,
+    async getAllCommentsByProjectId (req, res){
+      try {
+        const projectId = req.params.id;
+        const project = await Project.findById(projectId).populate("comment");
+    
+        if (!project) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+    
+        const comments = project.comment;
+    
+        res.json(comments);
+      } catch (error) {
+        console.error("Error while getting comments by project ID", error);
+        res.status(500).json({ message: error.message });
+      }
+    }
   
   };
     

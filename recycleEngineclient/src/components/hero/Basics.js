@@ -3,12 +3,27 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import {ReactComponent as SvgDotPatternIcon} from "../../images/dot-pattern.svg"
-import Header, { NavLinks } from "components/headers/light";
-import { NavLink, useParams } from "react-router-dom";
+import Header, { NavLinks ,NavLink} from "components/headers/light";
+import { Link } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade'
+import {  useParams } from "react-router-dom";
 import Axios from"axios";
 const Container = tw.div``;
 const Content = tw.div``;
-
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 const SvgDotPattern1 = tw(
   SvgDotPatternIcon
 )`absolute top-0 left-0 transform -translate-x-20 rotate-90 translate-y-8 -z-10 opacity-25 text-primary-500 fill-current w-32`;
@@ -48,8 +63,20 @@ const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm
 const Input = tw.input`  `;
 const TextArea = tw.textarea`h-64 sm:h-full `;
 const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl justify-center`;
-
-
+const Button = styled.button`
+  ${tw`mt-5 tracking-wide font-semibold bg-gray-100 text-primary-500 w-full py-4 rounded-lg   rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700  transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-inner focus:outline-none`}
+  .icon {
+    ${tw`w-6 h-6 -ml-2`}
+  }
+  .text {
+    ${tw`ml-3`}
+  }
+`;
+const ErrorMsg = styled.span`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`;
 export default function Basics ({ roundedHeaderButton  }) {
   const { titre } = useParams();
 //   const searchParams = new URLSearchParams(window.location.search);
@@ -59,6 +86,8 @@ export default function Basics ({ roundedHeaderButton  }) {
 // console.log(usernameParam);
   const [error, setErrors] = useState(null);
   const[msg,setMsg]=useState("");
+  const [img, setimg] = useState(true);
+  const [vd, setvd] = useState(true);
   const [file, setFile] = useState({name:""});
   const [video, setVideo] = useState({name:""});
   const [project, setproject] = useState({
@@ -73,9 +102,7 @@ export default function Basics ({ roundedHeaderButton  }) {
     duration: 0
   });
   const [dragging, setDragging] = useState(false);
-
-
-
+  
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
@@ -179,12 +206,57 @@ const hundelchange = (e) => {
 const handleInputChange = (e) => {
   const selectedFile = e.target.files[0];
   setFile(selectedFile);
+  setimg(false);
 };
 
 const handleInputChangevd = (e) => {
   const selectedvd = e.target.files[0];
   setVideo(selectedvd);
+  setvd(false);
 };
+
+//////////////calcul////////////////////////
+const RecycleEngineFee = 0.05;
+const ProcessingFee = 0.05;
+  const [open, setOpen] = React.useState(false);
+  const [goalAmount, setGoalAmount] = useState(" ");
+ 
+  const [taxes, setTaxes] = useState(" ");
+  const [subtotaltaxes,setSubtotaltaxes]=useState(" ");
+  const [suggestedGoal, setSuggestedGoal] = useState(" ");
+  const [total,setTotal]=useState(" ");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleGoalAmountChange = (event) => {
+    setGoalAmount(event.target.value);
+  };
+
+  const handleTaxesChange = (event) => {
+    setTaxes(event.target.value);
+  };
+  const handleTotalChange = (event) => {
+    setTotal(event.target.value);
+  };
+  const calculateSuggestedGoal = () => {
+   
+    const subtotal = parseFloat(goalAmount) + (parseFloat(goalAmount) * parseFloat(taxes||0) / 100);
+    setSubtotaltaxes(subtotal);
+    const total = subtotal + (subtotal * RecycleEngineFee) + (subtotal * ProcessingFee);
+    setSuggestedGoal(total.toFixed(2));
+
+  };
+  const selectAmount=()=>{
+    if(suggestedGoal)
+    setTotal(suggestedGoal);
+    handleClose();
+   setGoalAmount("");
+   setTaxes("");
+    
+  }
+  useEffect(() => {
+    calculateSuggestedGoal();
+  }, [goalAmount, taxes]);
+
   return (
     <><Header roundedHeaderButton={roundedHeaderButton} />
  
@@ -259,9 +331,11 @@ const handleInputChangevd = (e) => {
              <br></br>
               <TwoColumn>
                 <Column>
-                  <InputContainer>
+                <InputContainer>
                     <Label htmlFor="name-input" tw="text-primary-500">Funding goal</Label>
-                    <Input id="name-input" type="number" name="fundGoal" value={project.fundGoal|| ''} onChange={(e) => hundelchange(e)} placeholder="Goal amount $ " />
+                    <Input id="name-input" type="number" name="fundGoal" value={total!==" "?project.fundGoal=total:project.fundGoal} onChange={(e) => hundelchange(e)} placeholder="Goal amount $ " /><br/><br/>
+                   {/* <img src={calcul} width="20px" height="20px"/> */}
+                   <NavLink onClick={handleOpen}   >Use our calculator to estimate total costs </NavLink>
                   </InputContainer>
                  
                 </Column>
@@ -294,7 +368,10 @@ const handleInputChangevd = (e) => {
                   <br></br>
                   <InputContainer>
                     <Label htmlFor="email-input" tw="text-primary-500">Fixed number of days (1-60)</Label>
-                    <Input id="email-input" type="Number" maxLength={60}  name="duration" value={project.duration|| ''} onChange={(e) => hundelchange(e)} placeholder="Enter number of days" />
+                    <Input id="email-input" type="Number" maxLength={60}  name="duration" value={project.duration|| ''} onChange={(e) => hundelchange(e)} placeholder="Enter number of days" min="1" max="60" />
+                    {project.duration < 1 || project.durationduration > 60 ? (
+        <span tw="text-red-500">Please enter a number between 1 and 60.</span>
+      ) : null}
                   </InputContainer>
                 </Column>
                 
@@ -316,7 +393,7 @@ const handleInputChangevd = (e) => {
         Drop an image here (MAX. 800x400px)
         </label>
         <div tw="flex justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-          <input   id="file_input" tw="sr-only" type="file"  name="image" onChange={handleInputChange} />
+          <input   id="file_input" tw="sr-only" type="file" onChange={handleInputChange} />
           <div tw="space-y-1 text-center">
       <svg tw="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
         <path d="M19.67,8H28.33a1.33,1.33,0,0,1,1.26,1.06l.88,4.39H17.53l.88-4.39A1.33,1.33,0,0,1,19.67,8Z"></path>
@@ -327,12 +404,15 @@ const handleInputChangevd = (e) => {
       <div tw="flex text-sm text-gray-600">
         <span tw="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-md">
         It must be a   SVG, PNG, JPG or GIF
-        {file && (
         <div>
-          <p>Selected file:</p>
-          <p>{project.image}</p>
-        </div>
-      )}
+ <p>Selected file:</p>
+  {img &&( <p>{project.image}</p>)
+  }
+  
+  {file && (
+    <p>{file.name}</p>
+  ) }
+</div>
         </span>
        
       
@@ -352,7 +432,7 @@ const handleInputChangevd = (e) => {
         Drop a video here ( no larger than 5120 MB)
         </label>
         <div tw="flex justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-          <input   id="file_input1" tw="sr-only"name="video"  type="file" onChange={handleInputChangevd} />
+          <input   id="file_input1" tw="sr-only" type="file" onChange={handleInputChangevd} />
           <div tw="space-y-1 text-center">
       <svg tw="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
         <path d="M19.67,8H28.33a1.33,1.33,0,0,1,1.26,1.06l.88,4.39H17.53l.88-4.39A1.33,1.33,0,0,1,19.67,8Z"></path>
@@ -363,12 +443,16 @@ const handleInputChangevd = (e) => {
       <div tw="flex text-sm text-gray-600">
         <span tw="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-md">
         It must be a MOV, MPEG, AVI, MP4, 3GP, WMV, or FLV 
-        {video && (
-        <div>
-          <p>Selected video:</p>
-          <p>{project.video}</p>
-        </div>
-      )}  
+    
+<div>
+ <p>Selected video:</p>
+  {vd &&( <p>{project.video}</p>)
+  }
+  
+  {video && (
+    <p>{video.name}</p>
+  ) }
+</div>
         </span>
        
       
@@ -398,6 +482,99 @@ const handleInputChangevd = (e) => {
       </Content>
       
     </Container>
+    <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={open}>
+        <Box sx={{...style, width: 600}}>
+          {/* <Typography id="modal-modal-title" variant="h6" component="h2">
+            Modifier vos informations
+          </Typography> */}
+           <Container>
+      <Content>
+      <FormContainer name="form">
+          {/* <h2>Funding goal</h2> */}
+          <p  tw="text-gray-700 font-bold sm:text-3xl">Funding calculator</p>
+          <h3>Enter the total amount you think you'll need to make this project and fulfill your rewards.Build out a budget that includes shipping , materials, research,vendors, and labor costs </h3>
+      <TwoColumn>
+                <Column>
+                  <InputContainer>
+                    <Label htmlFor="name-input" tw="text-primary-500">Funding goal</Label>
+                    <Input id="name-input" type="Number" name="name" placeholder="Goal amount $ " value={goalAmount}  onChange={handleGoalAmountChange}/>
+                   
+                  </InputContainer>
+              
+               
+                </Column>
+           
+              
+               
+              
+                  <Column>
+                  <InputContainer>
+                    <Label htmlFor="name-input" tw="text-primary-500">Pourcentage du Taxes %</Label>
+                    <Input id="name-input" type="Number" name="name" placeholder="Taxes %" value={taxes}
+              onChange={handleTaxesChange} />
+                   
+                  </InputContainer>
+
+             
+            
+                </Column>
+                
+              
+              </TwoColumn>
+              <br></br>
+              <TwoColumn>
+               <Column> <p tw="text-primary-500 font-bold ">Taxes</p></Column>
+                <Column>
+                <Input id="taxe" type="number" name="taxe" placeholder="$" value={goalAmount*taxes/100} readOnly />
+              
+            </Column>
+              </TwoColumn>
+              <br></br>
+      
+              {/* <TwoColumn>
+                <Column> <p tw="text-primary-500 font-bold ">Recycle Engine fees: 5%</p></Column>
+                <Column> <p tw="text-gray-500 font-bold ">${subtotaltaxes*RecycleEngineFee}</p></Column>
+              </TwoColumn> */}
+                <TwoColumn>
+               <Column> <p tw="text-primary-500 font-bold ">Recycle Engine fees: 5%</p></Column>
+                <Column>
+                <Input id="RecycleEnginefees" type="number" name="Suggestedgoal" placeholder="$" value={RecycleEngineFee*goalAmount} readOnly />
+              
+            </Column>
+              </TwoColumn>
+              <br></br>
+       
+              <TwoColumn>
+                  <Column> <p tw="text-primary-500 font-bold ">Processing fees 5%</p></Column>
+                <Column>
+                <Input id="email-input" type="number" name="email" placeholder="%" value={ProcessingFee*goalAmount} readOnly />
+              
+            </Column>
+              </TwoColumn>
+              <br></br> <hr tw=" text-gray-900"></hr> 
+             <br></br>
+             
+              <TwoColumn>
+               <Column> <p tw="text-primary-500 font-bold ">Suggested goal:</p></Column>
+                <Column>
+                <Input id="Suggestedgoal-input" type="number" name="Suggestedgoal" placeholder="$" value={suggestedGoal} readOnly />
+              
+            </Column>
+              </TwoColumn>
+                <Button type="submit" onClick={selectAmount}>
+     
+                  <span className="text">Select</span>
+                </Button>   
+              </FormContainer></Content></Container>
+        </Box>
+        </Fade>
+      </Modal>
     </>
   );
 };

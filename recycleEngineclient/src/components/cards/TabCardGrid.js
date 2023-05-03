@@ -71,9 +71,10 @@ export default ({
   cardLinkText = " I Support this project",
 }) => {
  
-
+  const [likeStatus, setLikeStatus] = useState(null);
   const [error, setErrors] = useState(null);
   const [projects, setproject] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
   const [rating, setRating] = useState(0);
   const [newComment, setNewComment] = useState("");
   const headers = {
@@ -97,6 +98,7 @@ export default ({
         updatedProjects[index] = updatedProject;
         return updatedProjects;
       });
+      setLikeStatus("like");
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -121,6 +123,7 @@ export default ({
         updatedProjects[index] = updatedProject;
         return updatedProjects;
       });
+      setLikeStatus("dislike");
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -143,35 +146,7 @@ export default ({
   }
 , []);
 
-  // const handleRatingChange = (e) => {
-  //   const value = parseInt(e.target.value);
-  //   if (value < 1 || value > 5) {
-  //     setErrors('Invalid rating value');
-  //   } else {
-  //     setErrors(null);
-  //    setRating(parseInt(e.target.value));
-  //   }
-  // };
 
-  // const handleRatingSubmit = (e, projectId) => {
-  //   e.preventDefault();
-  //   if (rating > 0) {
-  //     fetch(`http://localhost:5000/projects/${projectId}/rating`, {
-  //       method: 'POST',
-  //       headers: headers,
-  //       body: JSON.stringify({ rating }),
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data);
-  //         console.log(rating)
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //         setErrors(err.message);
-  //       });
-  //   }
-  // };
   const handleCommentSubmit = async (e, projectId, content) => {
     e.preventDefault();
   
@@ -193,7 +168,9 @@ export default ({
         const updatedProjects = [...prevProjects];
         updatedProjects[index] = updatedProject;
         return updatedProjects;
+        
       });
+      setSuccessMessage('Comment added successfully!');
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -201,11 +178,12 @@ export default ({
   };
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
+    
   };
   
   return (
     <>
-    {/* <Headers/> */}
+     <Headers/> 
     <Container>
       <ContentWithPaddingXl>
          <HeaderRow>
@@ -257,28 +235,24 @@ export default ({
                   </CardImageContainer>
                   <CardText>
                   <SecondaryInfoContainer>
-                  <button 
-     onClick={() => handleLike(project._id)} style={{ backgroundColor:'transparent' , color:'#a273ff' }}
-  >
-   < AiFillLike style={{ width:'40px', height:'40px' , color:'#a273ff' , marginRight:'15px'}} /> Like
-  </button>
-  <button 
-     onClick={() => handleDislike(project._id)} style={{ backgroundColor:'transparent' , color:'#a273ff'  }}
+                  <div tw="flex flex-col sm:flex-row mt-1 sm:mt-4">   
+                   <a onClick={() => handleLike(project._id)} style={{  cursor: 'pointer' }}>
+   < AiFillLike style={{ width:'40px', height:'40px' , color: likeStatus === "like" ? "red" : "#a273ff" , marginRight:'15px'}} /> 
+  </a>
+
+  <p style={{marginTop:'20px' , marginRight:'20px'}}>{project.likes}Likes </p> </div>
+  <div tw="flex flex-col sm:flex-row mt-2 sm:mt-4">
+  <a 
+     onClick={() => handleDislike(project._id)} style={{  cursor: 'pointer' }}
      
   >
-    <AiFillDislike style={{ width:'40px', height:'40px' , color:'#a273ff' , marginRight:'15px'}}/>  Dislike
-  </button>      </SecondaryInfoContainer>
+    <AiFillDislike style={{ width:'40px', height:'40px' , color: likeStatus === "dislike" ? "red" : "#a273ff", marginRight:'15px'}}  
+     /> 
+  </a>   <p style={{marginTop:'20px'}}>{project.dislikes} Dislikes</p> </div> </SecondaryInfoContainer>
 
   
   {/* <StarRating rating={project.ratings} onRatingChange={(newRating) => handleRatingClick(newRating, project._id)}/> */}
-  {/* <form onSubmit={(e) => handleRatingSubmit(e, project._id)}>
-        <label>
-          Rating (1-5):
-          <input type="number" min="1" max="5" value={rating} onChange={handleRatingChange} />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
-      {error && <p>{error}</p>} */}
+
 
 
 
@@ -331,6 +305,7 @@ export default ({
   >
     Add Comment
   </button>
+  {successMessage && <div>{successMessage}</div>}
 </div>
 </form>
                  

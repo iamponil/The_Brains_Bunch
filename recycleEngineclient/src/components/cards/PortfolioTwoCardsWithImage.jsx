@@ -104,19 +104,24 @@ export default ({
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   };
-  const handleClickDeleteOne = (id)=>
-  {
-    fetch('http://localhost:5000/projects/deleteProject/'+id,{
-      method : 'DELETE' ,   headers: headers
-    })
-    .then(res=>{
-      return res.json()
-    })
-    .then(data=>{
-      console.log(data);
-      window.location.reload(false);
-    })
-  } 
+  const handleClickDeleteOne = (id) => {
+    // Display a confirmation pop-up
+    const confirmDelete = window.confirm("Are you sure you want to delete this project?");
+  
+    if (confirmDelete) {
+      fetch(`http://localhost:5000/projects/deleteProject/${id}`, {
+        method: 'DELETE',
+        headers: headers
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        window.location.reload(false);
+      })
+      .catch(err => console.error(err));
+    }
+  }
+  
   return (
     <>  
     
