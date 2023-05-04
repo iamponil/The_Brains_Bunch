@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
-import Header from "components/headers/light";
+import {Header} from "components/headers/profileHeader";
 import MainFeature from "components/features/TwoColWithButton.js";
 import DesignIllustration from "../../images/imgoo.jpg";
 import Exit from "../../images/exit.png";
@@ -36,7 +36,7 @@ console.log(usernameParam);
   console.log(titre)
   const handlepreview = (e) => {
     e.preventDefault();
-    window.location.href = `/oo?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(titre)}`;
+    window.location.href = `/projectMenu?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(titre)}`;
   
    }
    //get project details by id

@@ -26,10 +26,8 @@ export const ThankYouPage = () => {
           throw new Error('authentication has been failed!');
         })
         .then((resObject) => {
-          console.log(resObject.user);
           localStorage.setItem('accessToken', resObject.token);
-          const data = resObject.user;
-          window.location.href = `/?data=${JSON.stringify(data)} `;
+          window.location.href = `/ `;
         })
         .catch((err) => {
           console.log(err);

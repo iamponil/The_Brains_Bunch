@@ -1,6 +1,6 @@
 import { ReactComponent as ArrowIcon } from './icons/arrow.svg';
 import { CSSTransition } from 'react-transition-group';
-import { TbLogout  } from 'react-icons/tb';
+import { TbLogout } from 'react-icons/tb';
 import './dropdown.css';
 
 import {
@@ -20,13 +20,39 @@ import { FaCompactDisc } from 'react-icons/fa';
 
 import { BiCog } from 'react-icons/bi';
 
-import DropdownItem from 'react-bootstrap/esm/DropdownItem.js';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-export const DropdownMenu = ({ user }) => {
-  console.log(user);
+export const DropdownMenu = () => {
+  const [theme, setTheme] = useState('light');
+  const [User, setUser] = useState(null);
+  useEffect(() => {
+    // start initial tasks here
+    const getUser = () => {
+      fetch('http://localhost:5000/users/getOneByPayloadId/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) return response.json();
+          throw new Error('authentication has been failed!');
+        })
+        .then((resObject) => {
+          const user = resObject.user;
+          setUser((prevState) => ({ ...prevState, user }));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
   const style = { borderRadius: '50%' };
-
+  const handleProfile = async (e) => {
+    window.location.href = `/editProfile/editInformation`;
+  };
   const [activeMenu, setActiveMenu] = useState('main');
   const [menuHeight, setMenuHeight] = useState(null);
   const dropdownRef = useRef(null);
@@ -49,11 +75,6 @@ export const DropdownMenu = ({ user }) => {
       console.error(error);
     }
   };
-  const handleproject= async (e) => {
-     e.preventDefault();
-     window.location.href = `/Projectbyuser?username=${JSON.stringify(user)}`;
-   
-  };
   useEffect(() => {
     setMenuHeight(dropdownRef.current?.firstChild.offsetHeight);
   }, []);
@@ -68,7 +89,10 @@ export const DropdownMenu = ({ user }) => {
       <a
         href="#"
         className="menu-item"
-        onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}
+        onClick={() => {
+          props.goToMenu && setActiveMenu(props.goToMenu);
+          props.onClick && props.onClick();
+        }}
       >
         <span className="icon-button">{props.leftIcon}</span>
         {props.children}
@@ -76,9 +100,23 @@ export const DropdownMenu = ({ user }) => {
       </a>
     );
   }
+  const toggleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  };
 
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
   return (
-    <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
+    <div
+      className={`DropdownMenu ${theme} dropdown`}
+      style={{ height: menuHeight }}
+      ref={dropdownRef}
+    >
       <CSSTransition
         in={activeMenu === 'main'}
         timeout={500}
@@ -87,21 +125,24 @@ export const DropdownMenu = ({ user }) => {
         onEnter={calcHeight}
       >
         <div className="menu">
-          <DropdownItem
-            leftIcon={
-              <img
-                style={style}
-                src={
-                  user.image.startsWith('https')
-                    ? user.image
-                    : 'http://localhost:5000/uploads/' + user.image
-                }
-                alt="ouki"
-              />
-            }
-          >
-            My Profile
-          </DropdownItem>
+          {User && (
+            <DropdownItem
+              goToMenu={handleProfile}
+              leftIcon={
+                <img
+                  style={style}
+                  src={
+                    User.user.image.startsWith('https')
+                      ? User.user.image
+                      : 'http://localhost:5000/uploads/' + User.user.image
+                  }
+                  alt="ouki"
+                />
+              }
+            >
+              My Profile
+            </DropdownItem>
+          )}
           <DropdownItem
             leftIcon={<BiCog />}
             rightIcon={<BsChevronRight />}
@@ -115,13 +156,6 @@ export const DropdownMenu = ({ user }) => {
             goToMenu="Display"
           >
             Display and accesibility
-          </DropdownItem>
-          <DropdownItem
-            goToMenu={handleproject}
-            leftIcon={<BsFillCursorFill />}
-            
-          >
-            My Projects
           </DropdownItem>
           <DropdownItem
             goToMenu={handleLogout}
@@ -151,7 +185,7 @@ export const DropdownMenu = ({ user }) => {
           <DropdownItem leftIcon={<MdOutlinePrivateConnectivity />}>
             Privacy center
           </DropdownItem>
-          <DropdownItem  leftIcon={<MdOutlineLanguage />}>Language</DropdownItem>
+          <DropdownItem leftIcon={<MdOutlineLanguage />}>Language</DropdownItem>
         </div>
       </CSSTransition>
 
@@ -166,7 +200,13 @@ export const DropdownMenu = ({ user }) => {
           <DropdownItem goToMenu="main" leftIcon={<ArrowIcon />}>
             <h2>Display</h2>
           </DropdownItem>
-          <DropdownItem leftIcon={<MdDarkMode />}>dark Mode</DropdownItem>
+          <DropdownItem
+            // goToMenu={toggleTheme}
+            leftIcon={<MdDarkMode />}
+            onClick={() => toggleTheme()}
+          >
+            dark Mode
+          </DropdownItem>
           <DropdownItem leftIcon={<FaCompactDisc />}>Compact Mode</DropdownItem>
           <DropdownItem leftIcon={<BsFillCursorFill />}>
             Show perviews of links

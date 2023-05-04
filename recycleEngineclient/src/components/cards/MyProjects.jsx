@@ -9,7 +9,7 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin.svg";
 import { ReactComponent as TimeIcon } from "feather-icons/dist/icons/clock.svg";
 import { ReactComponent as ArrowRightIcon } from "images/arrow-right-icon.svg";
-import Header from "components/headers/light";
+import {Header} from "components/headers/profileHeader";
 import { Link } from "react-router-dom";
 const Container = tw.div`relative`;
 const Content = tw.div` mx-auto py-20 lg:py-24`;
@@ -78,28 +78,56 @@ export default ({
 
   const [projects, setproject] = useState([]);
   const [error, setErrors] = useState(null);
-  const searchParams = new URLSearchParams(window.location.search);
-  const dataParam = searchParams.get('data');
-  const user = JSON.parse(dataParam);
-  console.log(user);
-
-
+  const [User, setUser] = useState(null);
+  let user;
   useEffect(() => {
-    if (user && user._id) {
-      fetch(`http://localhost:5000/projects/GetProjectsByUser/${user._id}`) 
-        .then(res => {
-          return res.json()
+    let isMounted = true;
+
+    const getUser = () => {
+      fetch('http://localhost:5000/users/getOneByPayloadId/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) return response.json();
+          throw new Error('authentication has been failed!');
         })
-        .then(data => {
-          console.log(data);
-          setproject(data);
+        .then((resObject) => {
+          user = resObject.user;
+          console.log(resObject.user);
+          setUser((prevState) => ({ ...prevState, user }));
+
+          if (user && user._id) {
+            console.log(user._id);
+            fetch(`http://localhost:5000/projects/GetProjectsByUser/${user._id}`) 
+              .then(res => {
+                return res.json()
+              })
+              .then(data => {
+                console.log(data);
+                setproject(data);
+              })
+              .catch(err => {
+                console.error(err);
+                setErrors(err);
+              });
+          }
         })
-        .catch(err => {
-          console.error(err);
-          setErrors(err);
+        .catch((err) => {
+          console.log(err);
         });
-    }
+    };
+    getUser();
+  
   }, []);
+
+   
+ 
+
+ 
      
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

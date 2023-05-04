@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import tw from "twin.macro";
-import Header from "components/headers/light";
+import {Header} from "components/headers/profileHeader";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "components/misc/Headings.js";
 import { SectionDescription } from "components/misc/Typography.js";
@@ -56,7 +56,7 @@ export default (
   const searchParams = new URLSearchParams(window.location.search);
   const usernameParam = searchParams.get('username');
   const user = JSON.parse(usernameParam);
-console.log(usernameParam);
+console.log(user);
 const dataParam = searchParams.get('data');
   const selectedValue = JSON.parse(dataParam);
   
@@ -68,7 +68,7 @@ const dataParam = searchParams.get('data');
   const [projects, setproject] = useState([]);
   const handlepreview = (e) => {
     e.preventDefault();
-    window.location.href = `/previewProject?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(titre)}`;
+    window.location.href = `/previewProject?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user.user)}&titre=${JSON.stringify(titre)}`;
    }
    const handlebacis = (e) => {
     e.preventDefault();
@@ -76,7 +76,7 @@ const dataParam = searchParams.get('data');
   }
 
   useEffect(() => {
-    if (user && user._id) {
+    if (user.user && user.user._id) {
       fetch(`http://localhost:5000/projects/getByTitle/${titre}`) 
         .then(res => {
           return res.json()
@@ -101,7 +101,7 @@ const dataParam = searchParams.get('data');
             </Heading>
             <br></br>
             <Paragraph tw="font-bold text-primary-500">
-            By {user.name} 
+            By {user.user.name} 
             </Paragraph>
             <br></br>
           <button  style={{ backgroundColor: 'transparent' , color:'gray' }}onClick={handlepreview} >  <BsEyeFill style={{ marginRight:'20px' }}/> Preview</button> 

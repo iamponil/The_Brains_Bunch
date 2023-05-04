@@ -66,7 +66,34 @@ const StyledResponsiveVideoEmbed = styled(ResponsiveVideoEmbed)`
 `;
 const style = { borderRadius: '50%' };
 
-export const Hero = ({ user }) => {
+export const Hero = () => {
+  const [User, setUser] = useState(null);
+  let user;
+  useEffect(() => {
+    // start initial tasks here
+    const getUser = () => {
+      fetch('http://localhost:5000/users/getOneByPayloadId/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) return response.json();
+          throw new Error('authentication has been failed!');
+        })
+        .then((resObject) => {
+          user = resObject.user;
+          console.log(resObject.user);
+          setUser((prevState) => ({ ...prevState, user }));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
   function NavItem(props) {
     const [open, setOpen] = useState(false);
 
@@ -80,38 +107,42 @@ export const Hero = ({ user }) => {
       </li>
     );
   }
-  console.log(user);
 
   const navLinks = [
     <NavLinks key={1}>
-       {user ? (<NavLink href={`/ProjectCreat?data=${JSON.stringify(user)}`}>Create Project</NavLink> ) : (
-        <NavLink href="/login">Create Project</NavLink> 
-           
-      )}
-      
-      {user ? (<NavLink href={`/Projectbyuser?data=${JSON.stringify(user)}`}>My Projects</NavLink> ) : (
-        <NavLink ></NavLink> 
-           
-      )}
-      <NavLink href="#">Blogs</NavLink>
-      <NavLink href="#"> Contributions</NavLink>
-      <NavLink>Contact</NavLink>
+ {User ? (
+  <NavLink href='/ProjectCreat'>
+    Create Project
+  </NavLink>
+) : (
+  <NavLink href="/login">Create Project</NavLink>
+)}
+{User ? (<NavLink href='Projectbyuser'>My Projects</NavLink> ) : (
+<NavLink ></NavLink> 
+ 
+)}
+{User ? (<NavLink href="#">Contributions</NavLink> ) : (
+<NavLink ></NavLink> 
+ 
+)}
+     
+      <NavLink href="/ContactUs">Contact</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
-      {user ? (
+      {User ? (
         <NavItem
           icon={
             <img
               style={style}
               src={
-                user.image.startsWith('https')
-                  ? user.image
-                  : 'http://localhost:5000/uploads/' + user.image
+                User.user.image.startsWith('https')
+                  ? User.user.image
+                  : 'http://localhost:5000/uploads/' + User.user.image
               }
             />
           }
         >
-          <DropdownMenu user={user}></DropdownMenu>;
+          <DropdownMenu></DropdownMenu>
         </NavItem>
       ) : (
         <PrimaryLink href="/login">Login</PrimaryLink>

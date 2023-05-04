@@ -3,7 +3,8 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import {ReactComponent as SvgDotPatternIcon} from "../../images/dot-pattern.svg"
-import Header, { NavLinks ,NavLink} from "components/headers/light";
+import  { NavLinks ,NavLink} from "components/headers/light";
+import { Header } from 'components/headers/profileHeader';
 import { Link } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -79,11 +80,32 @@ const ErrorMsg = styled.span`
 `;
 export default function Basics ({ roundedHeaderButton  }) {
   const { titre } = useParams();
-//   const searchParams = new URLSearchParams(window.location.search);
-
-//   const usernameParam = searchParams.get('username');
-//   const userName = JSON.parse(usernameParam);
-// console.log(usernameParam);
+  const [User, setUser] = useState(null);
+  let user;
+  useEffect(() => {
+    const getUser = () => {
+      fetch('http://localhost:5000/users/getOneByPayloadId/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) return response.json();
+          throw new Error('authentication has been failed!');
+        })
+        .then((resObject) => {
+          user = resObject.user;
+          console.log(resObject.user);
+          setUser((prevState) => ({ ...prevState, user }));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
   const [error, setErrors] = useState(null);
   const[msg,setMsg]=useState("");
   const [img, setimg] = useState(true);

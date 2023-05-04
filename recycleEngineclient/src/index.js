@@ -1,11 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import Modal from "react-modal";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import Modal from 'react-modal';
+import { ProSidebarProvider } from 'react-pro-sidebar';
 
-Modal.setAppElement("#root");
+Modal.setAppElement('#root');
 
 ReactDOM.render(
-  <App />,
-  document.getElementById("root")
+  <ProSidebarProvider>
+    <App />
+  </ProSidebarProvider>,
+  document.getElementById('root')
 );

@@ -5,6 +5,8 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const sendMail = require("./sendMail");
 const ValidateRegister = require("../validations/Register");
+const Address = require("../models/address");
+
 const jwt = require("jsonwebtoken");
 const salt = bcrypt.genSaltSync(10);
 exports.getAllUsers = (req, res) => {
@@ -29,6 +31,53 @@ exports.getAll = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
+//send contact us mail
+exports.SendContactMail = async (req,res) => {
+  // console.log(name,email,msg)
+
+  console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+  console.log(req.body.name)
+  // Create a SMTP transporter object
+
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "thebrainsbrunch41@gmail.com",
+      pass: "aufdccimtrwxoslh",
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+  // Message object
+  let message = {
+    from: req.body.email,
+    to: "marwa.memmi@esprit.tn",
+    subject: "Message from Contact Form",
+    html: `<div>
+            <p><strong>Email from: ${req.body.name}</strong></p>
+             <br>
+             <p>  <strong>Email: ${req.body.email} </strong></span> </p>
+             <p>  <strong>Message: ${req.body.msg} </strong></span> </p>
+             </div>`,
+  };
+try {
+  await transporter.sendMail(message, function (error, info) {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ message: "Failed to send email. Please try again later." });
+    } else {
+      console.log("Email sent successfully!");
+      res.status(200).json({ message: "Email sent successfully!" });
+    }
+  });
+} catch (error) {
+  console.log(error);
+  res.status(500).json({ message: "Failed to send email. Please try again later." });
+}};
 exports.getAllClients = async (req, res) => {
   const search = req.query.query;
   try {
@@ -408,5 +457,181 @@ user.role=req.body.role;
   }catch (error) {
     console.log(error);
     return res.status(500).send("Erreur interne du serveur");
+  }
+};
+//update user by id
+exports.UpdateUserById = async (req, res) => {
+  const id = req.payload.id;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send("Utilisateur non trouvé");
+    }
+    if (req.body.name != null) {
+      user.name = req.body.name;
+    }
+    if (req.body.email != null) {
+      user.email = req.body.email;
+    }
+
+    if (req.body.phone_number != null) {
+      user.phone_number = req.body.phone_number;
+    }
+    if (req.file.filename != null) {
+      user.image = req.file.filename;
+    }
+    try {
+      user.save().then((updatedUser) => {
+        res.json(updatedUser);
+      });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Erreur interne du serveur");
+  }
+};
+
+exports.addUserAddress = async (req, res) => {
+  const id = req.payload.id;
+  console.log(req.payload.id);
+  console.log(req.body);
+  const newAddress = {
+    streetAdress: req.body.streetAddress,
+    city: req.body.city,
+    state: req.body.state,
+    zipCode: req.body.zipCode,
+    country: req.body.country,
+  };
+
+  // Find the user by ID
+  User.findById(id)
+    .populate("address") // Populate the address field so we can check if it exists
+    .exec((err, user) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ error: "Error updating user address" });
+      }
+      if (user.address) {
+        // User already has an address, update it instead of creating a new one
+        Address.findByIdAndUpdate(
+          user.address._id,
+          newAddress,
+          { new: true },
+          (err, updatedAddress) => {
+            if (err) {
+              console.log(err);
+              return res
+                .status(500)
+                .send({ error: "Error updating user address" });
+            }
+            // Update the user's address field with the updated address object
+            User.findByIdAndUpdate(
+              id,
+              { address: updatedAddress },
+              { new: true }
+            )
+              .populate("address")
+              .exec((err, updatedUser) => {
+                if (err) {
+                  console.log(err);
+                  return res
+                    .status(500)
+                    .send({ error: "Error updating user address" });
+                }
+                res.send(updatedUser);
+              });
+          }
+        );
+      } else {
+        // User doesn't have an address yet, create a new one
+        const address = new Address(newAddress);
+        address.user_id.push(id);
+        address.save((err, savedAddress) => {
+          if (err) {
+            console.log(err);
+            return res
+              .status(500)
+              .send({ error: "Error creating user address" });
+          }
+          // Update the user's address field with the new address object
+          User.findByIdAndUpdate(id, { address: savedAddress }, { new: true })
+            .populate("address")
+            .exec((err, updatedUser) => {
+              if (err) {
+                console.log(err);
+                return res
+                  .status(500)
+                  .send({ error: "Error updating user address" });
+              }
+              res.send(updatedUser);
+            });
+        });
+      }
+    });
+};
+exports.getUserAddress = async (req, res) => {
+  const id = req.payload.id;
+  try {
+    const user = await User.findById(id).populate("address");
+    const address = user?.address || null;
+    console.log(address);
+    res.json({ address });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error fetching user address" });
+  }
+};
+exports.getByPayloadId = async (req, res) => {
+  console.log(req.body.payload.id);
+  const id = req.body.payload.id;
+  try {
+    const user = await User.findById(id);
+    if (user == null) {
+      return res.status(304).json({ message: "cannot find user" });
+    }
+    res.json({ user: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.updateUserPassword = async (req, res) => {
+  try {
+    const id = req.payload.id;
+    const user = await User.findById(id);
+
+    // Get new and confirm password from req.body
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    console.log(currentPassword, newPassword, confirmPassword);
+    // Check if 2 password is equal
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .send({ msg: "Les mots de passe ne sont pas identiques" });
+    } else if (user) {
+      console.log(user.password);
+      const match = await bcrypt.compare(newPassword, user.password);
+
+      if (!match) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        //replace password
+        await User.updateOne(
+          { _id: id },
+          { $set: { password: hashedPassword } }
+        );
+        res.status(200).send({ msg: "Mot de passe changé !" });
+      } else {
+        return res.status(400).send({
+          msg: "Le nouveau mot de passe doit être différent du mot de passe actuel.",
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ msg: "Changement du mot de passe echoué", error });
   }
 };

@@ -100,7 +100,8 @@ export default ({
   const defaultLogoLink = (
     <LogoLink href="/">
       <img src={logo} alt="logo" />
-      RecycleEngine
+      <p style={{ color: '#7E22CE', opacity: '0.5' }}>RecycleEngine</p>
+
     </LogoLink>
   );
 

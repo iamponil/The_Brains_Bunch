@@ -14,10 +14,10 @@ import axios, { Axios } from "axios";
 import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin.svg";
 import { Link } from "react-router-dom";
 import { AiFillLike ,AiFillDislike } from 'react-icons/ai';
-import Headers from "components/headers/light";
+import {Header} from "components/headers/profileHeader";
 import { ReactComponent as PriceIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
-const Header = tw(SectionHeading)`text-primary-500 `;
+const Headers = tw(SectionHeading)`text-primary-500 `;
 const SecondaryInfoContainer = tw.div`flex justify-between flex-col sm:flex-row mt-2 sm:mt-4`;
 const SecondaryInfoContainer2 = tw.div`flex flex-col sm:flex-row mt-2 sm:mt-4`;
 const IconWithText = tw.div`flex items-center mr-6 my-2 sm:my-0`;
@@ -183,11 +183,11 @@ export default ({
   
   return (
     <>
-     <Headers/> 
+     <Header/> 
     <Container>
       <ContentWithPaddingXl>
          <HeaderRow>
-          <Header>{heading}</Header>
+          <Headers>{heading}</Headers>
          
         </HeaderRow>
 
@@ -209,6 +209,7 @@ export default ({
             transition={{ duration: 0.4 }}
             
           >
+            {successMessage && <div>{successMessage}</div>}
             {projects.map((project, index) => (
               <CardContainer key={index}>
                 <Card className="group"  initial="rest" whileHover="hover" animate="rest">
@@ -237,7 +238,7 @@ export default ({
                   <SecondaryInfoContainer>
                   <div tw="flex flex-col sm:flex-row mt-1 sm:mt-4">   
                    <a onClick={() => handleLike(project._id)} style={{  cursor: 'pointer' }}>
-   < AiFillLike style={{ width:'40px', height:'40px' , color: likeStatus === "like" ? "red" : "#a273ff" , marginRight:'15px'}} /> 
+   < AiFillLike style={{ width:'40px', height:'40px' , color: "#a273ff" , marginRight:'15px'}} /> 
   </a>
 
   <p style={{marginTop:'20px' , marginRight:'20px'}}>{project.likes}Likes </p> </div>
@@ -246,7 +247,7 @@ export default ({
      onClick={() => handleDislike(project._id)} style={{  cursor: 'pointer' }}
      
   >
-    <AiFillDislike style={{ width:'40px', height:'40px' , color: likeStatus === "dislike" ? "red" : "#a273ff", marginRight:'15px'}}  
+    <AiFillDislike style={{ width:'40px', height:'40px' , color: "#a273ff", marginRight:'15px'}}  
      /> 
   </a>   <p style={{marginTop:'20px'}}>{project.dislikes} Dislikes</p> </div> </SecondaryInfoContainer>
 
@@ -305,8 +306,9 @@ export default ({
   >
     Add Comment
   </button>
-  {successMessage && <div>{successMessage}</div>}
+ 
 </div>
+
 </form>
                  
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { Form } from 'react-bootstrap';
@@ -55,17 +55,40 @@ export default ({ roundedHeaderButton  }) => {
   const [formSubmitted2, setFormSubmitted2] = useState(true);
   const [Title, setTitle] = useState("");
   const [error, setErrors] = useState(null);
-  const searchParams = new URLSearchParams(window.location.search);
-  const dataParam = searchParams.get('data');
-  console.log(dataParam);
-  const user = JSON.parse(dataParam);
-  console.log(user);
+;
   const [formData, setFormData] = useState({
     title: '',
     location: '',
     category: ''
   });
- 
+  const [User, setUser] = useState(null);
+  let user;
+  useEffect(() => {
+    // start initial tasks here
+    const getUser = () => {
+      fetch('http://localhost:5000/users/getOneByPayloadId/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) return response.json();
+          throw new Error('authentication has been failed!');
+        })
+        .then((resObject) => {
+          user = resObject.user;
+          console.log(resObject.user);
+     setUser((prevState) => ({ ...prevState, user }));
+          console.log({User});
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
   const {title, location , category}=formData;
   const hundelchange = (e) =>{
   setFormData({ ...formData, [e.target.name]: e.target.value });}
@@ -94,7 +117,7 @@ export default ({ roundedHeaderButton  }) => {
     const res = await Axios.post(`http://localhost:5000/projects/addProject`,{...project },{ headers });
     console.log(selectedValue,selectedCountry,Title)
     alert("Informations enregistrées avec succès !");
-    window.location.href = `/oo?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(user)}&titre=${JSON.stringify(Title)} `;
+    window.location.href = `/projectMenu?data=${JSON.stringify(selectedValue)}&username=${JSON.stringify(User)}&titre=${JSON.stringify(Title)} `;
   } catch (error) {
     console.log(error);
     setErrors(error.response.data.msg);
@@ -132,7 +155,7 @@ export default ({ roundedHeaderButton  }) => {
             </Heading>
             
            
-            <Form  onSubmit={(e) => onsubmit(e)}>
+        {User &&    <Form  onSubmit={(e) => onsubmit(e)}>
        {formSubmitted2 && (
                <div >
             <Paragraph>
@@ -220,7 +243,7 @@ export default ({ roundedHeaderButton  }) => {
     </p>
            </div> 
          )} 
-          </Form> 
+          </Form> }
          
     
            </LeftColumn>

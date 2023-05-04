@@ -8,7 +8,7 @@ import StatsIllustrationSrc from "images/stats-illustration.svg";
 import { ReactComponent as SvgDotPattern } from "images/dot-pattern.svg";
 import { Button } from "react-bootstrap";
 import Header from "components/headers/light";
-import Virtualbox from "components/cards/SingleCol";
+import Virtualbox from "components/cards/ProjectMenu";
 import {
   BsEye,
   BsEyeFill
