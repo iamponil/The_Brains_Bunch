@@ -62,4 +62,19 @@ router.post(
   storage.upload_file("image"),
   UserController.UpdateUserById
 );
+router.post(
+  "/addUserAddress/",
+  authenticateToken,
+  UserController.addUserAddress
+);
+router.get(
+  "/getUserAddress/",
+  authenticateToken,
+  UserController.getUserAddress
+);
+router.post(
+  "/updateUserPassword/",
+  authenticateToken,
+  UserController.updateUserPassword
+);
 module.exports = router;

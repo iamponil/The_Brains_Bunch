@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const userAddressSchema = new mongoose.Schema(
   {
-  streetAdress:{type :String},
-  city:{type :String},
-  state:{type :String},
-  zipCode:{type :String},
-  country:{type :String},
+    streetAdress: { type: String },
+    city: { type: String },
+    state: { type: String },
+    zipCode: { type: String },
+    country: { type: String },
     user_id: [{ type: Schema.Types.ObjectId, ref: "user" }],
   },
   {

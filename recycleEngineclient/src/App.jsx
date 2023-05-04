@@ -36,7 +36,7 @@ export default function App() {
             <Route path="editInformation" element={<InformationForm />} />
             <Route path="editAddress" element={<AddressForm />} />
             <Route path="payment" element={<AddressForm />} />
-            <Route path="" element={<AddressForm />} />
+            <Route path="" element={<CredentialsForm />} />
           </Route>
 
           <Route path="/previewProject" element={<Previewproject />} />

@@ -1,232 +1,358 @@
-import React from 'react';
-import GoogleMaps from './googlemaps.jsx';
+import React, { useState, useEffect } from 'react';
 
-export default function editAddress() {
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { css } from 'styled-components/macro'; //eslint-disable-line
+import { ReactComponent as SvgDotPatternIcon } from '../../images/dot-pattern.svg';
+import axios, { Axios } from 'axios';
+
+const Content = tw.div`max-w-screen-2xl mx-auto py-20 lg:py-24`;
+
+const FormContainer = styled.div`
+  ${tw`p-10 sm:p-12 md:p-16 bg-primary-500 text-gray-100 rounded-lg `}
+  form {
+    ${tw`mt-4`}
+  }
+  h2 {
+    ${tw`text-3xl sm:text-4xl font-bold`}
+  }
+
+  input,
+  textarea {
+    ${tw`w-full bg-transparent text-gray-100 text-base font-medium tracking-wide border-b-2 py-2 text-gray-100 hocus:border-pink-400 focus:outline-none transition duration-200`};
+
+    padding: 8px;
+
+    ::placeholder {
+      ${tw`text-gray-500`}
+    }
+  }
+
+  max-width: 800px; // set a max width for the container
+
+  @media (min-width: 768px) {
+    max-width: 900px;
+  }
+`;
+const ImageContainer = styled.div`
+  border: 2px dashed gray;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ImagePreview = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
+const Column = tw.div`sm:w-5/12 flex flex-col`;
+const InputContainer = tw.div`relative py-5 mt-6`;
+const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm`;
+const Input = tw.input``;
+const TextArea = tw.textarea`h-24 sm:h-full resize-none`;
+const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px text-center hocus:shadow-xl `;
+const buttonStyle = { display: 'revert' };
+const SvgDotPattern1 = tw(
+  SvgDotPatternIcon
+)`absolute bottom-0 right-0 transform translate-y-1/2 translate-x-1/2 -z-10 opacity-50 text-primary-500 fill-current w-24`;
+
+export default function EditAddress() {
+  const [map, setMap] = useState(null);
+  const [marker, setMarker] = useState(null);
+  const [geocoder, setGeocoder] = useState(null);
+  const [streetAddress, setstreetAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+  const [msg, setMsg] = useState('');
+  const [error, setErrors] = useState(null);
+  const [zipCode, setZipCode] = useState('');
+
+  const [formData, setFormData] = useState({
+    streetAddress: '',
+    city: '',
+    streetAddress: '',
+    state: '',
+    zipCode: '',
+    country: '',
+  });
+  useEffect(() => {
+    let script;
+    if (!window.google) {
+      script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCOZZr9jV6SMRQM6rYiYZvnmernRiS3Llo&libraries=places`;
+      script.defer = true;
+      script.async = true;
+
+      script.onload = () => {
+        const geocoderInstance = new window.google.maps.Geocoder();
+        const map = new window.google.maps.Map(document.getElementById('map'), {
+          center: { lat: -34.0, lng: 9.0 },
+          zoom: 8,
+        });
+
+        setGeocoder(geocoderInstance);
+        setMap(map);
+
+        geocoderInstance.geocode(
+          { address: `Amphitheatre Parkway, USA` },
+          (results, status) => {
+            if (status === 'OK') {
+              map.setCenter(results[0].geometry.location);
+              const marker = new window.google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                draggable: true,
+              });
+              setMarker(marker);
+
+              window.google.maps.event.addListener(marker, 'click', () => {
+                geocoderInstance.geocode(
+                  { location: marker.getPosition() },
+                  (results, status) => {
+                    if (status === 'OK') {
+                      const address_components = results[0].address_components;
+                      console.log(address_components);
+                      let city = '';
+                      let state = '';
+                      let country = '';
+                      let streetAddress = '';
+                      let zipCode = '';
+                      address_components.forEach((component) => {
+                        if (component.types.includes('locality')) {
+                          city = component.long_name;
+                        }
+                        if (
+                          component.types.includes(
+                            'administrative_area_level_1'
+                          )
+                        ) {
+                          state = component.long_name;
+                        }
+                        if (component.types.includes('country')) {
+                          country = component.long_name;
+                        }
+                        if (
+                          component.types.includes('route') ||
+                          component.types.includes('street_address')
+                        ) {
+                          streetAddress = component.long_name;
+                        }
+                        if (component.types.includes('postal_code')) {
+                          zipCode = component.long_name;
+                        }
+                      });
+                      console.log('City:', city);
+                      console.log('State:', state);
+                      console.log('Country:', country);
+                      console.log('Street Address:', streetAddress);
+                      console.log('zipCode:', zipCode);
+                      setCity(city);
+                      setState(state);
+                      setCountry(country);
+                      setstreetAddress(streetAddress);
+                      setZipCode(zipCode);
+                      setFormData({
+                        streetAddress,
+                        city,
+                        state,
+                        zipCode,
+                        country,
+                      });
+                      // update city, state, country, and street address state here
+                    }
+                  }
+                );
+              });
+            } else {
+              console.error(
+                'Geocode was not successful for the following reason: ' + status
+              );
+            }
+          }
+        );
+      };
+
+      document.head.appendChild(script);
+    } else {
+      const geocoderInstance = new window.google.maps.Geocoder();
+      const map = new window.google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+      });
+
+      setGeocoder(geocoderInstance);
+      setMap(map);
+    }
+
+    return () => {
+      if (script) {
+        script.onload = null;
+        document.head.removeChild(script);
+      }
+      if (marker) {
+        window.google.maps.event.clearListeners(marker, 'click');
+        //   window.google.maps.event.clearListeners(marker, 'dragend');
+      }
+    };
+  }, []);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+  useEffect(() => {
+    const fetchUserAddress = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/users/getUserAddress',
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }
+        );
+        const userAddress = response.data.address;
+        console.log(userAddress);
+        if (userAddress) {
+          setFormData({
+            streetAddress: userAddress.streetAdress,
+            city: userAddress.city,
+            state: userAddress.state,
+            zipCode: userAddress.zipCode,
+            country: userAddress.country,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserAddress();
+  }, []);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const { city, country, state, streetAddress, zipCode } = formData;
+
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    };
+
+    const formDataToSend = {
+      state,
+      streetAddress,
+      zipCode,
+      city,
+      country,
+    };
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/users/addUserAddress',
+        formDataToSend,
+        { headers }
+      );
+
+      const { data: res } = response;
+      console.log(res.message);
+    } catch (error) {
+      setErrors(error?.response?.data?.msg);
+    }
+  };
+
   return (
     <div>
-      <GoogleMaps
-        address="1600 Amphitheatre Parkway"
-        country="USA"
-        apiKey={'AIzaSyAuyzQcpAPoL0gx7-94QJTdQXyBklZNCKM'}
-      />
-      editAddress
+      <Content>
+        <FormContainer enctype="multipart/form-data" onSubmit={handleSubmit}>
+          <div tw="mx-auto max-w-4xl">
+            <h2>Edit Address</h2>
+            <form action="#">
+              <TwoColumn>
+                <Column>
+                  <InputContainer>
+                    <Label htmlFor="country-input">Your Country</Label>
+                    <Input
+                      id="country-input"
+                      type="text"
+                      name="country"
+                      placeholder="Tunisia"
+                      value={formData.country}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+                  </InputContainer>
+
+                  <InputContainer>
+                    <Label htmlFor="city-input">Your City</Label>
+                    <Input
+                      id="city-input"
+                      type="text"
+                      name="city"
+                      placeholder="el kef"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+                  </InputContainer>
+                  <InputContainer>
+                    <Label htmlFor="state-input">Your State</Label>
+                    <Input
+                      id="state-input"
+                      type="text"
+                      name="state"
+                      placeholder="Tunisia"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+                  </InputContainer>
+                  <InputContainer>
+                    <Label htmlFor="streetAddress-input">
+                      Your Street Address
+                    </Label>
+                    <Input
+                      id="streetAddress-input"
+                      type="text"
+                      name="streetAddress"
+                      placeholder="harrouch"
+                      value={formData.streetAddress}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+                  </InputContainer>
+                  <InputContainer>
+                    <Label htmlFor="zipcode-input">Your ZipCode</Label>
+                    <Input
+                      id="zipcode-input"
+                      type="text"
+                      name="zipCode"
+                      placeholder="7100"
+                      value={formData.zipCode}
+                      onChange={handleInputChange}
+                      required={true}
+                    />
+
+                    {error && <div>{error}</div>}
+                    {msg && <div>{msg}</div>}
+                  </InputContainer>
+                </Column>
+                <Column>
+                  <ImageContainer id="map"></ImageContainer>
+                </Column>
+              </TwoColumn>
+
+              <SubmitButton style={buttonStyle} type="submit" value="Submit">
+                Submit
+              </SubmitButton>
+            </form>
+          </div>
+        </FormContainer>
+      </Content>
     </div>
   );
 }
-
-// import React, { useState } from 'react';
-// import styled from 'styled-components';
-// import tw from 'twin.macro';
-// import { css } from 'styled-components/macro'; //eslint-disable-line
-// import { ReactComponent as SvgDotPatternIcon } from '../../images/dot-pattern.svg';
-
-// import flags from 'react-phone-number-input/flags';
-// const Content = tw.div`max-w-screen-2xl mx-auto py-20 lg:py-24`;
-
-// const FormContainer = styled.div`
-//   ${tw`p-10 sm:p-12 md:p-16 bg-primary-500 text-gray-100 rounded-lg `}
-//   form {
-//     ${tw`mt-4`}
-//   }
-//   h2 {
-//     ${tw`text-3xl sm:text-4xl font-bold`}
-//   }
-
-//   input,
-//   textarea {
-//     ${tw`w-full bg-transparent text-gray-100 text-base font-medium tracking-wide border-b-2 py-2 text-gray-100 hocus:border-pink-400 focus:outline-none transition duration-200`};
-
-//     padding: 8px;
-
-//     ::placeholder {
-//       ${tw`text-gray-500`}
-//     }
-//   }
-
-//   max-width: 800px; // set a max width for the container
-
-//   @media (min-width: 768px) {
-//     max-width: 900px;
-//   }
-// `;
-// const ImageContainer = styled.div`
-//   border: 2px dashed gray;
-//   width: 300px;
-//   height: 300px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// `;
-
-// const ImagePreview = styled.img`
-//   width: 100%;
-//   height: 100%;
-//   object-fit: cover;
-// `;
-
-// const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
-// const Column = tw.div`sm:w-5/12 flex flex-col`;
-// const InputContainer = tw.div`relative py-5 mt-6`;
-// const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm`;
-// const Input = tw.input``;
-// const TextArea = tw.textarea`h-24 sm:h-full resize-none`;
-// const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px text-center hocus:shadow-xl `;
-// const buttonStyle = { display: 'revert' };
-// const SvgDotPattern1 = tw(
-//   SvgDotPatternIcon
-// )`absolute bottom-0 right-0 transform translate-y-1/2 translate-x-1/2 -z-10 opacity-50 text-primary-500 fill-current w-24`;
-
-// export default () => {
-//   const [formData, setFormData] = useState({
-//     streetAdress: '',
-//     city: '',
-//     state: '',
-//     zipCode: 'null',
-//     country: '',
-//   });
-//   const [msg, setMsg] = useState('');
-//   const [error, setErrors] = useState(null);
-//   const [imageFile, setImageFile] = useState(null);
-//   const [previewSrc, setPreviewSrc] = useState(null);
-
-//   const handleDragOver = (e) => {
-//     e.preventDefault();
-//   };
-
-//   const handleDrop = (e) => {
-//     e.preventDefault();
-//     const file = e.dataTransfer.files[0];
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => {
-//       setImageFile(file);
-//       console.log({ imageFile });
-//       setPreviewSrc(reader.result);
-//     };
-//   };
-//   function handleInputChange(event) {
-//     const target = event.target;
-//     const name = target.name;
-//     const value = target.type === 'file' ? target.files[0] : target.value;
-
-//     if (name === 'phone_number' && !isValidPhoneNumber(value)) {
-//       setErrors(
-//         <div style={{ color: 'violet' }}>Please enter a valid phone number</div>
-//       );
-//     } else {
-//       setErrors(null);
-//     }
-
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   }
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-
-//     const { name, phone_number } = formData;
-
-//     const formDataToSend = new FormData();
-//     formDataToSend.append('name', name);
-//     formDataToSend.append('phone_number', phone_number);
-//     if (imageFile) {
-//       formDataToSend.append('image', new File([imageFile], imageFile.name));
-//     }
-
-//     try {
-//       const response = await fetch('http://localhost:5000/users/updateUser', {
-//         method: 'POST',
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-//         },
-//         body: formDataToSend,
-//       });
-//       const { data: res } = await response.json();
-//       console.log(res.message);
-//     } catch (error) {
-//       setErrors(error?.response?.data?.msg);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <Content>
-//         <FormContainer enctype="multipart/form-data" onSubmit={handleSubmit}>
-//           <div tw="mx-auto max-w-4xl">
-//             <h2>Edit Informations</h2>
-//             <form action="#">
-//               <TwoColumn>
-//                 <Column>
-//                   <InputContainer>
-//                     <Label htmlFor="name-input">Your Name</Label>
-//                     <Input
-//                       id="name-input"
-//                       type="text"
-//                       name="name"
-//                       placeholder="E.g. John Doe"
-//                       value={formData.name}
-//                       onChange={handleInputChange}
-//                       required={true}
-//                     />
-//                   </InputContainer>
-//                   <InputContainer>
-//                     <label>
-//                       Phone Number:
-//                       <PhoneInput
-//                         name="phone_number"
-//                         placeholder="Phone Number *"
-//                         value={formData.phone_number}
-//                         onChange={(value) => {
-//                           setFormData({ ...formData, phone_number: value });
-//                         }}
-//                         flags={flags}
-//                         defaultCountry="TN"
-//                         style={{
-//                           height: '100px',
-//                           border: formData.phone_number
-//                             ? !isPossiblePhoneNumber(formData.phone_number) &&
-//                               !isValidPhoneNumber(formData.phone_number)
-//                               ? '2px solid violet'
-//                               : 'none'
-//                             : 'null',
-//                         }}
-//                       />
-//                     </label>
-//                     {formData.phone_number ? (
-//                       !isPossiblePhoneNumber(formData.phone_number) &&
-//                       !isValidPhoneNumber(formData.phone_number) ? (
-//                         <div style={{ color: 'violet' }}>
-//                           Please enter a valid phone number
-//                         </div>
-//                       ) : null
-//                     ) : null}
-
-//                     {error && <div>{error}</div>}
-//                     {msg && <div>{msg}</div>}
-//                   </InputContainer>
-//                 </Column>
-//                 <Column>
-//                   <ImageContainer
-//                     onDragOver={handleDragOver}
-//                     onDrop={handleDrop}
-//                   >
-//                     {previewSrc ? (
-//                       <ImagePreview src={previewSrc} />
-//                     ) : (
-//                       'Drag and drop image here'
-//                     )}
-//                   </ImageContainer>
-//                 </Column>
-//               </TwoColumn>
-
-//               <SubmitButton style={buttonStyle} type="submit" value="Submit">
-//                 Submit
-//               </SubmitButton>
-//             </form>
-//           </div>
-//         </FormContainer>
-//       </Content>
-//     </div>
-//   );
-// };

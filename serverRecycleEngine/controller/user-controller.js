@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const UserModel = require("../models/user");
 const SecretCode = require("../models/SecretCode");
+const Address = require("../models/address");
+
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const sendMail = require("./sendMail");
@@ -296,7 +298,44 @@ exports.resetNewPassword = async (req, res) => {
     res.status(400).send({ msg: "Changement du mot de passe echoué", error });
   }
 };
+exports.updateUserPassword = async (req, res) => {
+  try {
+    const id = req.payload.id;
+    const user = await User.findById(id);
 
+    // Get new and confirm password from req.body
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    console.log(currentPassword, newPassword, confirmPassword);
+    // Check if 2 password is equal
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .send({ msg: "Les mots de passe ne sont pas identiques" });
+    } else if (user) {
+      console.log(user.password);
+      const match = await bcrypt.compare(newPassword, user.password);
+
+      if (!match) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        //replace password
+        await User.updateOne(
+          { _id: id },
+          { $set: { password: hashedPassword } }
+        );
+        res.status(200).send({ msg: "Mot de passe changé !" });
+      } else {
+        return res.status(400).send({
+          msg: "Le nouveau mot de passe doit être différent du mot de passe actuel.",
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ msg: "Changement du mot de passe echoué", error });
+  }
+};
 exports.addUser1 = async (req, res, next) => {
   const user = req.body;
   const { errors, isValid } = ValidateRegister(req.body);
@@ -389,7 +428,6 @@ exports.Bloquage = (req, res) => {
 //update user by id
 exports.UpdateUserById = async (req, res) => {
   const id = req.payload.id;
-  console.log(req.file.filename);
 
   try {
     const user = await User.findById(id);
@@ -399,6 +437,10 @@ exports.UpdateUserById = async (req, res) => {
     if (req.body.name != null) {
       user.name = req.body.name;
     }
+    if (req.body.email != null) {
+      user.email = req.body.email;
+    }
+
     if (req.body.phone_number != null) {
       user.phone_number = req.body.phone_number;
     }
@@ -415,5 +457,96 @@ exports.UpdateUserById = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).send("Erreur interne du serveur");
+  }
+};
+
+exports.addUserAddress = async (req, res) => {
+  const id = req.payload.id;
+  console.log(req.payload.id);
+  console.log(req.body);
+  const newAddress = {
+    streetAdress: req.body.streetAddress,
+    city: req.body.city,
+    state: req.body.state,
+    zipCode: req.body.zipCode,
+    country: req.body.country,
+  };
+
+  // Find the user by ID
+  User.findById(id)
+    .populate("address") // Populate the address field so we can check if it exists
+    .exec((err, user) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ error: "Error updating user address" });
+      }
+      if (user.address) {
+        // User already has an address, update it instead of creating a new one
+        Address.findByIdAndUpdate(
+          user.address._id,
+          newAddress,
+          { new: true },
+          (err, updatedAddress) => {
+            if (err) {
+              console.log(err);
+              return res
+                .status(500)
+                .send({ error: "Error updating user address" });
+            }
+            // Update the user's address field with the updated address object
+            User.findByIdAndUpdate(
+              id,
+              { address: updatedAddress },
+              { new: true }
+            )
+              .populate("address")
+              .exec((err, updatedUser) => {
+                if (err) {
+                  console.log(err);
+                  return res
+                    .status(500)
+                    .send({ error: "Error updating user address" });
+                }
+                res.send(updatedUser);
+              });
+          }
+        );
+      } else {
+        // User doesn't have an address yet, create a new one
+        const address = new Address(newAddress);
+        address.user_id.push(id);
+        address.save((err, savedAddress) => {
+          if (err) {
+            console.log(err);
+            return res
+              .status(500)
+              .send({ error: "Error creating user address" });
+          }
+          // Update the user's address field with the new address object
+          User.findByIdAndUpdate(id, { address: savedAddress }, { new: true })
+            .populate("address")
+            .exec((err, updatedUser) => {
+              if (err) {
+                console.log(err);
+                return res
+                  .status(500)
+                  .send({ error: "Error updating user address" });
+              }
+              res.send(updatedUser);
+            });
+        });
+      }
+    });
+};
+exports.getUserAddress = async (req, res) => {
+  const id = req.payload.id;
+  try {
+    const user = await User.findById(id).populate("address");
+    const address = user?.address || null;
+    console.log(address);
+    res.json({ address });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error fetching user address" });
   }
 };
