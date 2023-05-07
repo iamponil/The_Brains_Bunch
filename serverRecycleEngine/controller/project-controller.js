@@ -305,6 +305,24 @@ async deleteProject(req, res) {
         res.status(400).json({ message: err.message });
       }
     },
+    //recommendation system
+
+async  getRecommendedProjects(req, res) {
+  try {
+    const projects = await Project.find({})
+      .sort({likes: -1, averageRating: -1})
+      .limit(6);
+    if (projects.length === 0) {
+      return res.status(404).json({ message: "Aucun projet n'est disponible." });
+    }
+    res.json(projects);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: err.message });
+  }
+}
+
+
     
   };
     

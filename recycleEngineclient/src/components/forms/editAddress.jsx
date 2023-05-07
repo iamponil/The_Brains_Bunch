@@ -259,6 +259,7 @@ export default function EditAddress() {
       );
 
       const { data: res } = response;
+      alert("vos informations sont enregistrées avec succées")
       console.log(res.message);
     } catch (error) {
       setErrors(error?.response?.data?.msg);

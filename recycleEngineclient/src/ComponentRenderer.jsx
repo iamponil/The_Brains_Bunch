@@ -66,6 +66,7 @@ import SliderCards from "components/cards/ThreeColSlider.js";
 import TrendingCards from "components/cards/TwoTrendingPreviewCardsWithImage.js";
 import PortfolioCards from "components/cards/MyProjects.jsx";
 import TabGridCards from "components/cards/AllProjects.js";
+import RecomendedProjects from 'components/cards/RecomendedProjects';
 import ProfileThreeColGridCards from "components/cards/ProfileThreeColGrid.js"
 import ThreeColContactDetailsCards from "components/cards/ThreeColContactDetails.js"
 
@@ -343,6 +344,11 @@ export const components = {
           name: "Two Trending Preview Cards With Images",
           component: TrendingCards,
           url: "/components/blocks/Cards/Trending",
+        },
+        RecomendedProjects:{
+          name: "RecomendedProjects",
+          component: TabGridCards,
+          url: "/components/blocks/Cards/RecomendedProjects",
         },
       }
     },

@@ -121,10 +121,10 @@ export const Hero = () => {
 <NavLink ></NavLink> 
  
 )}
-{User ? (<NavLink href="#">Contributions</NavLink> ) : (
+{/* {User ? (<NavLink href="#">Contributions</NavLink> ) : (
 <NavLink ></NavLink> 
  
-)}
+)} */}
      
       <NavLink href="/ContactUs">Contact</NavLink>
     </NavLinks>,

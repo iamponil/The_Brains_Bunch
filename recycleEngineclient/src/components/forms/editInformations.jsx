@@ -164,6 +164,7 @@ const [User , setUser]= useState(null);
         body: formDataToSend,
       });
       const { data: res } = await response.json();
+      alert("vos informations sont enregistrées avec succées")
       console.log(res.message);
     } catch (error) {
       setErrors(error?.response?.data?.msg);
