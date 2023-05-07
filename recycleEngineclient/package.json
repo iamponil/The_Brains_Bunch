@@ -29,6 +29,7 @@
     "react-modal": "^3.13.1",
     "react-phone-number-input": "^3.2.19",
     "react-pro-sidebar": "^1.0.0",
+    "react-rating": "^2.0.5",
     "react-rnd": "^10.2.4",
     "react-router-dom": "^6.0.1",
     "react-scripts": "^5.0.1",

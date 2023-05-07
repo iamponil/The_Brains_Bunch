@@ -5,6 +5,7 @@ import {Header} from "components/headers/profileHeader";
 import MainFeature from "components/features/TwoColWithButton.js";
 import DesignIllustration from "../../images/imgoo.jpg";
 import Exit from "../../images/exit.png";
+import axios from "react";
 export default () => {
   const Subheading = tw.span`tracking-wider text-sm font-medium`;
   const HighlightedText = tw.span`bg-primary-500 text-gray-100 px-4 transform -skew-x-12 inline-block`;
@@ -55,12 +56,27 @@ useEffect(()=>
     setErrors(err);
   });
 },[]);
+const [rating, setRating] = useState(0);
+
+const handleRatingClick = (value) => {
+  setRating(value);
+
+  axios.post(`http://localhost:5000/projects/${project._id}/rating`, {
+    rating: value
+  })
+    .then(response => {
+      setproject(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
   return (
     <><Header  />
    
     <button  style={{marginLeft:'111 px' , backgroundColor: 'transparent' , color:'gray' }}onClick={handlepreview} >   Exit preview  <img src={Exit} style={{width:'20px', height:'20px' ,marginRight:'20px'}}></img></button> 
 
-       
+ 
       <MainFeature
         subheading={<Subheading></Subheading>}
         heading={

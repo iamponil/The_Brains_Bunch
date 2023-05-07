@@ -11,10 +11,10 @@ export const MainLandingPage = () => {
   return (
     <AnimationRevealPage>
       <Hero />
-      <Feature />
+      {/* <Feature /> */}
       <PortCard />
-      <Blog />
-      <Card />
+      {/* <Blog />
+      <Card /> */}
       
       <Footer />
     </AnimationRevealPage>

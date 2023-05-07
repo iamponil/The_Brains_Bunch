@@ -15,6 +15,8 @@ import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin
 import { Link } from "react-router-dom";
 import { AiFillLike ,AiFillDislike } from 'react-icons/ai';
 import {Header} from "components/headers/profileHeader";
+import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
+import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
 import { ReactComponent as PriceIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Headers = tw(SectionHeading)`text-primary-500 `;
@@ -65,7 +67,15 @@ const DecoratorBlob1 = styled(SvgDecoratorBlob1)`
 const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
   ${tw`pointer-events-none -z-20 absolute left-0 bottom-0 h-80 w-80 opacity-15 transform -translate-x-2/3 text-primary-500`}
 `;
-
+const Controls = tw.div`flex items-center`;
+const ControlButton = styled(PrimaryButtonBase)`
+  ${tw`mt-4 sm:mt-0 first:ml-0 ml-6 rounded-full p-2`}
+  svg {
+    ${tw`w-6 h-6`}
+  }
+`;
+const PrevButton = tw(ControlButton)``;
+const NextButton = tw(ControlButton)``;
 export default ({
   heading = "All Projects",
   cardLinkText = " I Support this project",
@@ -76,6 +86,7 @@ export default ({
   const [projects, setproject] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [rating, setRating] = useState(0);
+  const [startIndex, setStartIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -145,7 +156,17 @@ export default ({
       });
   }
 , []);
+const handlePreviousClick = () => {
+  if (startIndex >= 3) {
+    setStartIndex(startIndex - 3);
+  }
+};
 
+const handleNextClick = () => {
+  if (startIndex + 3 < projects.length) {
+    setStartIndex(startIndex + 3);
+  }
+};
 
   const handleCommentSubmit = async (e, projectId, content) => {
     e.preventDefault();
@@ -181,6 +202,7 @@ export default ({
     
   };
   
+  
   return (
     <>
      <Header/> 
@@ -188,7 +210,14 @@ export default ({
       <ContentWithPaddingXl>
          <HeaderRow>
           <Headers>{heading}</Headers>
-         
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            {/* <button onClick={handlePreviousClick} disabled={startIndex < 3}><ChevronLeftIcon/></button>
+            <button onClick={handleNextClick} disabled={startIndex + 3 >= projects.length}><ChevronRightIcon/></button> */}
+            <Controls>
+            <PrevButton  onClick={handlePreviousClick} disabled={startIndex < 3}><ChevronLeftIcon/></PrevButton>
+            <NextButton onClick={handleNextClick} disabled={startIndex + 3 >= projects.length}><ChevronRightIcon/></NextButton>
+          </Controls>
+          </div>
         </HeaderRow>
 
         
@@ -210,7 +239,7 @@ export default ({
             
           >
             {successMessage && <div>{successMessage}</div>}
-            {projects.map((project, index) => (
+            {projects.slice(startIndex, startIndex + 3).map((project, index) => (
               <CardContainer key={index}>
                 <Card className="group"  initial="rest" whileHover="hover" animate="rest">
                   <CardImageContainer imageSrc={`http://localhost:5000/uploads/${project.image}`}>

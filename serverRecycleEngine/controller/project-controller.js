@@ -233,15 +233,60 @@ async deleteProject(req, res) {
         res.status(500).json({ message: "Server Error" });
       }
     },
-    async addRating(req, res)  {
+    //add rating
+    // async addRating(req, res)  {
+    //   try {
+    //     const { projectId } = req.params;
+    //     const project = await Project.findById(projectId);
+    //     if (!project) throw new Error("Project not found");
+    
+    //     const rating = req.body.rating;
+    //     if (!rating || rating < 1 || rating > 5)
+    //       throw new Error("Invalid rating value");
+    
+    //     if (!project.ratings) {
+    //       project.ratings = [];
+    //     }
+    //     project.ratings.push(rating);
+    //     const totalRatings = project.ratings.length;
+    //     const ratingSum = project.ratings.reduce((sum, r) => sum + r, 0);
+    //     const averageRating = ratingSum / totalRatings;
+    
+    //     project.averageRating = averageRating;
+    //     await project.save();
+    
+    //     res.json(project);
+    //   } catch (err) {
+    //     console.error(err);
+    //     res.status(400).json({ message: err.message });
+    //   }
+    // } ,
+    async getAllCommentsByProjectId (req, res){
+      try {
+        const projectId = req.params.id;
+        const project = await Project.findById(projectId).populate("comment");
+    
+        if (!project) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+    
+        const comments = project.comment;
+    
+        res.json(comments);
+      } catch (error) {
+        console.error("Error while getting comments by project ID", error);
+        res.status(500).json({ message: error.message });
+      }
+    },
+  
+    async addRating(req, res) {
       try {
         const { projectId } = req.params;
         const project = await Project.findById(projectId);
         if (!project) throw new Error("Project not found");
     
         const rating = req.body.rating;
-        if (!rating || rating < 1 || rating > 5)
-          throw new Error("Invalid rating value");
+        if (!rating || rating < 1 || rating > 5) throw new Error("Invalid rating value");
     
         if (!project.ratings) {
           project.ratings = [];
@@ -259,24 +304,7 @@ async deleteProject(req, res) {
         console.error(err);
         res.status(400).json({ message: err.message });
       }
-    } ,
-    async getAllCommentsByProjectId (req, res){
-      try {
-        const projectId = req.params.id;
-        const project = await Project.findById(projectId).populate("comment");
+    },
     
-        if (!project) {
-          return res.status(404).json({ message: "Project not found" });
-        }
-    
-        const comments = project.comment;
-    
-        res.json(comments);
-      } catch (error) {
-        console.error("Error while getting comments by project ID", error);
-        res.status(500).json({ message: error.message });
-      }
-    }
-  
   };
     

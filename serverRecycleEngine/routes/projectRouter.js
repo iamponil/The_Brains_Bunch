@@ -35,5 +35,5 @@ router.post("/:projectId/like",authenticateToken,ProjectController.addLike);
   //add comment to project
   router.post("/:projectId/comment",authenticateToken,ProjectController.addComment);
   //add rating
-  router.post("/:projectId/rating",authenticateToken,ProjectController.addRating);
+  router.post("/:projectId/rating",ProjectController.addRating);
 module.exports = router;
