@@ -21,7 +21,7 @@ const TogglePasswordFields = styled.div`
 `;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-primary-500 opacity-50 text-gray-100 rounded-lg `}
+  ${tw`p-10 sm:p-12 md:p-16 bg-primary-100  opacity-50 text-gray-100 rounded-lg `}
   form {
     ${tw`mt-4`}
   }
@@ -72,6 +72,7 @@ export default () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userMainAddress, setUserMainAddress] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [showSuccessMsg, setShowSuccessMsg] = useState(false); // initialize state variable to false
   const handleInputChange = (event) => {
     const target = event.target;
@@ -110,7 +111,14 @@ export default () => {
         });
     };
     getUser();
-  }, []);
+   // Clear success message after 4 seconds
+   if (successMessage) {
+    const timeoutId = setTimeout(() => {
+      setSuccessMessage(null);
+    }, 2000);
+    return () => clearTimeout(timeoutId);
+  }
+}, [successMessage]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -152,9 +160,11 @@ export default () => {
         console.log(res.message);
         setShowSuccessMsg(true);
       }
+      setSuccessMessage('updated successfully! ');
     } catch (error) {
       setErrors(error?.response?.data?.msg);
       setShowError(true);
+      setSuccessMessage('Error! ');
     }
   };
   return (
@@ -221,6 +231,8 @@ export default () => {
                             required={true}
                           />
                         </InputContainer>
+                        {successMessage && <div  style={{ backgroundColor: '#d4edda', borderColor: '#c3e6cb', color: '#155724', padding: '1rem' ,
+  borderRadius: '0.25rem', marginBottom: '1rem' }} >{successMessage}</div>}
                       </>
                     )}
                   </div>
@@ -231,11 +243,7 @@ export default () => {
                   >
                     Submit
                   </SubmitButton>
-                  {showSuccessMsg && (
-                    <p style={{ color: 'green', textAlign: 'center' }}>
-                      Update successful!
-                    </p>
-                  )}
+                  
                 </Column>
                 <Column>
                   <TogglePasswordFields
@@ -247,6 +255,7 @@ export default () => {
                   </TogglePasswordFields>
                 </Column>
               </TwoColumn>
+       
             </form>
           </div>
         </FormContainer>

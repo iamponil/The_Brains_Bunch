@@ -9,7 +9,7 @@ import axios, { Axios } from 'axios';
 const Content = tw.div`max-w-screen-2xl mx-auto py-20 lg:py-24`;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-primary-500 opacity-50 text-gray-100 rounded-lg `}
+  ${tw`p-10 sm:p-12 md:p-16 bg-primary-100  opacity-50 text-gray-100 rounded-lg `}
   form {
     ${tw`mt-4`}
   }
@@ -69,6 +69,7 @@ export default function EditAddress() {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [msg, setMsg] = useState('');
   const [error, setErrors] = useState(null);
   const [zipCode, setZipCode] = useState('');
@@ -200,7 +201,14 @@ export default function EditAddress() {
         //   window.google.maps.event.clearListeners(marker, 'dragend');
       }
     };
-  }, []);
+   // Clear success message after 4 seconds
+   if (successMessage) {
+    const timeoutId = setTimeout(() => {
+      setSuccessMessage(null);
+    }, 2000);
+    return () => clearTimeout(timeoutId);
+  }
+}, [successMessage]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
@@ -260,6 +268,7 @@ export default function EditAddress() {
 
       const { data: res } = response;
       console.log(res.message);
+      setSuccessMessage('updated successfully!');
     } catch (error) {
       setErrors(error?.response?.data?.msg);
     }
@@ -349,6 +358,8 @@ export default function EditAddress() {
               <SubmitButton style={buttonStyle} type="submit" value="Submit">
                 Submit
               </SubmitButton>
+              {successMessage && <div  style={{ backgroundColor: '#d4edda', borderColor: '#c3e6cb', color: '#155724', padding: '1rem' ,
+  borderRadius: '0.25rem', marginBottom: '1rem' }} >{successMessage}</div>}
             </form>
           </div>
         </FormContainer>

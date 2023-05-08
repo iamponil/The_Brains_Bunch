@@ -325,7 +325,7 @@ const ProcessingFee = 0.05;
                 </Column>
                 <Column>
                 <InputContainer tw="flex-1">
-                    <Label htmlFor="name-input" tw="text-primary-500">Subtitle</Label>
+                    <Label htmlFor="name-input" tw="text-primary-500">Description</Label>
                     <TextArea type="text" name="subtitle" value={project.subtitle|| ''} onChange={(e) => hundelchange(e)} placeholder="Gently brings awareness to self-care activities, using encouraging push notifications, rather than guilt or shame." />
                   </InputContainer>
                  

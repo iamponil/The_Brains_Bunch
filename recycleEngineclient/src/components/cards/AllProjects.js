@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Footer from 'components/footers/FiveColumnDark';
 import tw from "twin.macro";
 import StarRating from "components/cards/StarRating";
 import styled from "styled-components";
@@ -58,7 +59,7 @@ const CardHoverOverlay = styled(motion.div)`
   ${tw`absolute inset-0 flex justify-center items-center`}
 `;
 const CardButton = tw(PrimaryButtonBase)`text-sm`;
-const CardAction = tw(PrimaryButtonBase)`w-full mt-6 opacity-50 justify-center` ;
+const CardAction = tw(PrimaryButtonBase)`w-full mt-6  justify-center` ;
 const CardReview = tw.div`font-medium text-xs text-gray-600`;
 
 const CardText = tw.div`p-4 text-gray-900`;
@@ -95,7 +96,7 @@ export default ({
   const [rating, setRating] = useState(0);
   const [startIndex, setStartIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
-  
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -119,6 +120,7 @@ export default ({
         return updatedProjects;
       });
       setLikeStatus("like");
+      setSelectedProjectId(projectId);
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -144,6 +146,7 @@ export default ({
         return updatedProjects;
       });
       setLikeStatus("dislike");
+      setSelectedProjectId(projectId);
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -163,7 +166,7 @@ export default ({
     if (successMessage) {
       const timeoutId = setTimeout(() => {
         setSuccessMessage(null);
-      }, 4000);
+      }, 2000);
       return () => clearTimeout(timeoutId);
     }
   }, [successMessage]);
@@ -215,20 +218,7 @@ const handleNextClick = () => {
     setNewComment(e.target.value);
     
   };
-//   ///filter
-//   const searchItems = (searchValue) => {
-//     setSearchInput(searchValue)
-//     if (searchInput !== '') {
-//         const filteredData = projects.filter((item) => {
-//             return Object.values(item).join('').toLowerCase().includes(searchInput.toLowerCase())
-//         })
-//         setFilteredResults(filteredData)
-//         console.log(filteredData)
-//     }
-//     else{
-//         setFilteredResults(projects)
-//     }
-// }
+
 const filterProjectsByCategory = () => {
   if (selectedCategory === "") {
     return projects;
@@ -259,6 +249,7 @@ const filterProjectsByCategory = () => {
       padding: '0.5rem', 
       borderRadius: '5px', 
       border: 'none', 
+      borderColor:'transparent',
       backgroundColor: '#f5f5f5',
       color:'#a273ff'
     }}
@@ -321,7 +312,7 @@ const filterProjectsByCategory = () => {
                   <SecondaryInfoContainer>
                   <div tw="flex flex-col sm:flex-row mt-1 sm:mt-4">   
                    <a onClick={() => handleLike(project._id)} style={{  cursor: 'pointer' }}>
-   < AiFillLike style={{ width:'40px', height:'40px' , color: "#a273ff" , marginRight:'15px'}} /> 
+   < AiFillLike style={{ width:'40px', height:'40px' , color: selectedProjectId === project._id && likeStatus === "like"  ? "red" : "#a273ff", marginRight:'15px'}} /> 
   </a>
 
   <p style={{marginTop:'20px' , marginRight:'20px'}}>{project.likes}Likes </p> </div>
@@ -330,7 +321,7 @@ const filterProjectsByCategory = () => {
      onClick={() => handleDislike(project._id)} style={{  cursor: 'pointer' }}
      
   >
-    <AiFillDislike style={{ width:'40px', height:'40px' , color: "#a273ff", marginRight:'15px'}}  
+    <AiFillDislike style={{ width:'40px', height:'40px' ,color: selectedProjectId === project._id && likeStatus === "dislike"  ? "red" : "#a273ff" , marginRight:'15px'}}  
      /> 
   </a>   <p style={{marginTop:'20px'}}>{project.dislikes} Dislikes</p> </div> </SecondaryInfoContainer>
 
@@ -361,38 +352,7 @@ const filterProjectsByCategory = () => {
                     <CardTitle>Duration : {project.duration}</CardTitle>
                   </CardText>
                   <CardAction >{cardLinkText}</CardAction>
-                  <form onSubmit={(e) => handleCommentSubmit(e, project._id, newComment)}>
-                  <div style={{ display: "flex", marginTop: "10px" }}>
-  <input 
-    type="text"
-    style={{ 
-      flexGrow: 1,
-      padding: "5px",
-      borderRadius: "5px",
-      marginRight: "5px"
-    }}
-    placeholder="Add a comment..."
-    value={newComment[project._id]}
-    onChange={(e) => handleCommentChange(e, project._id)} 
-  />
-  <button 
-    type="submit" 
-    style={{ 
-      padding: "5px 10px",
-      borderRadius: "5px",
-      backgroundColor: "#a273ff",
-      color: "white",
-      border: "none",
-      cursor: "pointer"
-    }}
-    
-  >
-    Add Comment
-  </button>
- 
-</div>
-
-</form>
+         
                  
 
                 </Card>
@@ -401,8 +361,7 @@ const filterProjectsByCategory = () => {
             ))}
           </TabContent>
           <br></br>
-          {successMessage && <div  style={{ backgroundColor: '#d4edda', borderColor: '#c3e6cb', color: '#155724', padding: '1rem' ,
-  borderRadius: '0.25rem', marginBottom: '1rem' }} >{successMessage}</div>}
+         
          
       </ContentWithPaddingXl>
       <DecoratorBlob1 />

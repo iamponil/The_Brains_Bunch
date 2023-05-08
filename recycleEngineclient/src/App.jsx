@@ -40,13 +40,14 @@ export default function App() {
           <Route path="/basics/:titre" element={<Basics />} />
           <Route path="/projectss" element={<Projects />} />
           <Route path="/story" element={<Story />} />
+          
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
           {/* <Route path="/previewProject" element={<Previewproject />} /> */}
           <Route path="/editProfile" element={<EditProfile />}>
             <Route path="editInformation" element={<InformationForm />} />
             <Route path="editAddress" element={<AddressForm />} />
-            <Route path="payment" element={<AddressForm />} />
+            <Route path="payment" element={<PaymentForm />} />
             <Route path="" element={<CredentialsForm />} />
           </Route>
           <Route path="/ContactUs" element={<ContactUs/>} />

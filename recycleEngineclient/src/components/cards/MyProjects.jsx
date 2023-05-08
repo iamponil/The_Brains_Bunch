@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
+import Footer from 'components/footers/FiveColumnDark';
 import styled from "styled-components";
 import { motion } from "framer-motion";
+
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading } from "components/misc/Headings.js";
 import { PrimaryLink as PrimaryLinkBase } from "components/misc/Links.js";
@@ -152,7 +154,7 @@ export default ({
   
   return (
     <>  
-    
+      <Header/> 
     {/* <Header roundedHeaderButton={roundedHeaderButton }  /> */}
     <HeadingColumn >
     <HeadingInfoContainer>
@@ -214,6 +216,7 @@ export default ({
         </ThreeColumn> 
       </Content>
     </Container>
+    <Footer />
     </>
   );
 };

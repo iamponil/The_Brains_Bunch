@@ -16,7 +16,7 @@ import { DropdownMenu } from './../DropdownMenu/ReactDropDownMenu';
 const StyledHeader = styled(Headers)`
   ${tw`pt-8 max-w-none`}
   ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
-    ${tw`text-gray-100 hover:border-gray-300 hover:text-gray-300`}
+    ${tw`text-gray-500 hover:border-gray-400  hover:text-gray-300`}
   }
   ${NavToggle}.closed {
     ${tw`text-gray-100 hover:text-primary-500`}
@@ -73,8 +73,17 @@ export const Header = () => {
   }
 
   const navLinks = [
-    <NavLinks key={1}>
+    
+    <NavLinks  key={1}>
+        
+        <NavLink href="/" >Home </NavLink>
+        <NavLink href="/Projectbyuser" >My Projects </NavLink>
+        <NavLink href="/projectss">All Projects </NavLink>
+        <NavLink href="/ContactUs">Contact us  </NavLink>
+    </NavLinks>,
+    <NavLinks key={2}>
       {User && (
+        
         <NavItem
           icon={
             <img
@@ -89,8 +98,13 @@ export const Header = () => {
         >
           <DropdownMenu></DropdownMenu>
         </NavItem>
+
+       
       )}
+     
+
     </NavLinks>,
+    
   ];
 
   return (

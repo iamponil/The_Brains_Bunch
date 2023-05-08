@@ -13,8 +13,8 @@ export const MainLandingPage = () => {
       <Hero />
       {/* <Feature /> */}
       <PortCard />
-      {/* <Blog />
-      <Card /> */}
+       <Blog />
+      <Card /> 
       
       <Footer />
     </AnimationRevealPage>

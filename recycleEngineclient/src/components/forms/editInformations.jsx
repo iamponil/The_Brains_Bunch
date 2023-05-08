@@ -11,7 +11,7 @@ import flags from 'react-phone-number-input/flags';
 const Content = tw.div`max-w-screen-2xl mx-auto py-20 lg:py-24`;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-primary-500 opacity-50 text-gray-100 rounded-lg `}
+  ${tw`p-10 sm:p-12 md:p-16 bg-primary-100  opacity-50 text-gray-100 rounded-lg `}
   form {
     ${tw`mt-4`}
   }
@@ -75,6 +75,7 @@ export default () => {
   const [error, setErrors] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 const [User , setUser]= useState(null);
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -109,8 +110,17 @@ const [User , setUser]= useState(null);
           console.log(err);
         });
     };
+     // Clear success message after 4 seconds
+     if (successMessage) {
+      const timeoutId = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 2000);
+      return () => clearTimeout(timeoutId);
+    }
     getUser();
-  }, []);
+    
+  }, [successMessage]);
+
       
         
   
@@ -165,8 +175,10 @@ const [User , setUser]= useState(null);
       });
       const { data: res } = await response.json();
       console.log(res.message);
+      setSuccessMessage('updated successfully!');
     } catch (error) {
       setErrors(error?.response?.data?.msg);
+      setSuccessMessage('updated successfully!');
     }
   };
 
@@ -239,11 +251,14 @@ const [User , setUser]= useState(null);
                     )}
                   </ImageContainer>
                 </Column>
+       
               </TwoColumn>
-
+           
               <SubmitButton style={buttonStyle} type="submit" value="Submit">
                 Submit
               </SubmitButton>
+              {successMessage && <div  style={{ backgroundColor: '#d4edda', borderColor: '#c3e6cb', color: '#155724', padding: '1rem' ,
+  borderRadius: '0.25rem', marginBottom: '1rem' }} >{successMessage}</div>}
             </form>
           </div>
         </FormContainer>

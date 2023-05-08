@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
+import Footer from 'components/footers/FiveColumnDark';
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { ReactComponent as ArrowRightIcon } from "images/arrow-right-icon.svg";
 import {Header} from "components/headers/profileHeader";
@@ -8,14 +9,17 @@ import MainFeature from "components/features/TwoColWithButton.js";
 import DesignIllustration from "../../images/imgoo.jpg";
 import Exit from "../../images/exit.png";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import {AiFillStar} from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import etoile from "../../images/etoilee.jpg";
 import Rating from "react-rating";
 import { FaStar } from "react-icons/fa";
 import styled from 'styled-components';
+
 export default () => {
   const Subheading = tw.span`tracking-wider text-sm font-medium`;
+
   const HighlightedText = tw.span`bg-primary-500 text-gray-100 px-4 transform -skew-x-12 inline-block`;
 //  const Description = tw.span`inline-block mt-8`;
   const imageCss = tw`rounded-4xl`;
@@ -65,6 +69,7 @@ const SubmitButton = styled.button`
 `;
   const [project, setproject] = useState([]);
   const [showComments, setShowComments] = useState(false);
+  const [showDescription, setshowDescription] = useState(false);
 
   
  
@@ -111,6 +116,10 @@ const SubmitButton = styled.button`
 const handleCommentToggle = () => {
   setShowComments(!showComments);
 };
+const handledescriptionToggle = () => {
+  setshowDescription(!showDescription);
+};
+
 const [rating, setRating] = useState(0);
 const [hover, setHover] = useState(0);
 const [show,setShow]=useState(false);
@@ -166,14 +175,17 @@ const handleCommentSubmit = async (e, projectId, content) => {
 
   return (
     <><Header  />
-  
+   {successMessage && <div  style={{ backgroundColor: '#d4edda', borderColor: '#c3e6cb', color: '#155724', padding: '1rem' ,
+  borderRadius: '0.25rem', marginBottom: '1rem' }} >{successMessage}</div>}
 
       <MainFeature
        
         heading={
           <>
-         {project.title}<br/>
-         <span tw="text-primary-500" style={{ display: "flex" }} >{project.averageRating ? project.averageRating.toFixed(1) : 0}<img src={etoile} width="50px"height="50px"/></span>
+        <p style={{fontFamily:'initial' , color:'#6415FF'}}> {project.title}</p>
+    
+         
+         <span tw="text-gray-500" style={{ display: "flex" , fontSize:'30px'}} >{project.averageRating ? project.averageRating.toFixed(1) : 0}<AiFillStar style={{color:'yellow' , fontSize:'40px'}}/></span>
             <NavLink onClick={handleSetShow} style={{ float: "left" }}>share your opinion</NavLink>
             <wbr /> 
            
@@ -238,79 +250,13 @@ const handleCommentSubmit = async (e, projectId, content) => {
         imageDecoratorBlob={true}
         imageDecoratorBlobCss={tw`left-1/2 -translate-x-1/2 md:w-32 md:h-32 opacity-25`}
       />
-        {/* <div tw="flex" style={{justifySelf: 'end', alignSelf: 'center', marginLeft: '700px'}}>
-        <div tw="flex flex-col items-center justify-center mb-10">
-        <a
-          onClick={handleCommentToggle}
-          tw="flex   w-full  text-primary-500 hover:text-primary-600 cursor-pointer" 
-        >
-          <h1 style={{ fontSize: '24px' }}>
-            All comments{' '}
-            {showComments ? <FaAngleUp size={20} /> : <FaAngleDown size={20} />}
-          </h1>
-        </a>
-        <div tw="flex-1">
-        {showComments && (
-          
-          <div tw="w-full max-w-lg mt-4 space-y-4">
-              <form onSubmit={(e) => handleCommentSubmit(e, project._id, comment)}>
-                  <div style={{ display: "flex", marginTop: "10px" }}>
-  <input 
-    type="text"
-    style={{ 
-      flexGrow: 1,
-      padding: "5px",
-      borderRadius: "5px",
-      marginRight: "5px"
-    }}
-    placeholder="Add a comment..."
-    value={comment}
-    onChange={(e) => handleCommentChange(e, project._id)} 
-  />
-  <button 
-    type="submit" 
-    style={{ 
-      padding: "5px 10px",
-      borderRadius: "5px",
-      backgroundColor: "#a273ff",
-      color: "white",
-      border: "none",
-      cursor: "pointer"
-    }}
-    
-  >
-    Add Comment
-  </button>
- 
-</div>
 
-</form>
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <div
-                  key={comment._id}
-                  tw="bg-gray-100 rounded-md p-4 shadow-md"
-                >
-                  <p tw="text-gray-700 text-lg">{comment.content}</p>
-                  <div tw="flex items-center justify-between mt-2">
-                    <p tw="text-gray-500 text-sm">by {comment.user.name}</p>
-                    <p tw="text-gray-500 text-sm">
-                      {new Date(comment.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p tw="text-center text-gray-500">No comments yet.</p>
-            )}
-          </div>
-        )}
-      </div>
-      </div>
-      </div> */}
 
-<div tw="flex justify-center">
-  <div tw="max-w-lg w-full">
+
+<div style={{ display: "flex" , marginLeft:'150px' }}>
+  <div style={{ flex: "1" }}>
+    <div tw="max-w-lg w-full">
+    <div tw="max-w-lg w-full">
     <div tw="bg-white rounded-lg shadow-md p-8">
       <a
         onClick={handleCommentToggle}
@@ -359,9 +305,40 @@ const handleCommentSubmit = async (e, projectId, content) => {
       )}
     </div>
   </div>
+    </div>
+  </div>
+  <div style={{ flex: "1" }}>
+    <div tw="max-w-lg w-full">
+    <div tw="max-w-lg w-full">
+    <div tw="bg-white rounded-lg shadow-md p-8">
+      <a
+        onClick={handledescriptionToggle}
+        tw="flex items-center justify-between mb-4 text-primary-500 hover:text-primary-600 cursor-pointer"
+      >
+        <h1 tw="text-lg font-bold">
+         Show Description{' '}
+          {showDescription ? <FaAngleUp size={20} /> : <FaAngleDown size={20} />}
+        </h1>
+      </a>
+      {showDescription && (
+        <div tw="space-y-4">
+          
+        
+           
+              <div tw="bg-gray-100 rounded-md p-4 shadow-md">
+                <p tw="text-gray-700 text-lg">{project.subtitle}</p>
+                
+              </div>
+          
+         
+        </div>
+      )}
+    </div>
+  </div>
+    </div>
+  </div>
 </div>
-
-
+<Footer />
     </>
   );
 

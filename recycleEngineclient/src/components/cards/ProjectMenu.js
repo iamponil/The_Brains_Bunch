@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import Footer from 'components/footers/FiveColumnDark';
 import tw from "twin.macro";
 import {Header} from "components/headers/profileHeader";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -92,7 +93,7 @@ const dataParam = searchParams.get('data');
     }
   }, []);
   return (<>  
-   <Header roundedHeaderButton={roundedHeaderButton }  />
+ <Header/> 
     <Container>
       <ContentWithPaddingXl>
         <Column>
