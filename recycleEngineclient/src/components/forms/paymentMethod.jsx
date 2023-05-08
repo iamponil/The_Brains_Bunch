@@ -79,22 +79,39 @@ export default function Payment() {
     const [number, setNumber] = useState("");
     const [name, setName] = useState("");
     const [expiry, setExpiry] = useState("");
+    const [exp_month, setExp_month] = useState("");
+
+    const [exp_year, setExp_year] = useState("");
+
     const [cvc, setCvc] = useState("");
-    const [issuer, setIssuer] = useState("");
+    // const [issuer, setIssuer] = useState("");
     const [focused, setFocused] = useState("");
-    const [formData, setFormData] = useState(null);
+    const [error, setErrors] = useState(null);
+    const [formData, setFormData] = useState({
+      number:'',
+      name:'',
+      exp_month:'',
+      exp_year:'',
+      expiry:"",
+      cvc:'',
+    });
+   
     const formRef = useRef(null);
+
+    const hundelchange = (e) =>{
+    setFormData({ ...formData, [e.target.name]: e.target.value });}
   
-    const handleCallback = ({ issuer }, isValid) => {
-      if (isValid) {
-        setIssuer(issuer);
-      }
-    };
+    // const handleCallback = ({ issuer }, isValid) => {
+    //   if (isValid) {
+    //     setIssuer(issuer);
+    //   }
+    // };
   
     const handleInputFocus = ({ target }) => {
       setFocused(target.name);
     };
   
+    
     const handleInputChange = ({ target }) => {
       if (target.name === "number") {
         target.value = formatCreditCardNumber(target.value);
@@ -110,20 +127,41 @@ export default function Payment() {
       }
     };
   
-    const handleSubmit = e => {
-      e.preventDefault();
-      const { issuer } = issuer;
-      const formData = [...e.target.elements]
-        .filter(d => d.name)
-        .reduce((acc, d) => {
-          acc[d.name] = d.value;
-          return acc;
-        }, {});
-  
-      setFormData(formData);
-      formRef.current.reset();
-    };
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      // setExp_month(target.value.slice(0, 2))
+      // setExp_year(target.value.slice(2,4 ))
+      const { cvc, expiry, name,number } = formData;
+    const exp_month = await  setExp_month(expiry.slice(0,2));
 
+      console.log(exp_month);
+      const exp_year = setExp_year(expiry.slice(3,5));
+      const formDataToSend = {
+        cvc,
+        exp_month,
+        exp_year,
+        name,
+        number,
+      };
+      console.log(formDataToSend);
+    
+//ADD Paiement
+  try {
+    const response = await fetch(`http://localhost:5000/projects/createCustomer`, {
+    method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            withCredentials:"true",
+          },
+          body: JSON.stringify(formDataToSend),
+        });
+    alert("Informations enregistrées avec succès !");
+    } catch (error) {
+    console.log(error);
+    // setErrors(error.response.data.msg);
+    alert("Échec d'enregistrement");
+  }}
   return (
     <div>
       <Content>
@@ -132,24 +170,30 @@ export default function Payment() {
          <h1 style={{color:'#a273ff', fontSize:'30px'}}>Payment</h1>
      
 <br></br>
-<FormContainer ref={formRef} onSubmit={handleSubmit}>   
+<FormContainer ref={formRef}>   
 <Card
   number={number}
   name={name}
   expiry={expiry}
   cvc={cvc}
   focused={focused}
-  callback={handleCallback}
+  // callback={handleCallback}
 />     
     <div className="form-group">
               <input
                 type="tel"
                 name="number"
+               
+               value={number}
                 className="form-control"
                 placeholder="Card Number"
                 pattern="[\d| ]{16,22}"
                 required
-                onChange={handleInputChange}
+              
+                onChange={(e) => {
+                  handleInputChange(e);
+                  hundelchange(e);
+                }}
                 onFocus={handleInputFocus}
               />
               <small>E.g.: 49..., 51..., 36..., 37...</small>
@@ -158,10 +202,14 @@ export default function Payment() {
               <input
                 type="text"
                 name="name"
+                value={name}
                 className="form-control"
                 placeholder="Name"
                 required
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  handleInputChange(e);
+                  hundelchange(e);
+                }}
                 onFocus={handleInputFocus}
               />
             </div>
@@ -170,30 +218,39 @@ export default function Payment() {
                 <input
                   type="tel"
                   name="expiry"
+                  value={expiry}
                   className="form-control"
                   placeholder="Valid Thru"
                   required
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    handleInputChange(e);
+                    hundelchange(e);
+                  }}
                   onFocus={handleInputFocus}
                 />
+                
               </div>
               <div className="col-6">
                 <input
                   type="tel"
                   name="cvc"
+                  value={cvc}
                   className="form-control"
                   placeholder="CVC"
                   pattern="\d{3,4}"
                   required
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    handleInputChange(e);
+                    hundelchange(e);
+                  }}
                   onFocus={handleInputFocus}
                 />
               </div>
             </div>
-            <input type="hidden" name="issuer" value={issuer} />
+            {/* <input type="hidden" name="issuer" value={issuer} /> */}
             
           
-              <SubmitButton  >Confirm Payment</SubmitButton>
+              <SubmitButton  type="submit" onClick={handleSubmit} >Confirm Payment</SubmitButton>
            
           </FormContainer>
    

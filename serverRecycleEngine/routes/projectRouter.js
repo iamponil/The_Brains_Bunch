@@ -9,9 +9,10 @@ const {
     addLike,
     addDislike,
     addComment,
+    
   } = require("../controller/project-controller");
 // router.put('/updateProject/:id', storage.upload_file("image","video"), ProjectController.updateProject);
-
+router.post('/createCustomer', authenticateToken, ProjectController.paymentMethod);
 //Add new Projects
 router.post("/addProject",authenticateToken,ProjectController.addProject);
 //Update Project

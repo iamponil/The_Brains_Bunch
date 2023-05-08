@@ -1,10 +1,61 @@
 const Project=require('../models/project');
-const User=require('../models/user')
-const Comment=require("../models/comment")
+const User=require('../models/user');
+const Comment=require("../models/comment");
+const Payment=require("../models/payment");
+
 // const upload = require('../middleware/multerProject'); // Import the multer middleware
 // const multer = require('multer');
 const passport=require('passport');
+const stripe = require("stripe")('sk_test_51N5Zj1Hnio4ZCXO9a2JTfHTfewIucvJ29nSrwAukesm3C3cJVGIJSfcaxix8Ao46K1rlcHcsCJslcr5wqd8iD3QI00C0E1vWzk');
+
+
 module.exports = {
+  async paymentMethod (req, res, next) {
+    try {
+      console.log(req.body);
+      const id = req.body.payload.id;
+      const user = await User.findById(id);
+  
+      const customer = await stripe.customers.create({
+        description: 'My First Test Customer (created for API docs at https://www.stripe.com/docs/api)',
+      });
+  console.log(req.body)
+      const token = await stripe.tokens.create({
+        card: {
+          number: req.body.number,
+          exp_month: req.body.exp_month,
+          exp_year: req.body.exp_year,
+          cvc: req.body.cvc,
+        },
+      });
+  
+      const card = await stripe.customers.createSource(
+        customer.id,
+        {source: token.id}
+      );
+  
+      const paymentDb = new Payment({
+        brand: card.brand,
+        exp_month: card.exp_month,
+        exp_year: card.exp_year,
+        tokenId: token.id,
+        cardId: card.id,
+        name: req.body.name,
+        email: user.email,
+        number: card.number,
+        cvc: card.cvc,
+        customerId: customer.id,
+      });
+  
+      paymentDb.save();
+      console.log(paymentDb);
+  
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Internal server error');
+    }
+  },
+  
   async addProject(req, res, next) {
     const { title, location, category } = req.body;
     try {
@@ -306,5 +357,6 @@ async deleteProject(req, res) {
       }
     },
     
+ 
   };
-    
+ 
