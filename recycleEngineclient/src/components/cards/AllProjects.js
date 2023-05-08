@@ -150,21 +150,25 @@ export default ({
     }
   };
   useEffect(() => {
-  
-    fetch(`http://localhost:5000/projects/getAll`) 
-      .then(res => {
-        return res.json()
-      })
-      .then(data => {
-        console.log(data);
-        setproject(data);
-      })
+    // Fetch all projects
+    fetch(`http://localhost:5000/projects/getAll`)
+      .then(res => res.json())
+      .then(data => setproject(data))
       .catch(err => {
         console.error(err);
         setErrors(err);
       });
-  }
-, []);
+  
+    // Clear success message after 4 seconds
+    if (successMessage) {
+      const timeoutId = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 4000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [successMessage]);
+  
+
 const handlePreviousClick = () => {
   if (startIndex >= 3) {
     setStartIndex(startIndex - 3);
@@ -201,6 +205,7 @@ const handleNextClick = () => {
         
       });
       setSuccessMessage('Comment added successfully!');
+     
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -270,8 +275,7 @@ const filterProjectsByCategory = () => {
 </div>
         </HeaderRow>
 
-        {successMessage && <div>{successMessage}</div>}
-          <TabContent
+       <TabContent
         
             variants={{
               current: {
@@ -396,7 +400,10 @@ const filterProjectsByCategory = () => {
               
             ))}
           </TabContent>
-       
+          <br></br>
+          {successMessage && <div  style={{ backgroundColor: '#d4edda', borderColor: '#c3e6cb', color: '#155724', padding: '1rem' ,
+  borderRadius: '0.25rem', marginBottom: '1rem' }} >{successMessage}</div>}
+         
       </ContentWithPaddingXl>
       <DecoratorBlob1 />
       <DecoratorBlob2 />
