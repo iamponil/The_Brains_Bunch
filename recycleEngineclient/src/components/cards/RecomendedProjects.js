@@ -100,7 +100,7 @@ export default ({
   const [startIndex, setStartIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
   const [selectedProjectId, setSelectedProjectId] = useState(null);
-
+  const [selectedOption, setSelectedOption] = useState("All");
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   };
@@ -229,13 +229,19 @@ const handleNextClick = () => {
     
   };
 
-const filterProjectsByCategory = () => {
-  if (selectedCategory === "") {
-    return projects;
-  } else {
-    return projects.filter((project) => project.category === selectedCategory);
+  const filterProjects = () => {
+    console.log(selectedOption)
+    console.log(projects)
+    if (selectedOption === "All") {
+      return projects;
+    } else if (selectedOption === "Funded") {
+      return projects.filter(project => (project.status == true))
+    } else if (selectedOption === "Not_Funded") {
+      return projects.filter(project => ( (project.status == false)))
+    } 
+    console.log(projects)
   }
-}; 
+  
  ///////Filter list by search value//////////////
        const [filteredResults, setFilteredResults] = useState([]);
        const [searchInput, setSearchInput] = useState('');
@@ -274,9 +280,10 @@ const filterProjectsByCategory = () => {
               <input type="text" placeholder="Search" 
               onChange={(e) => searchItems(e.target.value)}/>
             </Actions>
-          <div>
+            <Actions>
   <select
-    onChange={(e) => setSelectedCategory(e.target.value)}
+    value={selectedOption}
+    onChange={(e) => setSelectedOption(e.target.value)}
     style={{ 
       fontSize: '1.2rem', 
       padding: '0.5rem', 
@@ -287,16 +294,11 @@ const filterProjectsByCategory = () => {
       color:'#a273ff'
     }}
   >
-    <option value="">All categories</option>
-    <option value="Paper & Cardboard">Paper & Cardboard</option>
-    <option value="Plastic">Plastic</option>
-    <option value="Metals">Metals</option>
-    <option value="Electronic waste">Electronic waste</option>
-    <option value="organic waste">Organic waste</option>
-    <option value="Textiles">Textiles</option>
-    <option value="Tires">Tires</option>
+    <option value="All">All</option>
+    <option value="Funded">Funded</option>
+    <option value="Not_Funded">Not Funded</option>
   </select>
-</div>
+  </Actions>
         </HeaderRow>
 
        <TabContent
@@ -401,7 +403,7 @@ const filterProjectsByCategory = () => {
 
                 </Card>
               </CardContainer>
-                    )  )):(projects.slice(startIndex, startIndex + 3).map((project, index) => (
+                    )  )):(filterProjects().slice(startIndex, startIndex + 3).map((project, index) => (
               <CardContainer key={index}>
                 <Card className="group"  initial="rest" whileHover="hover" animate="rest">
                   <CardImageContainer imageSrc={`http://localhost:5000/uploads/${project.image}`}>

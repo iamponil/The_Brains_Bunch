@@ -64,11 +64,11 @@ export default () => {
         'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=640&q=80',
       authorImageSrc:
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3.25&w=512&h=512&q=80',
-      title: 'Tips on how to travel safely in foreign countries',
+      title: 'Welcome to Recycle Engine',
       description:
-        'Lorem ipsum dolor sit amet, consecteturious adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua now ele.',
-      authorName: 'Charlotte Delos',
-      authorProfile: 'Travel Advocate',
+        '👋 Welcome to our crowdfunding project, where dreams take flight and passions find support. We believe that together, we can make a difference and bring impactful ideas to life. With your help, we aim to create a community dedicated to innovation, empowerment, and positive change.',
+      authorName: 'Elbich yosra',
+      authorProfile: 'Web developer',
       url: 'https://timerse.com',
     },
     {
@@ -76,11 +76,11 @@ export default () => {
         'https://images.unsplash.com/photo-1563784462041-5f97ac9523dd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=640&q=80',
       authorImageSrc:
         'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80',
-      title: 'Enjoying the beach life while on a vacation',
+      title: 'Sustainable Fashion and Textiles',
       description:
-        'Lorem ipsum dolor sit amet, consecteturious adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua now ele.',
-      authorName: 'Adam Cuppy',
-      authorProfile: 'Vlogger',
+        'Crowdfunding campaigns can support sustainable fashion brands and initiatives that promote recycling and upcycling in the textile industry. This can include projects focused on recycling textiles, creating sustainable fashion lines, and raising awareness about the environmental impact of fast fashion.',
+      authorName: 'Memmi Marwa',
+      authorProfile: 'Web developer',
       url: 'https://reddit.com',
     },
   ];
@@ -89,35 +89,35 @@ export default () => {
     {
       postImageSrc:
         'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&q=80',
-      title: 'Getting the most out of your vacation',
+      title: 'Green Building and Construction',
       authorName: 'Aaron Patterson',
       url: 'https://reddit.com',
     },
     {
       postImageSrc:
         'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&q=80',
-      title: 'Choosing the perfect Safaris in Africa',
+      title: 'Eco-friendly Energy Solutions',
       authorName: 'Sam Phipphen',
       url: 'https://reddit.com',
     },
     {
       postImageSrc:
         'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&q=80',
-      title: 'Hiking during the monsoon in Asia',
+      title: 'Sustainable Agriculture and Food Waste',
       authorName: 'Tony Hawk',
       url: 'https://timerse.com',
     },
     {
       postImageSrc:
         'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&q=80',
-      title: 'Must carry items while travelling to Thailand',
+      title: 'Community Recycling Initiatives',
       authorName: 'Himali Turn',
       url: 'https://timerse.com',
     },
     {
       postImageSrc:
         'https://images.unsplash.com/photo-1546971587-02375cbbdade?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=641&q=80',
-      title: 'An extremely funny trip to the Swiss Alps',
+      title: 'Eco-friendly Energy Solutions',
       authorName: 'Naomi Watts',
       url: 'https://timerse.com',
     },

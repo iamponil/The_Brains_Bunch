@@ -15,9 +15,9 @@ export const MainLandingPage = () => {
       <Chatbot/>
       <Hero />
       <RecomendedProjects/>
-      {/* <Feature /> */}
+      <Blog/>
       <PortCard />
-      {/* <Card />  */}
+     
       <OurTeam/>
       <Footer />
     </AnimationRevealPage>
