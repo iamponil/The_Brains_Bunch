@@ -3,10 +3,17 @@
 /**
  * Module dependencies.
  */
+const cron = require('node-cron');
 
 var app = require('../app');
 var debug = require('debug')('ph-diagnostics-back:server');
 var http = require('http');
+const { startAllCountdowns } = require("../controller/project-controller");
+
+// run startCountdown every minute
+cron.schedule("* * * * *", () => {
+  startAllCountdowns();
+});
 
 /**
  * Get port from environment and store in Express.

@@ -2,6 +2,8 @@ const Project=require('../models/project');
 const User=require('../models/user');
 const Comment=require("../models/comment");
 const Payment=require("../models/payment");
+const FundedProject=require("../models/fundedProject");
+
 
 // const upload = require('../middleware/multerProject'); // Import the multer middleware
 // const multer = require('multer');
@@ -61,13 +63,60 @@ const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
       res.status(500).send('Internal server error');
     }
   },
-  async makeDonation(req,res){
-const id =req.payload.id;
-console.log(id);
-const user = await User.findById(id).populate("payment");
-
-
+  async makeDonation(req, res) {
+    const userId = req.payload.id;
+    const projectId = req.body.id_project;
+    const balance=req.body.initialBalance;
+    const amount = Number(req.body.amountValue);
+    console.log(amount,projectId);
+    const user = await User.findById(userId).populate("payment");
+    const project=await Project.findById(projectId);
+    const paymentMethod = user.payment;
+    console.log(paymentMethod._id);
+  
+    // Create a new projectFunded document
+    const projectFunded = new FundedProject({
+      project: projectId,
+      reservedAmount: amount,
+      cards: [paymentMethod._id]
+    });
+  console.log(projectFunded);
+    // Save the projectFunded document
+    await projectFunded.save();
+    project.fundGoalProgress+=amount;
+    await project.save();
+    // Update the paymentMethod reservedAmount
+    paymentMethod.reservedAmount += amount;
+    paymentMethod.balance=balance;
+    await paymentMethod.save();
+  
+    res.status(200).send("Donation successful");
   },
+  async  startAllCountdowns() {
+    const projects = await Project.find();
+    for (const project of projects) {
+      const projectId = project._id;
+      let duration = project.duration;
+      setInterval(async () => {
+        const updatedProject = await Project.findById(projectId);
+        let updatedDuration = updatedProject.duration - 1;
+        updatedDuration = Math.max(updatedDuration, 0);
+        updatedProject.duration = updatedDuration;
+        await updatedProject.save();
+        console.log(`Project ${projectId}: Duration ${updatedDuration} seconds`);
+        if (updatedDuration <= 0) {
+          console.log(`Project ${projectId}: Duration has ended`);
+          clearInterval(this);
+        }
+      }, 60000);
+    }
+  },
+  
+
+ 
+  
+
+  
   async getUserCard  (req, res)  {
     const id = req.payload.id;
     try {
@@ -136,7 +185,7 @@ console.log(card.expiry)  ;
     project.category = req.body.category;
     project.location = req.body.location;
     project.fundGoal = req.body.fundGoal;
-    project.duration = req.body.duration;
+    project.duration = req.body.duration* 24 * 60 * 60;
     project.launchingDate = req.body.launchingDate;
     project.budget = req.body.budget;
 
