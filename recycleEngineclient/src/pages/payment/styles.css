@@ -31,7 +31,7 @@ body {
   
   form {
     margin: 30px auto 0;
-    max-width: 400px;
+    max-width: 100%;
   }
   
   .form-actions {

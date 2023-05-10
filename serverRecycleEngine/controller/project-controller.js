@@ -13,18 +13,22 @@ module.exports = {
   async paymentMethod (req, res, next) {
     try {
       console.log(req.body);
+      const min = 1000;
+const max = 2000;
+const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
       const id = req.body.payload.id;
       const user = await User.findById(id);
-  
-      const customer = await stripe.customers.create({
+  const exp_month = req.body.expiry.slice(0,2);
+  const exp_year = req.body.expiry.slice(3,5);
+      const customer = await stripe. customers.create({
         description: 'My First Test Customer (created for API docs at https://www.stripe.com/docs/api)',
       });
   console.log(req.body)
       const token = await stripe.tokens.create({
         card: {
           number: req.body.number,
-          exp_month: req.body.exp_month,
-          exp_year: req.body.exp_year,
+          exp_month: exp_month,
+          exp_year: exp_year,
           cvc: req.body.cvc,
         },
       });
@@ -33,7 +37,7 @@ module.exports = {
         customer.id,
         {source: token.id}
       );
-  
+
       const paymentDb = new Payment({
         brand: card.brand,
         exp_month: card.exp_month,
@@ -42,17 +46,42 @@ module.exports = {
         cardId: card.id,
         name: req.body.name,
         email: user.email,
-        number: card.number,
-        cvc: card.cvc,
+        number: req.body.number,
+        balance:randomNum,
+        cvc:req.body.cvc,
         customerId: customer.id,
       });
-  
-      paymentDb.save();
+      await paymentDb.save();
+      user.payment = paymentDb._id;
+      await user.save();
       console.log(paymentDb);
-  
+  res.status(200).send('Success');
     } catch (error) {
       console.log(error);
       res.status(500).send('Internal server error');
+    }
+  },
+  async makeDonation(req,res){
+const id =req.payload.id;
+console.log(id);
+const user = await User.findById(id).populate("payment");
+
+
+  },
+  async getUserCard  (req, res)  {
+    const id = req.payload.id;
+    try {
+      const user = await User.findById(id).populate("payment");
+      const card = user?.payment || null;
+      if (card) {
+        card.expiry = `${card.exp_month}/${card.exp_year.slice(2,4)}`;
+      }
+      console.log(card);
+console.log(card.expiry)  ;
+    res.json({ card:card ,expiry:card.expiry});
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error fetching user address" });
     }
   },
   

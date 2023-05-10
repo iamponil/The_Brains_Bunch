@@ -241,7 +241,7 @@ const handleCommentSubmit = async (e, projectId, content) => {
         buttonRounded={false}
         textOnLeft={false}
         primaryButtonText="View all Projects "
-        primaryButtonUrl = "/AllProjects"
+        primaryButtonUrl = "/projectss"
         
         imageSrc=
           {`http://localhost:5000/uploads/${project.image}`}
@@ -338,6 +338,9 @@ const handleCommentSubmit = async (e, projectId, content) => {
     </div>
   </div>
 </div>
+<br>
+</br>
+<br></br>
 <Footer />
     </>
   );

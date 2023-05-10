@@ -59,7 +59,7 @@ const CardHoverOverlay = styled(motion.div)`
   ${tw`absolute inset-0 flex justify-center items-center`}
 `;
 const CardButton = tw(PrimaryButtonBase)`text-sm`;
-const CardAction = tw(PrimaryButtonBase)`w-full mt-6  justify-center` ;
+const CardAction = tw(PrimaryButtonBase)`w-full mt-6  justify-center text-white` ;
 const CardReview = tw.div`font-medium text-xs text-gray-600`;
 
 const CardText = tw.div`p-4 text-gray-900`;
@@ -84,7 +84,6 @@ const PrevButton = tw(ControlButton)``;
 const NextButton = tw(ControlButton)``;
 export default ({
   heading = "All Projects",
-  cardLinkText = " I Support this project",
 }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   // const [searchInput, setSearchInput] = useState('');
@@ -312,7 +311,7 @@ const filterProjectsByCategory = () => {
                   <SecondaryInfoContainer>
                   <div tw="flex flex-col sm:flex-row mt-1 sm:mt-4">   
                    <a onClick={() => handleLike(project._id)} style={{  cursor: 'pointer' }}>
-   < AiFillLike style={{ width:'40px', height:'40px' , color: selectedProjectId === project._id && likeStatus === "like"  ? "red" : "#a273ff", marginRight:'15px'}} /> 
+   < AiFillLike style={{ width:'40px', height:'40px' , color: selectedProjectId === project._id && likeStatus === "like"  ? "blue" : "gray", marginRight:'15px'}} /> 
   </a>
 
   <p style={{marginTop:'20px' , marginRight:'20px'}}>{project.likes}Likes </p> </div>
@@ -321,7 +320,7 @@ const filterProjectsByCategory = () => {
      onClick={() => handleDislike(project._id)} style={{  cursor: 'pointer' }}
      
   >
-    <AiFillDislike style={{ width:'40px', height:'40px' ,color: selectedProjectId === project._id && likeStatus === "dislike"  ? "red" : "#a273ff" , marginRight:'15px'}}  
+    <AiFillDislike style={{ width:'40px', height:'40px' ,color: selectedProjectId === project._id && likeStatus === "dislike"  ? "red" : "gray" , marginRight:'15px'}}  
      /> 
   </a>   <p style={{marginTop:'20px'}}>{project.dislikes} Dislikes</p> </div> </SecondaryInfoContainer>
 
@@ -351,8 +350,8 @@ const filterProjectsByCategory = () => {
                     <CardContent>Category:{project.category}</CardContent>
                     <CardTitle>Duration : {project.duration}</CardTitle>
                   </CardText>
-                  <CardAction >{cardLinkText}</CardAction>
-         
+                  <CardAction ><Link to={`/rewards/${project._id}`}><p style={{color:"#ffffff"}} >I support this project</p></Link></CardAction>
+          
                  
 
                 </Card>

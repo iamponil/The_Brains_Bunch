@@ -364,7 +364,7 @@ const ProcessingFee = 0.05;
                 <Column>
                 <InputContainer>
                     <Label htmlFor="name-input" tw="text-primary-500">Target launch date (optional)</Label>
-                    <Input id="name-input" type="date"  name="launchingDate" value={project.launchingDate && !isNaN(new Date(project.launchingDate)) ? new Date(project.launchingDate).toISOString().slice(0,10) : ''} onChange={(e) => hundelchange(e)} placeholder="E.g. John Doe" />
+                    <Input id="name-input" type="date"  name="launchingDate" value={project.launchingDate && !isNaN(new Date(project.launchingDate)) ? new Date(project.launchingDate).toISOString().slice(0,10) : ''} onChange={(e) => hundelchange(e)}  />
                   </InputContainer>
                   <br></br>
                 

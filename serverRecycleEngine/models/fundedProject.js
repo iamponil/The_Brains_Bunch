@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const projectFundedSchema = new mongoose.Schema(
   {
 
-   user: { type: Schema.Types.ObjectId, ref: "user" },
+   card: { type: Schema.Types.ObjectId, ref: "card" },
    project: { type: Schema.Types.ObjectId, ref: "project" },
    reservedAmount:{type:Number}
   },

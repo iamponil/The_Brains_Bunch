@@ -5,7 +5,7 @@ import tw from 'twin.macro';
 import { css } from 'styled-components/macro'; //eslint-disable-line
 import { ReactComponent as SvgDotPatternIcon } from '../../images/dot-pattern.svg';
 import axios, { Axios } from 'axios';
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { render } from "react-dom";
 import Card from "react-credit-cards";
 
@@ -112,39 +112,41 @@ export default function Payment() {
     };
   
     
-    const handleInputChange = ({ target }) => {
-      if (target.name === "number") {
-        target.value = formatCreditCardNumber(target.value);
-        setNumber(target.value);
-      } else if (target.name === "expiry") {
-        target.value = formatExpirationDate(target.value);
-        setExpiry(target.value);
-      } else if (target.name === "cvc") {
-        target.value = formatCVC(target.value);
-        setCvc(target.value);
-      } else if (target.name === "name") {
-        setName(target.value);
-      }
-    };
+  const handleInputChange = ({ target }) => {
+  if (target.name === "number") {
+    target.value = formatCreditCardNumber(target.value);
+    setNumber(target.value);
+  } else if (target.name === "expiry") {
+    target.value = formatExpirationDate(target.value);
+    setExpiry(target.value);
+    const expMonth = target.value.slice(0, 2);
+    const expYear = target.value.slice(3, 5);
+    setFormData(prevState => ({ ...prevState, [target.name]: target.value }));
+  } else if (target.name === "cvc") {
+    target.value = formatCVC(target.value);
+    setCvc(target.value);
+  } else if (target.name === "name") {
+    setName(target.value);
+  }
+
+  hundelchange({ target }); // add this line to update the formData state
+};
+
   
+
     const handleSubmit = async (event) => {
       event.preventDefault();
-      // setExp_month(target.value.slice(0, 2))
-      // setExp_year(target.value.slice(2,4 ))
-      const { cvc, expiry, name,number } = formData;
-    const exp_month = await  setExp_month(expiry.slice(0,2));
+     
+      const { cvc,expiry ,name,number } = formData;
 
-      console.log(exp_month);
-      const exp_year = setExp_year(expiry.slice(3,5));
       const formDataToSend = {
         cvc,
-        exp_month,
-        exp_year,
+        expiry,
         name,
         number,
       };
       console.log(formDataToSend);
-    
+     
 //ADD Paiement
   try {
     const response = await fetch(`http://localhost:5000/projects/createCustomer`, {
@@ -156,6 +158,7 @@ export default function Payment() {
           },
           body: JSON.stringify(formDataToSend),
         });
+   
     alert("Informations enregistrées avec succès !");
     } catch (error) {
     console.log(error);

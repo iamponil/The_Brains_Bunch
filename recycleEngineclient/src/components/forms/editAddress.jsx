@@ -9,7 +9,7 @@ import axios, { Axios } from 'axios';
 const Content = tw.div`max-w-screen-2xl mx-auto py-20 lg:py-24`;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-primary-100  opacity-50 text-gray-100 rounded-lg `}
+  ${tw`p-10 sm:p-12 md:p-16 bg-primary-100   text-gray-100 rounded-lg `}
   form {
     ${tw`mt-4`}
   }

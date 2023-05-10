@@ -16,6 +16,7 @@ import Basics from 'components/hero/Basics.js';
 // import Previewproject from 'components/cards/previewProject.js';
 import ProjectDetailsS from 'components/cards/ProjectDetails.js';
 import Projectbyuser from 'components/cards/MyProjects.jsx';
+import Rewards from 'components/cards/rewards.js';
 import AllProjects from 'components/cards/AllProjects.js';
 import EditProfile from 'pages/editprofile/editProfile.jsx';
 import InformationForm from 'components/forms/editInformations.jsx';
@@ -24,6 +25,8 @@ import PaymentForm from 'components/forms/paymentMethod.jsx';
 import CredentialsForm from 'components/forms/editCredentials.jsx';
 import ContactUs from 'pages/ContactUsPage.jsx';
 import Story from 'pages/story.js';
+import PaymentProcess from 'components/hero/paymentProcess.jsx';
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -40,7 +43,7 @@ export default function App() {
           <Route path="/basics/:titre" element={<Basics />} />
           <Route path="/projectss" element={<Projects />} />
           <Route path="/story" element={<Story />} />
-          
+          <Route path="/rewards/:id" element={<Rewards />} />
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/login" element={<Login />} />
           {/* <Route path="/previewProject" element={<Previewproject />} /> */}
@@ -51,6 +54,8 @@ export default function App() {
             <Route path="" element={<CredentialsForm />} />
           </Route>
           <Route path="/ContactUs" element={<ContactUs/>} />
+          <Route path="/PaymentProcess" element={<PaymentProcess/>} />
+
 
           <Route
             path="/activationemail/:activation_token"

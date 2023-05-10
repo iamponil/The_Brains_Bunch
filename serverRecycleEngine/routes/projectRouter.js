@@ -13,6 +13,8 @@ const {
   } = require("../controller/project-controller");
 // router.put('/updateProject/:id', storage.upload_file("image","video"), ProjectController.updateProject);
 router.post('/createCustomer', authenticateToken, ProjectController.paymentMethod);
+router.get('/getUserCard',authenticateToken,ProjectController.getUserCard);
+router.post('/makeDonation',authenticateToken,ProjectController.makeDonation);
 //Add new Projects
 router.post("/addProject",authenticateToken,ProjectController.addProject);
 //Update Project

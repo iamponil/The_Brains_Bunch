@@ -63,87 +63,8 @@ function ContactUs() {
 
 
 
-    <ToastContainer />
-    <div className="contact_us_8">
-      <div className="responsive-container-block container">
-        <form className="form-box" onSubmit={handleSubmit}>
-          <div className="container-block form-wrapper">
-            <div className="responsive-container-block">
-              <div className="responsive-cell-block wk-tab-12 wk-mobile-12 wk-desk-8 wk-ipadp-12" id="i10mt-9">
-                <input
-                  className="input"
-                  type="text"
-                  id="name"
-                  placeholder="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="responsive-cell-block wk-tab-12 wk-mobile-12 wk-desk-8 wk-ipadp-12" id="iajvf">
-                <input
-                  className="input"
-                  placeholder="Email"
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="responsive-cell-block wk-tab-12 wk-mobile-12 wk-desk-8 wk-ipadp-12" id="i634i-9">
-                <textarea
-                  aria-placeholder="What’s on your mind?"
-                  placeholder="What’s on your mind?"
-                  className="textinput"
-                  id="message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="responsive-cell-block wk-tab-12 wk-mobile-12 wk-desk-8 wk-ipadp-12 checkbox-container" id="i634i-2-2">
-              <div className="checkboc-container">
-                <input id="i0m1w" type="checkbox" />
-                <p className="checkbox-text" id="i5ywz">
-                  I consent to the privacy policy of this application
-                </p>
-              </div>
-            </div>
-            <div className="responsive-cell-block wk-tab-12 wk-mobile-12 wk-desk-8 wk-ipadp-12" id="i0txn-2">
-              <button type="submit" className="submit-btn">
-                Submit
-              </button>
-            </div>
-            <div className="right-side-text">
-              <p className="text-blk contactus-head">
-                Get in Touch
-              </p>
-              <p className="text-blk contactus-subhead">
-                We'd love to hear from you! Leave a message and we will get in touch with you shortly.
+    <iframe title="engine" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=783fb4a8-14aa-410c-8a25-0fc6a4e4b247&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false"  frameborder="0" allowFullScreen="true"></iframe>
 
-              </p>
-              <div className="social-media-links">
-                <a href=" https://twitter.com/" id="ix94i-2-3">
-                  <img alt="aaa" className="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-twitter.png" />
-                </a>
-                <a href="https://facebook.com/">
-                  <img alt="aaa" className="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-facebook.png" />
-                </a>
-                <a href=" https://google.com/">
-                  <img alt="aaa" className="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-google.png" />
-                </a>
-                <a href=" https://instagram.com/" id="izldf-2-3">
-                  <img alt="aaa" className="link-img" src="https://workik-widget-assets.s3.amazonaws.com/Footer1-83/v1/images/Icon-instagram.png" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </form>
-
-      </div>
-    </div>
     <Footer />
      
   </div>
