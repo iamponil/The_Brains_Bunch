@@ -22,10 +22,10 @@ import styles from 'pages/payment/styles.css';
 import Footer from 'components/footers/FiveColumnDark';
 
 import "react-credit-cards/es/styles-compiled.css";
-const Content = tw.div`max-w-screen-2xl justify-center mx-auto py-20 lg:py-24 flex items-center`;
+const Content = tw.div`max-w-screen-2xl  justify-center mx-auto py-20 lg:py-24 flex items-center`;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-white text-gray-100 rounded-lg`}
+  ${tw`p-10 sm:p-12 md:p-16 bg-gray-100 text-gray-100 rounded-lg`}
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -56,22 +56,10 @@ const FormContainer = styled.div`
   }
 `;
 
-const ImageContainer = styled.div`
-  border: 2px dashed gray;
-  width: 300px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
-const ImagePreview = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
 
-const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
+const TwoColumn = tw.div`flex flex-col sm:flex-row justify-evenly`;
+
 const PaymentContainer = tw.div`flex flex-col sm:flex-row justify-between`;
 const Payment = tw.div`sm:w-5/12 flex flex-col`;
 const Reward = tw.div`sm:w-5/12 flex flex-col items-center`;
@@ -230,7 +218,7 @@ useEffect(() => {
   return (
     <div>
         <Header roundedHeaderButton={roundedHeaderButton} />
-    <Content>
+    <Content >
         <div key="Payment">
       <div className="App-payment">
        <h1 style={{color:'#000000', fontSize:'30px'}}>Payment</h1>

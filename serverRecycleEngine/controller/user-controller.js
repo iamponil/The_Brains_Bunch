@@ -55,7 +55,7 @@ exports.SendContactMail = async (req,res) => {
   // Message object
   let message = {
     from: req.body.email,
-    to: "marwa.memmi@esprit.tn",
+    to: "thebrainsbrunch41@gmail.com",
     subject: "Message from Contact Form",
     html: `<div>
             <p><strong>Email from: ${req.body.name}</strong></p>

@@ -131,20 +131,7 @@ Name your project, upload an image or video, and establish your campaign details
                Set your rewards and shipping costs.</p>
                
               </Div>
-              <Div
-               
-                className="group"
-              >
-                <Paragraph tw="font-bold text-primary-500">
-                Story
-
-
-            </Paragraph>
-               <p>
-               Add a detailed project description and convey your risks and challenges.
-              </p>
-               
-              </Div>  
+           
               <Div
                 
                 className="group"

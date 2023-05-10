@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Footer from 'components/footers/FiveColumnDark';
 import tw from "twin.macro";
 import StarRating from "components/cards/StarRating";
 import styled from "styled-components";
@@ -18,20 +19,25 @@ import {Header} from "components/headers/profileHeader";
 import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
 import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
 import { ReactComponent as PriceIcon } from "feather-icons/dist/icons/dollar-sign.svg";
+import { ReactComponent as PercentIcon } from "feather-icons/dist/icons/percent.svg";
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Headers = tw(SectionHeading)`text-primary-500 `;
 const SecondaryInfoContainer = tw.div`flex justify-between flex-col sm:flex-row mt-2 sm:mt-4`;
 const SecondaryInfoContainer2 = tw.div`flex flex-col sm:flex-row mt-2 sm:mt-4`;
 const IconWithText = tw.div`flex items-center mr-6 my-2 sm:my-0`;
 const Text = tw.div`ml-2 text-sm font-semibold text-gray-800`;
-
+const Actions = styled.div`
+  ${tw`text-center `}
+  input {
+    ${tw`rounded-full border-2 w-full relative py-4 px-10 mt-6 font-medium focus:outline-none  hover:border-gray-500`}
+  }
+`;
 const IconContainer = styled.div`
   ${tw`inline-block rounded-full p-2 bg-gray-700 text-gray-100`}
   svg {
     ${tw`w-3 h-3`}
   }
 `;
-
 
 const TabContent = tw(motion.div)`mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12`;
 const CardContainer = tw.div`mt-10 w-full sm:w-1/2 md:w-1/3  sm:pr-10 md:pr-6 lg:pr-12`;
@@ -53,7 +59,7 @@ const CardHoverOverlay = styled(motion.div)`
   ${tw`absolute inset-0 flex justify-center items-center`}
 `;
 const CardButton = tw(PrimaryButtonBase)`text-sm`;
-const CardAction = tw(PrimaryButtonBase)`w-full mt-6 opacity-50 justify-center` ;
+const CardAction = tw(PrimaryButtonBase)`w-full mt-6  justify-center text-white` ;
 const CardReview = tw.div`font-medium text-xs text-gray-600`;
 
 const CardText = tw.div`p-4 text-gray-900`;
@@ -81,13 +87,20 @@ export default ({
   cardLinkText = " I Support this project",
 }) => {
  
+ 
+  ///
+  const [selectedCategory, setSelectedCategory] = useState("");
+  // const [searchInput, setSearchInput] = useState('');
   const [likeStatus, setLikeStatus] = useState(null);
   const [error, setErrors] = useState(null);
+  // const [filteredResults, setFilteredResults] = useState([]);
   const [projects, setproject] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [rating, setRating] = useState(0);
   const [startIndex, setStartIndex] = useState(0);
   const [newComment, setNewComment] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   };
@@ -110,6 +123,7 @@ export default ({
         return updatedProjects;
       });
       setLikeStatus("like");
+      setSelectedProjectId(projectId);
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -135,6 +149,7 @@ export default ({
         return updatedProjects;
       });
       setLikeStatus("dislike");
+      setSelectedProjectId(projectId);
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -154,8 +169,19 @@ export default ({
         console.error(err);
         setErrors(err);
       });
-  }
-, []);
+  
+
+  
+    // Clear success message after 4 seconds
+    if (successMessage) {
+      const timeoutId = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 2000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [successMessage]);
+  
+
 const handlePreviousClick = () => {
   if (startIndex >= 3) {
     setStartIndex(startIndex - 3);
@@ -192,6 +218,7 @@ const handleNextClick = () => {
         
       });
       setSuccessMessage('Comment added successfully!');
+     
     } catch (error) {
       console.error(error);
       setErrors(error.message);
@@ -201,11 +228,35 @@ const handleNextClick = () => {
     setNewComment(e.target.value);
     
   };
-  
+
+const filterProjectsByCategory = () => {
+  if (selectedCategory === "") {
+    return projects;
+  } else {
+    return projects.filter((project) => project.category === selectedCategory);
+  }
+}; 
+ ///////Filter list by search value//////////////
+       const [filteredResults, setFilteredResults] = useState([]);
+       const [searchInput, setSearchInput] = useState('');
+       const [data, setData] = useState([]);
+       const searchItems = (searchValue) => {
+        setSearchInput(searchValue)
+        if (searchInput !== '') {
+            const filteredData = projects.filter((item) => {
+                return Object.values(item).join('').toLowerCase().includes(searchInput.toLowerCase())
+            })
+            setFilteredResults(filteredData)
+            console.log(filteredData)
+        }
+        else{
+            setFilteredResults(projects)
+        }
+    }
   
   return (
     <>
-     {/* <Header/>  */}
+   
     <Container>
       <ContentWithPaddingXl>
          <HeaderRow>
@@ -216,12 +267,39 @@ const handleNextClick = () => {
             <Controls>
             <PrevButton  onClick={handlePreviousClick} disabled={startIndex < 3}><ChevronLeftIcon/></PrevButton>
             <NextButton onClick={handleNextClick} disabled={startIndex + 3 >= projects.length}><ChevronRightIcon/></NextButton>
+            
           </Controls>
           </div>
+           <Actions>
+              <input type="text" placeholder="Search" 
+              onChange={(e) => searchItems(e.target.value)}/>
+            </Actions>
+          <div>
+  <select
+    onChange={(e) => setSelectedCategory(e.target.value)}
+    style={{ 
+      fontSize: '1.2rem', 
+      padding: '0.5rem', 
+      borderRadius: '5px', 
+      border: 'none', 
+      borderColor:'transparent',
+      backgroundColor: '#f5f5f5',
+      color:'#a273ff'
+    }}
+  >
+    <option value="">All categories</option>
+    <option value="Paper & Cardboard">Paper & Cardboard</option>
+    <option value="Plastic">Plastic</option>
+    <option value="Metals">Metals</option>
+    <option value="Electronic waste">Electronic waste</option>
+    <option value="organic waste">Organic waste</option>
+    <option value="Textiles">Textiles</option>
+    <option value="Tires">Tires</option>
+  </select>
+</div>
         </HeaderRow>
 
-        
-          <TabContent
+       <TabContent
         
             variants={{
               current: {
@@ -238,8 +316,92 @@ const handleNextClick = () => {
             transition={{ duration: 0.4 }}
             
           >
-            {successMessage && <div>{successMessage}</div>}
-            {projects.slice(startIndex, startIndex + 3).map((project, index) => (
+             {searchInput.length > 1 ? (
+                    filteredResults.map((item) => (
+                       <CardContainer  key={item._id}>
+                <Card className="group"  initial="rest" whileHover="hover" animate="rest">
+                  <CardImageContainer imageSrc={`http://localhost:5000/uploads/${item.image}`}>
+                    <CardRatingContainer>
+                    <LocationIcon /> <CardReview>({item.location})</CardReview>
+                    </CardRatingContainer>
+                  
+                    <CardHoverOverlay
+                      variants={{
+                        hover: {
+                          opacity: 1,
+                          height: "auto"
+                        },
+                        rest: {
+                          opacity: 0,
+                          height: 0
+                        }
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                       <Link to={`/project/${item._id}`}>Preview</Link>
+                    </CardHoverOverlay>
+                  </CardImageContainer>
+                  <CardText>
+                  <SecondaryInfoContainer>
+                  <div tw="flex flex-col sm:flex-row mt-1 sm:mt-4">   
+                   <a onClick={() => handleLike(item._id)} style={{  cursor: 'pointer' }}>
+   < AiFillLike style={{ width:'40px', height:'40px' , color: selectedProjectId === item._id && likeStatus === "like"  ? "blue" : "gray", marginRight:'15px'}} /> 
+  </a>
+
+  <p style={{marginTop:'20px' , marginRight:'20px'}}>{item.likes}Likes </p> </div>
+  <div tw="flex flex-col sm:flex-row mt-2 sm:mt-4">
+  <a 
+     onClick={() => handleDislike(item._id)} style={{  cursor: 'pointer' }}
+     
+  >
+    <AiFillDislike style={{ width:'40px', height:'40px' ,color: selectedProjectId === item._id && likeStatus === "dislike"  ? "red" : "gray" , marginRight:'15px'}}  
+     /> 
+  </a>   <p style={{marginTop:'20px'}}>{item.dislikes} Dislikes</p> </div> </SecondaryInfoContainer>
+
+  
+  {/* <StarRating rating={project.ratings} onRatingChange={(newRating) => handleRatingClick(newRating, project._id)}/> */}
+
+
+
+
+                <br></br>
+                <SecondaryInfoContainer2>
+                  <IconWithText>
+                    <IconContainer>
+                      <LocationIcon />
+                    </IconContainer>
+                    <Text>{item.location}</Text>
+                  </IconWithText>
+                  <Text>{item.fundGoal}</Text>
+                 
+               
+                  <IconWithText>
+                    <IconContainer>
+                      <PriceIcon />
+                    </IconContainer>
+                   
+                  </IconWithText>
+                </SecondaryInfoContainer2>
+                <br></br>
+
+                
+                {(item.fundGoalProgress / item.fundGoal) * 100 >100? <Text style={{color:"green"}}> 
+                      {((item.fundGoalProgress / item.fundGoal) * 100).toFixed(2)}%  funded
+                    </Text>:<Text>
+                      {((item.fundGoalProgress / item.fundGoal) * 100).toFixed(2)}% funded
+                    </Text>}
+                <br></br>
+                    <CardTitle>  {item.title}</CardTitle>
+                    <CardContent>Category:{item.category}</CardContent>
+                    <CardTitle>Duration : {item.duration}</CardTitle>
+                  </CardText>
+                  <CardAction ><Link to={`/rewards/${item._id}`}><p style={{color:"#ffffff"}} >I support this project</p></Link></CardAction>
+          
+                 
+
+                </Card>
+              </CardContainer>
+                    )  )):(projects.slice(startIndex, startIndex + 3).map((project, index) => (
               <CardContainer key={index}>
                 <Card className="group"  initial="rest" whileHover="hover" animate="rest">
                   <CardImageContainer imageSrc={`http://localhost:5000/uploads/${project.image}`}>
@@ -267,7 +429,7 @@ const handleNextClick = () => {
                   <SecondaryInfoContainer>
                   <div tw="flex flex-col sm:flex-row mt-1 sm:mt-4">   
                    <a onClick={() => handleLike(project._id)} style={{  cursor: 'pointer' }}>
-   < AiFillLike style={{ width:'40px', height:'40px' , color: "#a273ff" , marginRight:'15px'}} /> 
+   < AiFillLike style={{ width:'40px', height:'40px' , color: selectedProjectId === project._id && likeStatus === "like"  ? "blue" : "gray", marginRight:'15px'}} /> 
   </a>
 
   <p style={{marginTop:'20px' , marginRight:'20px'}}>{project.likes}Likes </p> </div>
@@ -276,17 +438,16 @@ const handleNextClick = () => {
      onClick={() => handleDislike(project._id)} style={{  cursor: 'pointer' }}
      
   >
-    <AiFillDislike style={{ width:'40px', height:'40px' , color: "#a273ff", marginRight:'15px'}}  
+    <AiFillDislike style={{ width:'40px', height:'40px' ,color: selectedProjectId === project._id && likeStatus === "dislike"  ? "red" : "gray" , marginRight:'15px'}}  
      /> 
   </a>   <p style={{marginTop:'20px'}}>{project.dislikes} Dislikes</p> </div> </SecondaryInfoContainer>
 
   
   {/* <StarRating rating={project.ratings} onRatingChange={(newRating) => handleRatingClick(newRating, project._id)}/> */}
 
+  <br></br>
 
 
-
-                <br></br>
                 <SecondaryInfoContainer2>
                   <IconWithText>
                     <IconContainer>
@@ -294,64 +455,48 @@ const handleNextClick = () => {
                     </IconContainer>
                     <Text>{project.location}</Text>
                   </IconWithText>
+              
+                 
+                
                   <IconWithText>
                     <IconContainer>
                       <PriceIcon />
                     </IconContainer>
-                    <Text>{project.fundGoal}</Text>
+                    <Text>{project.fundGoal} </Text>
                   </IconWithText>
+         
                 </SecondaryInfoContainer2>
+                <br></br>
+                
+                {(project.fundGoalProgress / project.fundGoal) * 100 >100? <Text style={{color:"green"}}> 
+                      {((project.fundGoalProgress / project.fundGoal) * 100).toFixed(2)}%  funded
+                    </Text>:<Text>
+                      {((project.fundGoalProgress / project.fundGoal) * 100).toFixed(2)}% funded
+                    </Text>}
                 <br></br>
                     <CardTitle>  {project.title}</CardTitle>
                     <CardContent>Category:{project.category}</CardContent>
                     <CardTitle>Duration : {project.duration}</CardTitle>
                   </CardText>
-                  <CardAction >{cardLinkText}</CardAction>
-                  <form onSubmit={(e) => handleCommentSubmit(e, project._id, newComment)}>
-                  <div style={{ display: "flex", marginTop: "10px" }}>
-  <input 
-    type="text"
-    style={{ 
-      flexGrow: 1,
-      padding: "5px",
-      borderRadius: "5px",
-      marginRight: "5px"
-    }}
-    placeholder="Add a comment..."
-    value={newComment[project._id]}
-    onChange={(e) => handleCommentChange(e, project._id)} 
-  />
-  <button 
-    type="submit" 
-    style={{ 
-      padding: "5px 10px",
-      borderRadius: "5px",
-      backgroundColor: "#a273ff",
-      color: "white",
-      border: "none",
-      cursor: "pointer"
-    }}
-    
-  >
-    Add Comment
-  </button>
- 
-</div>
-
-</form>
+                  <CardAction ><Link to={`/rewards/${project._id}`}><p style={{color:"#ffffff"}} >I support this project</p></Link></CardAction>
+          
                  
 
                 </Card>
               </CardContainer>
               
-            ))}
+        )    ))}
           </TabContent>
-       
+          <br></br>
+         
+         
       </ContentWithPaddingXl>
       <DecoratorBlob1 />
       <DecoratorBlob2 />
     </Container>
     </>
+
+     
   );
 };
 

@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
-
+import Analytics from "views/admin/Analytics";
 // layouts
 
 import Admin from "layouts/Admin.js";
@@ -24,8 +24,9 @@ ReactDOM.render(
       <Route path="/auth" component={Auth} />
       {/* add routes without layouts */}
    
-     
+ <Route path="/Analytics" exact component={Analytics} /> 
       <Route path="/" component={Admin} />
+  
       {/* add redirect for first page */}
       <Redirect from="*" to="/" />
     </Switch>

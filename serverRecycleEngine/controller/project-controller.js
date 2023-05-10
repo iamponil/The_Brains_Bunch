@@ -85,6 +85,7 @@ const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
     await projectFunded.save();
     project.fundGoalProgress+=amount;
     await project.save();
+
     // Update the paymentMethod reservedAmount
     paymentMethod.reservedAmount += amount;
     paymentMethod.balance=balance;
@@ -269,12 +270,29 @@ async deleteProject(req, res) {
         res.status(500).json({ message: error.message });
       }
     },
+    // async getAll(req, res) {
+    //   Project.find(function (err, projects) {
+    //     res.json(projects);
+    //   });
+    // },
     async getAll(req, res) {
       Project.find(function (err, projects) {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Error getting projects');
+          return;
+        }
+    
+        projects.forEach(async (project) => {
+          if (project.fundGoalProgress >= project.fundGoal) {
+            await Project.findByIdAndUpdate(project._id, { status: true }, { useFindAndModify: false });
+          }
+        });
+    
         res.json(projects);
       });
     },
-
+    
 
     async addLike(req, res) {
       try {

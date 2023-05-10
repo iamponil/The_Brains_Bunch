@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 //eslint-disable-next-line
 import { css } from "styled-components/macro";
 import Axios from"axios";
-import Header from "components/headers/light";
+import {Header} from "components/headers/profileHeader";
 
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-1.svg";
 import DesignIllustration from "images/design-illustration-2.svg";

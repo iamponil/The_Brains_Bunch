@@ -41,8 +41,7 @@ router.post("/:projectId/like",authenticateToken,ProjectController.addLike);
   router.post("/:projectId/comment",authenticateToken,ProjectController.addComment);
   //add rating
   router.post("/:projectId/rating",ProjectController.addRating);
-  //story
-router.post('/addstory', createContent);
+  
   //recommendation projects
   router.get("/recommended-projects",ProjectController.getRecommendedProjects);
 

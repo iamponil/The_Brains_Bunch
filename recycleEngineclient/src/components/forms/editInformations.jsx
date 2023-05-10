@@ -21,7 +21,7 @@ const FormContainer = styled.div`
 
   input,
   textarea {
-    ${tw`w-full bg-transparent text-gray-500 text-base font-medium tracking-wide border-b-2 py-2 text-primary-500 hocus:border-pink-400 focus:outline-none transition duration-200`};
+    ${tw`w-full bg-transparent text-gray-500 text-base font-medium tracking-wide border-b-2 py-2 text-gray-500 hocus:border-pink-400 focus:outline-none transition duration-200`};
 
     padding: 8px;
 

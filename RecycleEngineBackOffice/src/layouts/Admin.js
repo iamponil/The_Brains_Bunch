@@ -16,11 +16,13 @@ import UserDetails from "views/admin/UserDetails";
 import Users from "views/admin/Users.js";
 import Login from "views/auth/Login";
 import Settings from "views/admin/Settings";
+import Analytics from "views/admin/Analytics";
 export default function Admin() {
 
   return (
     <>
       <Sidebar />
+   
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar  />
         {/* Header */}
@@ -31,6 +33,7 @@ export default function Admin() {
             <Route path="/profile" exact component={Settings} />
             <Route path="/admin/userdetails" exact component={UserDetails} />
             <Route path="/admin/users" exact component={Users} />
+            <Route path="/admin/Analytics" exact component={Analytics} />
             <Route path="/auth/login" exact component={Login} />
             <Redirect from="/" to="/auth/login" />
             {/* <Redirect from="/" to="/admin/dashboard" /> */}
