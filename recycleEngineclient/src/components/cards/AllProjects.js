@@ -225,6 +225,7 @@ const filterProjectsByCategory = () => {
     return projects.filter((project) => project.category === selectedCategory);
   }
 }; 
+
   return (
     <>
    
@@ -344,6 +345,11 @@ const filterProjectsByCategory = () => {
                     </IconContainer>
                     <Text>{project.fundGoal}</Text>
                   </IconWithText>
+               {(project.fundGoalProgress / project.fundGoal) * 100 >100?<Text style={{color:"green"}}>
+                    {(project.fundGoalProgress / project.fundGoal) * 100}%
+                  </Text>:<Text>
+                    {(project.fundGoalProgress / project.fundGoal) * 100}%
+                  </Text>}
                 </SecondaryInfoContainer2>
                 <br></br>
                     <CardTitle>  {project.title}</CardTitle>

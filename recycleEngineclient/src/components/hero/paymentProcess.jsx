@@ -174,9 +174,12 @@ useEffect(() => {
         );
         const card = response.data.card;
         console.log(response.data);
+    
         if (card) {
-            setBalance(card.balance);
-            setCardId(card.id);
+            if((card.balance-amountValue)<=0)
+            {alert ('insufficient money to do this donation');}
+            setBalance(card.balance-amount);
+            setCardId(card.cardId);
           setFormData({
             name: card.name,
             expiry: response.data.expiry,
@@ -197,10 +200,12 @@ useEffect(() => {
      
       const  initialBalance  = balance;
       const card = cardId;
+      console.log(initialBalance,card);
       const formDataToSend = {
         initialBalance,
         card,
         id_project,
+        amountValue,
       };
       console.log(formDataToSend);
      

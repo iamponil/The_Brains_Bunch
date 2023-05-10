@@ -67,12 +67,12 @@ const SubmitButton = styled.button`
     ${tw`ml-3`}
   }
 `;
-  const [project, setproject] = useState([]);
+const [project, setproject] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [showDescription, setshowDescription] = useState(false);
 
   
- 
+ const [duration,setDuration]= useState("");
   const [newComment, setNewComment] = useState("");
   const [error, setErrors] = useState(null);
 
@@ -82,35 +82,72 @@ const SubmitButton = styled.button`
   const [errorMessage, setErrorMessage] = useState("");
   const { id } = useParams();
 
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const [projectResponse, commentsResponse] = await Promise.all([
-        fetch(`http://localhost:5000/projects/getProjectById/${id}`),
-        fetch(`http://localhost:5000/projects/${id}/comments`)
-      ]);
-
-      const projectData = await projectResponse.json();
-
-      const commentsData = await commentsResponse.json();
-
-      const commentsWithUsers = await Promise.all(
-        commentsData.map(async (comment) => {
-          const userResponse = await fetch(`http://localhost:5000/users/getUserById/${comment.user}`);
-          const user = await userResponse.json();
-          return { ...comment, user };
-        })
-      );
-
-      setproject(projectData);
-      setComments(commentsWithUsers);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [projectResponse, commentsResponse] = await Promise.all([
+          fetch(`http://localhost:5000/projects/getProjectById/${id}`),
+          fetch(`http://localhost:5000/projects/${id}/comments`)
+        ]);
   
-  fetchData();
-}, [id]);
+        const projectData = await projectResponse.json();
+  
+        const commentsData = await commentsResponse.json();
+  
+        const commentsWithUsers = await Promise.all(
+          commentsData.map(async (comment) => {
+            const userResponse = await fetch(`http://localhost:5000/users/getUserById/${comment.user}`);
+            const user = await userResponse.json();
+            return { ...comment, user };
+          })
+        );
+  
+        setproject(projectData);
+        setComments(commentsWithUsers);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const intervalId = setInterval(() => {
+      if (project.duration !== undefined) {
+        setDuration(formatDuration(project.duration));
+      }
+    }, 1000);
+  
+    fetchData();
+  
+    return () => clearInterval(intervalId);
+  }, [id]);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setproject(prevProject => ({ ...prevProject, duration: prevProject.duration - 1 }));
+    }, 1000);
+  
+    return () => clearInterval(intervalId);
+  }, []);
+  
+
+function formatDuration(duration) {
+  const days = Math.floor(duration / 86400);
+  const hours = Math.floor((duration % 86400) / 3600);
+  const minutes = Math.floor((duration % 3600) / 60);
+  const seconds = duration % 60;
+
+  let result = "";
+  if (days > 0) {
+    result += `${days}d `;
+  }
+  if (hours > 0) {
+    result += `${hours}h `;
+  }
+  if (minutes > 0) {
+    result += `${minutes}m `;
+  }
+  result += `${seconds}s`;
+
+  return result.trim();
+}
 
 
 const handleCommentToggle = () => {
@@ -218,20 +255,21 @@ const handleCommentSubmit = async (e, projectId, content) => {
 </>
  }
  
-        
         subheading={<Subheading>    Recycling {project.category} </Subheading>}
         description={
   
         
        
           <p className="text-lg">
-            <span className="text-primary-500 font-bold">Committed to a goal of:</span> {project.fundGoal}$
+            <span className="text-primary-500 font-bold">Committed to a goal of:</span>{project.fundGoalProgress}\ {project.fundGoal}$
+           {project.fundGoal<=project.fundGoalProgress?<p style={{color:"green"}}>this project will get funded by the deadline</p>:null}
             <br />
             <br />
             <span className="text-primary-500 font-bold">Location:</span> {project.location}
             <br />
             <br />
-            <span className="text-primary-500 font-bold">Committed to achieving a goal in:</span> {project.duration} days
+            <span className="text-primary-500 font-bold">Committed to achieving a goal in:</span>{" "}
+{formatDuration(project.duration)}
            
           </p>
         
