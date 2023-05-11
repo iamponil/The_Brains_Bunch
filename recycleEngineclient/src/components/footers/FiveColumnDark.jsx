@@ -51,8 +51,8 @@ export default () => {
               <LogoText>RecycleEngine Inc.</LogoText>
             </LogoContainer>
             <CompanyAddress>
-              123 Road, New Startup Building Carter Road, San Francisco
-              California 40234
+              123 Road, New Startup Building Carter Road, lac De Tunis
+              TUNISIA  
             </CompanyAddress>
             <SocialLinksContainer>
               <SocialLink href="https://facebook.com">
@@ -70,16 +70,13 @@ export default () => {
             <ColumnHeading>Quick Links</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#">Blog</Link>
+                <Link href="/Blog">Blog</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">FAQs</Link>
+                <Link href="/ContactUs">Support</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Support</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">About Us</Link>
+                <Link href="/index">About Us</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -87,16 +84,16 @@ export default () => {
             <ColumnHeading>Product</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#">Log In</Link>
+                <Link href="/login">Log In</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Personal</Link>
+                <Link href="/index">Personal</Link>
               </LinkListItem>
               <LinkListItem>
                 <Link href="#">Business</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Team</Link>
+              <Link href="/">Our Team</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -120,14 +117,14 @@ export default () => {
           <Column>
             <ColumnHeading>Contact</ColumnHeading>
             <LinkList>
-              <LinkListItem>+1 (234) (567)-8901</LinkListItem>
+              <LinkListItem>+2165826654</LinkListItem>
               <LinkListItem>
                 <Link href="mailto:support@servana.com">
-                  support@servana.com
+                thebrainsbrunch41@gmail.com
                 </Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Sales</Link>
+                <Link href="#">Funds</Link>
               </LinkListItem>
               <LinkListItem>
                 <Link href="#">Report Abuse</Link>
@@ -137,8 +134,8 @@ export default () => {
         </FiveColumns>
         <Divider />
         <CopyrightAndCompanyInfoRow>
-          <CopyrightNotice>&copy; Copyright 2020, Treact Inc.</CopyrightNotice>
-          <CompanyInfo>An Internet Company.</CompanyInfo>
+          <CopyrightNotice>&copy; Copyright 2023.</CopyrightNotice>
+          <CompanyInfo>A Crowfunding Company</CompanyInfo>
         </CopyrightAndCompanyInfoRow>
       </Content>
     </Container>
