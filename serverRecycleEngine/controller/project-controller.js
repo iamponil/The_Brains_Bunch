@@ -559,7 +559,7 @@ module.exports = {
     try {
       const projects = await Project.find({})
         .sort({ likes: -1, averageRating: -1 })
-        .limit(6);
+        .limit(3);
       if (projects.length === 0) {
         return res
           .status(404)

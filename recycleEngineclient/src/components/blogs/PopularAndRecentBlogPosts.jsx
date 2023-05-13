@@ -84,7 +84,7 @@ export default function TrendingBlogs() {
       title: 'Sustainable Fashion and Textiles',
       description:
         'Crowdfunding campaigns can support sustainable fashion brands and initiatives that promote recycling and upcycling in the textile industry. This can include projects focused on recycling textiles, creating sustainable fashion lines, and raising awareness about the environmental impact of fast fashion.',
-      authorName: 'Memmi Marwa',
+      authorName: 'Ameur Nemlaghi',
       authorProfile: 'Web developer',
       url: 'https://reddit.com',
     },

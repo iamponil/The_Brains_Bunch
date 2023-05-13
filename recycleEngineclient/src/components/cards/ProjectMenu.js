@@ -67,9 +67,7 @@ export default ({ roundedHeaderButton }) => {
   const [projects, setproject] = useState([]);
   const handlepreview = (e) => {
     e.preventDefault();
-    window.location.href = `/previewProject?data=${JSON.stringify(
-      selectedValue
-    )}&username=${JSON.stringify(user.user)}&titre=${JSON.stringify(titre)}`;
+    window.location.href = `project/${projects._id}`;
   };
   const handlebacis = (e) => {
     e.preventDefault();

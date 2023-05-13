@@ -91,10 +91,31 @@ const ControlButton = styled(PrimaryButtonBase)`
 `;
 const PrevButton = tw(ControlButton)``;
 const NextButton = tw(ControlButton)``;
+const TagContainer = styled.div`
+  text-align: center;
+
+  background-color: #ffffff;
+`;
+
+const Tag = styled.span`
+  ${tw`inline-block text-sm rounded-full font-medium px-16 py-1`}
+  background-color: ${(props) => props.color};
+  color: #fff;
+`;
 export default ({
   heading = 'Recomended for you ',
   cardLinkText = ' I Support this project',
 }) => {
+  const ColorTag = ({ value }) => {
+    const colorClass = getColorClass(parseFloat(value));
+    return (
+      <TagContainer>
+        <Tag color={colorClass} style={{ color: '#fff' }}>
+          {value}
+        </Tag>
+      </TagContainer>
+    );
+  };
   ///
   const [selectedCategory, setSelectedCategory] = useState('');
   // const [searchInput, setSearchInput] = useState('');
@@ -247,7 +268,18 @@ export default ({
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
-
+  const getColorClass = (value) => {
+    if (value >= 8 && value < 9) {
+      console.log('Value:', value, 'Class:', 'bg-yellow-400 text-gray-900');
+      return '#10B981';
+    } else if (value >= 9 && value <= 9.5) {
+      console.log('Value:', value, 'Class:', 'bg-green-400 text-gray-900');
+      return '#FBBF24';
+    } else {
+      console.log('Value:', value, 'Class:', 'bg-red-400 text-gray-900');
+      return '#EF4444';
+    }
+  };
   const filterProjects = () => {
     console.log(selectedOption);
     console.log(projects);
@@ -363,6 +395,8 @@ export default ({
                       whileHover="hover"
                       animate="rest"
                     >
+                                            <ColorTag value={item.analytics} />
+
                       <CardImageContainer
                         imageSrc={`http://localhost:5000/uploads/${item.image}`}
                       >
@@ -498,6 +532,8 @@ export default ({
                         whileHover="hover"
                         animate="rest"
                       >
+                                              <ColorTag value={project.analytics} />
+
                         <CardImageContainer
                           imageSrc={`http://localhost:5000/uploads/${project.image}`}
                         >
@@ -618,6 +654,7 @@ export default ({
                           <CardTitle> {project.title}</CardTitle>
                           <CardContent>Category:{project.category}</CardContent>
                         </CardText>
+                        {project.duration > 0 ? (
                         <CardAction>
                           <Link to={`/rewards/${project._id}`}>
                             <p style={{ color: '#ffffff' }}>
@@ -625,6 +662,7 @@ export default ({
                             </p>
                           </Link>
                         </CardAction>
+                        ):null}
                       </Card>
                     </CardContainer>
                   ))}

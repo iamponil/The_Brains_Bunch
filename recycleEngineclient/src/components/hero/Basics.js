@@ -520,215 +520,216 @@ export default function Basics({ roundedHeaderButton }) {
                       </>
                     </div>
                   </Column>
-                  <Column>
-                    <div
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={handleDrop2}
-                      tw="relative mt-4"
+                
+              <Column>
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={handleDrop2}
+                  tw="relative mt-4"
+                >
+                  <>
+                    <label
+                      tw="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                      htmlFor="file_input1"
                     >
-                      <>
-                        <label
-                          tw="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-                          htmlFor="file_input1"
+                      Drop a video here ( no larger than 5120 MB)
+                    </label>
+                    <div tw="flex justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                      <input
+                        id="file_input1"
+                        tw="sr-only"
+                        type="file"
+                        onChange={handleInputChangevd}
+                      />
+                      <div tw="space-y-1 text-center">
+                        <svg
+                          tw="mx-auto h-12 w-12 text-gray-400"
+                          stroke="currentColor"
+                          fill="none"
+                          viewBox="0 0 48 48"
+                          aria-hidden="true"
                         >
-                          Drop a video here ( no larger than 5120 MB)
-                        </label>
-                        <div tw="flex justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                          <input
-                            id="file_input1"
-                            tw="sr-only"
-                            type="file"
-                            onChange={handleInputChangevd}
-                          />
-                          <div tw="space-y-1 text-center">
-                            <svg
-                              tw="mx-auto h-12 w-12 text-gray-400"
-                              stroke="currentColor"
-                              fill="none"
-                              viewBox="0 0 48 48"
-                              aria-hidden="true"
-                            >
-                              <path d="M19.67,8H28.33a1.33,1.33,0,0,1,1.26,1.06l.88,4.39H17.53l.88-4.39A1.33,1.33,0,0,1,19.67,8Z"></path>
-                              <path d="M24,21.33A6.67,6.67,0,1,1,17.33,14,6.68,6.68,0,0,1,24,21.33Z"></path>
-                              <path d="M39.47,28.28a1.33,1.33,0,0,0-.94-.39H9.47a1.33,1.33,0,0,0,0,2.67H38.53A1.33,1.33,0,0,0,39.47,28.28Z"></path>
-                              <path d="M36.46,16H11.54a4.62,4.62,0,0,0-4.6,4.6V32.81a4.62,4.62,0,0,0,4.6,4.6H36.46a4.62,4.62,0,0,0,4.6-4.6V20.6A4.62,4.62,0,0,0,36.46,16ZM36,32.81a2.62,2.62,0,0,1-2.6,2.6H11.54a2.62,2.62,0,0,1-2.6-2.6V20.6a2.62,2.62,0,0,1,2.6-2.6H36a2.62,2.62,0,0,1,2.6,2.6Z"></path>
-                            </svg>
-                            <div tw="flex text-sm text-gray-600">
-                              <span tw="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-md">
-                                It must be a MOV, MPEG, AVI, MP4, 3GP, WMV, or
-                                FLV
-                                <div>
-                                  <p>Selected video:</p>
-                                  {vd && <p>{project.video}</p>}
+                          <path d="M19.67,8H28.33a1.33,1.33,0,0,1,1.26,1.06l.88,4.39H17.53l.88-4.39A1.33,1.33,0,0,1,19.67,8Z"></path>
+                          <path d="M24,21.33A6.67,6.67,0,1,1,17.33,14,6.68,6.68,0,0,1,24,21.33Z"></path>
+                          <path d="M39.47,28.28a1.33,1.33,0,0,0-.94-.39H9.47a1.33,1.33,0,0,0,0,2.67H38.53A1.33,1.33,0,0,0,39.47,28.28Z"></path>
+                          <path d="M36.46,16H11.54a4.62,4.62,0,0,0-4.6,4.6V32.81a4.62,4.62,0,0,0,4.6,4.6H36.46a4.62,4.62,0,0,0,4.6-4.6V20.6A4.62,4.62,0,0,0,36.46,16ZM36,32.81a2.62,2.62,0,0,1-2.6,2.6H11.54a2.62,2.62,0,0,1-2.6-2.6V20.6a2.62,2.62,0,0,1,2.6-2.6H36a2.62,2.62,0,0,1,2.6,2.6Z"></path>
+                        </svg>
+                        <div tw="flex text-sm text-gray-600">
+                          <span tw="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-md">
+                            It must be a MOV, MPEG, AVI, MP4, 3GP, WMV, or
+                            FLV
+                            <div>
+                              <p>Selected video:</p>
+                              {vd && <p>{project.video}</p>}
 
-                                  {video && <p>{video.name}</p>}
-                                </div>
-                              </span>
+                              {video && <p>{video.name}</p>}
                             </div>
-                          </div>
+                          </span>
                         </div>
-                      </>
+                      </div>
                     </div>
-                  </Column>
-                </TwoColumn>
-                <br></br>
-                <hr tw=" text-gray-900"></hr>
-                <br></br>
-                <SubmitButton type="submit" value="Submit">
-                  Submit
-                </SubmitButton>
-                <br></br>
-              </form>
-            </div>
+                  </>
+                </div>
+              </Column>
+            </TwoColumn>
             <br></br>
-            <SvgDotPattern1 />
-            <SvgDotPattern2 />
-            <SvgDotPattern3 />
-            <SvgDotPattern4 />
-          </FormContainer>
-        </Content>
-      </Container>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Fade in={open}>
-          <Box sx={{ ...style, width: 600 }}>
-            {/* <Typography id="modal-modal-title" variant="h6" component="h2">
-            Modifier vos informations
-          </Typography> */}
-            <Container>
-              <Content>
-                <FormContainer name="form">
-                  {/* <h2>Funding goal</h2> */}
-                  <p tw="text-gray-700 font-bold sm:text-3xl">
-                    Funding calculator
-                  </p>
-                  <h3>
-                    Enter the total amount you think you'll need to make this
-                    project and fulfill your rewards.Build out a budget that
-                    includes shipping , materials, research,vendors, and labor
-                    costs{' '}
-                  </h3>
-                  <TwoColumn>
-                    <Column>
-                      <InputContainer>
-                        <Label htmlFor="name-input" tw="text-primary-500">
-                          Funding goal
-                        </Label>
-                        <Input
-                          id="name-input"
-                          type="Number"
-                          name="name"
-                          placeholder="Goal amount $ "
-                          value={goalAmount}
-                          onChange={handleGoalAmountChange}
-                        />
-                      </InputContainer>
-                    </Column>
+            <hr tw=" text-gray-900"></hr>
+            <br></br>
+            <SubmitButton type="submit" value="Submit">
+              Submit
+            </SubmitButton>
+            <br></br>
+          </form>
+        </div>
+        <br></br>
+        <SvgDotPattern1 />
+        <SvgDotPattern2 />
+        <SvgDotPattern3 />
+        <SvgDotPattern4 />
+      </FormContainer>
+    </Content>
+  </Container>
+  <Modal
+    open={open}
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+  >
+    <Fade in={open}>
+      <Box sx={{ ...style, width: 600 }}>
+        {/* <Typography id="modal-modal-title" variant="h6" component="h2">
+        Modifier vos informations
+      </Typography> */}
+        <Container>
+          <Content>
+            <FormContainer name="form">
+              {/* <h2>Funding goal</h2> */}
+              <p tw="text-gray-700 font-bold sm:text-3xl">
+                Funding calculator
+              </p>
+              <h3>
+                Enter the total amount you think you'll need to make this
+                project and fulfill your rewards.Build out a budget that
+                includes shipping , materials, research,vendors, and labor
+                costs{' '}
+              </h3>
+              <TwoColumn>
+                <Column>
+                  <InputContainer>
+                    <Label htmlFor="name-input" tw="text-primary-500">
+                      Funding goal
+                    </Label>
+                    <Input
+                      id="name-input"
+                      type="Number"
+                      name="name"
+                      placeholder="Goal amount $ "
+                      value={goalAmount}
+                      onChange={handleGoalAmountChange}
+                    />
+                  </InputContainer>
+                </Column>
 
-                    <Column>
-                      <InputContainer>
-                        <Label htmlFor="name-input" tw="text-primary-500">
-                          Pourcentage du Taxes %
-                        </Label>
-                        <Input
-                          id="name-input"
-                          type="Number"
-                          name="name"
-                          placeholder="Taxes %"
-                          value={taxes}
-                          onChange={handleTaxesChange}
-                        />
-                      </InputContainer>
-                    </Column>
-                  </TwoColumn>
-                  <br></br>
-                  <TwoColumn>
-                    <Column>
-                      {' '}
-                      <p tw="text-primary-500 font-bold ">Taxes</p>
-                    </Column>
-                    <Column>
-                      <Input
-                        id="taxe"
-                        type="number"
-                        name="taxe"
-                        placeholder="$"
-                        value={(goalAmount * taxes) / 100}
-                        readOnly
-                      />
-                    </Column>
-                  </TwoColumn>
-                  <br></br>
-                  {/* <TwoColumn>
-                <Column> <p tw="text-primary-500 font-bold ">Recycle Engine fees: 5%</p></Column>
-                <Column> <p tw="text-gray-500 font-bold ">${subtotaltaxes*RecycleEngineFee}</p></Column>
-              </TwoColumn> */}
-                  <TwoColumn>
-                    <Column>
-                      {' '}
-                      <p tw="text-primary-500 font-bold ">
-                        Recycle Engine fees: 5%
-                      </p>
-                    </Column>
-                    <Column>
-                      <Input
-                        id="RecycleEnginefees"
-                        type="number"
-                        name="Suggestedgoal"
-                        placeholder="$"
-                        value={RecycleEngineFee * goalAmount}
-                        readOnly
-                      />
-                    </Column>
-                  </TwoColumn>
-                  <br></br>
-                  <TwoColumn>
-                    <Column>
-                      {' '}
-                      <p tw="text-primary-500 font-bold ">Processing fees 5%</p>
-                    </Column>
-                    <Column>
-                      <Input
-                        id="email-input"
-                        type="number"
-                        name="email"
-                        placeholder="%"
-                        value={ProcessingFee * goalAmount}
-                        readOnly
-                      />
-                    </Column>
-                  </TwoColumn>
-                  <br></br> <hr tw=" text-gray-900"></hr>
-                  <br></br>
-                  <TwoColumn>
-                    <Column>
-                      {' '}
-                      <p tw="text-primary-500 font-bold ">Suggested goal:</p>
-                    </Column>
-                    <Column>
-                      <Input
-                        id="Suggestedgoal-input"
-                        type="number"
-                        name="Suggestedgoal"
-                        placeholder="$"
-                        value={suggestedGoal}
-                        readOnly
-                      />
-                    </Column>
-                  </TwoColumn>
-                  <Button type="submit" onClick={selectAmount}>
-                    <span className="text">Select</span>
-                  </Button>
-                </FormContainer>
-              </Content>
-            </Container>
-          </Box>
-        </Fade>
-      </Modal>
-    </>
-  );
+                <Column>
+                  <InputContainer>
+                    <Label htmlFor="name-input" tw="text-primary-500">
+                      Pourcentage du Taxes %
+                    </Label>
+                    <Input
+                      id="name-input"
+                      type="Number"
+                      name="name"
+                      placeholder="Taxes %"
+                      value={taxes}
+                      onChange={handleTaxesChange}
+                    />
+                  </InputContainer>
+                </Column>
+              </TwoColumn>
+              <br></br>
+              <TwoColumn>
+                <Column>
+                  {' '}
+                  <p tw="text-primary-500 font-bold ">Taxes</p>
+                </Column>
+                <Column>
+                  <Input
+                    id="taxe"
+                    type="number"
+                    name="taxe"
+                    placeholder="$"
+                    value={(goalAmount * taxes) / 100}
+                    readOnly
+                  />
+                </Column>
+              </TwoColumn>
+              <br></br>
+              {/* <TwoColumn>
+            <Column> <p tw="text-primary-500 font-bold ">Recycle Engine fees: 5%</p></Column>
+            <Column> <p tw="text-gray-500 font-bold ">${subtotaltaxes*RecycleEngineFee}</p></Column>
+          </TwoColumn> */}
+              <TwoColumn>
+                <Column>
+                  {' '}
+                  <p tw="text-primary-500 font-bold ">
+                    Recycle Engine fees: 5%
+                  </p>
+                </Column>
+                <Column>
+                  <Input
+                    id="RecycleEnginefees"
+                    type="number"
+                    name="Suggestedgoal"
+                    placeholder="$"
+                    value={RecycleEngineFee * goalAmount}
+                    readOnly
+                  />
+                </Column>
+              </TwoColumn>
+              <br></br>
+              <TwoColumn>
+                <Column>
+                  {' '}
+                  <p tw="text-primary-500 font-bold ">Processing fees 5%</p>
+                </Column>
+                <Column>
+                  <Input
+                    id="email-input"
+                    type="number"
+                    name="email"
+                    placeholder="%"
+                    value={ProcessingFee * goalAmount}
+                    readOnly
+                  />
+                </Column>
+              </TwoColumn>
+              <br></br> <hr tw=" text-gray-900"></hr>
+              <br></br>
+              <TwoColumn>
+                <Column>
+                  {' '}
+                  <p tw="text-primary-500 font-bold ">Suggested goal:</p>
+                </Column>
+                <Column>
+                  <Input
+                    id="Suggestedgoal-input"
+                    type="number"
+                    name="Suggestedgoal"
+                    placeholder="$"
+                    value={suggestedGoal}
+                    readOnly
+                  />
+                </Column>
+              </TwoColumn>
+              <Button type="submit" onClick={selectAmount}>
+                <span className="text">Select</span>
+              </Button>
+            </FormContainer>
+          </Content>
+        </Container>
+      </Box>
+    </Fade>
+  </Modal>
+</>
+);
 }

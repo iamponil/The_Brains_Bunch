@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema(
     image: { type: String },
     video: { type: String },
     launchingDate: { type: Date },
-    duration: { type: Number, min: 0 },
+    duration: { type: Number, default:0,min: 0 },
     UserName: { type: String },
     status: { type: Boolean, default: false },
     user: { type: Schema.Types.ObjectId, ref: "user" },
