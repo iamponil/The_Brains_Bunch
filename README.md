@@ -52,7 +52,7 @@ To receive funding, projects must reach their funding goal within a specified pe
 ![PowerBI Graph](insert_powerbi_screenshot_url_here)
 
 ### Project Tagging
-![Project Tagging](insert_project_tagging_screenshot_url_here)
+![image](https://github.com/iamponil/The_Brains_Bunch/assets/75281628/77f758e9-badb-42aa-afc0-6adf2016d895)
 
 ## Installation
 
