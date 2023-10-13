@@ -49,7 +49,7 @@ To receive funding, projects must reach their funding goal within a specified pe
 ## Screenshots
 
 ### Back Office - PowerBI Graph
-![PowerBI Graph](insert_powerbi_screenshot_url_here)
+![image](https://github.com/iamponil/The_Brains_Bunch/assets/75281628/14153cad-fb55-4984-930c-a107dd70ef02)
 
 ### Project Tagging
 ![image](https://github.com/iamponil/The_Brains_Bunch/assets/75281628/77f758e9-badb-42aa-afc0-6adf2016d895)
